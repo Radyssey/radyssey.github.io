@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>Radyssey launch video</title>
+<!--
+  Launch video, drawn and animated in SVG. Every frame is a pure function of time:
+  renderAt(t) draws the frame at t seconds, so make_video.py can step through it
+  frame by frame. Open this file in a browser to scrub it with the slider.
+  Query: ?w=1080&h=1920&url=...&name=...
+  Landmarks, colours, the simulation formulas and classify() are copied from the
+  lesson's own script (site/lessons/graf-hip-ultrasound/index.html).
+-->
+<style>
+html,body{margin:0;background:#0b0f14;overflow:hidden}
+svg{display:block}
+#scrub{position:fixed;left:8px;right:8px;bottom:8px;z-index:2}
+</style></head><body>
+<svg id="v" xmlns="http://www.w3.org/2000/svg"></svg>
+<script>
+const Q=new URLSearchParams(location.search);
+const W=+(Q.get('w')||1080),HH=+(Q.get('h')||1920);
+const SITE=Q.get('name')||'Radyssey';
+const URLTXT=Q.get('url')||'radyssey.github.io';
+const IMG=Q.get('img')||'../site/lessons/graf-hip-ultrasound/Graf_us_Walter2022_clean.jpg';
+const NS='http://www.w3.org/2000/svg',R=Math.PI/180;
+const FONT='"Segoe UI",system-ui,sans-serif';
+
+/* lesson palette */
+const C={bg:'#0b0f14',panel:'#18202a',ink:'#e6ebf1',muted:'#9aa6b4',accent:'#6ea2ff',
+ base:'#ff6b6b',roof:'#4dabf7',cart:'#51cf66',rim:'#ffd43b',head:'#63e6be',wing:'#ff922b',
+ labrum:'#ff8787',compass:'#ffe066',cartRoof:'#a5d8ff',socket:'#ffd8a8',body:'#9fb3c8'};
+
+/* lesson landmarks (Graf-view image coordinates) */
+const LM={wingTop:[652,170],rim:[640,492],ll:[805,612],lab:[515,612],head:[640,770],
+ roof:[725,550],cart:[575,555],caps:[470,700],fold:[445,800],chb:[600,1000]};
+const CEN=[488.5,634]; /* centre of the image as the lesson places it (x15..962, y40..1228) */
+
+/* lesson formulas */
+function classify(a,b,w){
+ if(a>=60)return b<=55?['Ia','Mature hip']:['Ib','Mature hip, transitional cartilage roof'];
+ if(a>=50)return w<=13?['IIa'+(a>=55?'+':'−'),'Physiologically immature']:['IIb','Delayed ossification'];
+ if(a>=43)return b<=77?['IIc','Critical: shallow socket, head still centred']:['D','Decentring: the head is leaving the socket'];
+ return['III / IV','Dislocated'];}
+const BT=[[34,105],[43,88],[45,82],[47,72],[50,63],[55,58],[60,52],[70,48]];
+function betaFor(a){let bb=105;for(let z=1;z<BT.length;z++){if(a<=BT[z][0]){bb=BT[z-1][1]+(BT[z][1]-BT[z-1][1])*(a-BT[z-1][0])/(BT[z][0]-BT[z-1][0]);break}}return bb}
+function sim(a){const rim=LM.rim,ll=[rim[0]+190*Math.sin(a*R),rim[1]+190*Math.cos(a*R)];
+ const k=Math.max(0,60-a),hc=[LM.head[0]-k*4.2,LM.head[1]-k*5.4],bb=betaFor(a);
+ const lab=[rim[0]-150*Math.sin(bb*R),rim[1]+150*Math.cos(bb*R)];return{a,b:bb,rim,ll,hc,lab}}
+
+/* helpers */
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function clear(g){while(g.firstChild)g.removeChild(g.firstChild)}
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const ease=x=>{x=cl(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const eout=x=>{x=cl(x);return 1-Math.pow(1-x,3)};
+const back=x=>{x=cl(x);const c=1.7;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const seg=(t,a,b)=>cl((t-a)/(b-a));
+const lerp=(a,b,p)=>a+(b-a)*p;
+const lerp2=(p0,p1,p)=>[lerp(p0[0],p1[0],p),lerp(p0[1],p1[1],p)];
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+const nrm=v=>{const l=Math.hypot(v[0],v[1])||1;return[v[0]/l,v[1]/l]};
+/* fade in over fi seconds after a, fade out over fo seconds before b */
+const env=(t,a,b,fi=.35,fo=.35)=>Math.min(seg(t,a,a+fi),1-seg(t,b-fo,b));
+
+function txt(p,x,y,s,o){o=o||{};const t=el('text',{x,y,'text-anchor':o.anchor||'start'},p);t.textContent=s;
+ t.setAttribute('style',`fill:${o.col||C.ink};font:${o.weight||700} ${o.size||40}px ${FONT};letter-spacing:${o.ls||0}px;`+
+  (o.stroke===false?'':`paint-order:stroke;stroke:#000;stroke-width:${o.sw||8}px;stroke-linejoin:round;`));
+ if(o.op!=null)t.setAttribute('opacity',cl(o.op));return t}
+function fitSize(s,base,maxW){return Math.min(base,maxW/(s.length*.53))}
+
+/* layout */
+const VERT=HH>W*1.3;
+const LAY=VERT?{pane:{x:0,y:470,w:W,h:1000},tag:280,cap:385,brand:110,cred:HH-30}
+ :{pane:{x:0,y:132,w:W,h:868},tag:44,cap:106,brand:null,cred:HH-34};
+const PN=LAY.pane,PC=[PN.x+PN.w/2,PN.y+PN.h/2];
+/* vertical: screen view fills the pane height (sides crop slightly); square: whole image */
+const FIT_SCREEN=VERT?PN.h/947:Math.min(PN.w/1188,PN.h/947),FIT_GRAF=Math.min(PN.w/947,PN.h/1188);
+
+/* persistent scene graph */
+const svg=document.getElementById('v');
+svg.setAttribute('width',W);svg.setAttribute('height',HH);svg.setAttribute('viewBox',`0 0 ${W} ${HH}`);
+const defs=el('defs',{},svg);
+el('rect',{x:PN.x,y:PN.y,width:PN.w,height:PN.h},el('clipPath',{id:'pc'},defs));
+const grad=el('radialGradient',{id:'glow',cx:'50%',cy:'38%',r:'75%'},defs);
+el('stop',{offset:'0','stop-color':'#17263d'},grad);el('stop',{offset:'1','stop-color':C.bg},grad);
+el('rect',{x:0,y:0,width:W,height:HH,fill:'url(#glow)'},svg);
+const paneG=el('g',{'clip-path':'url(#pc)'},svg);
+const paneBg=el('rect',{x:PN.x,y:PN.y,width:PN.w,height:PN.h,fill:'#000'},paneG);
+const camG=el('g',{},paneG),conG=el('g',{},camG);
+const img=el('image',{x:15,y:40,width:947,height:1188,href:IMG},conG);
+const ovC=el('g',{},conG);  /* overlays in image coordinates */
+const ovP=el('g',{},paneG); /* overlays in frame pixels, clipped to the pane */
+const ovF=el('g',{},svg);   /* everything else, in frame pixels */
+
+/* view state, set per frame */
+let M=[[0,1],[1,0]],S=1,CAM=[0,0];
+function setView(phi,psi,fit,cam,z){
+ const c=Math.cos(phi*R),k=(1-c)/2,m=Math.cos(psi*R);
+ const P=[[c+k,k],[k,c+k]];           /* rotation by phi about the diagonal, projected */
+ M=[[m*P[0][0],m*P[0][1]],[P[1][0],P[1][1]]];
+ S=fit*z;CAM=cam;
+ camG.setAttribute('transform',`translate(${PC[0]},${PC[1]}) scale(${S}) translate(${-cam[0]},${-cam[1]})`);
+ conG.setAttribute('transform',`matrix(${M[0][0]},${M[1][0]},${M[0][1]},${M[1][1]},0,0) translate(${-CEN[0]},${-CEN[1]})`);}
+function F(p){const d=sub(p,CEN),v=[M[0][0]*d[0]+M[0][1]*d[1],M[1][0]*d[0]+M[1][1]*d[1]];
+ return[PC[0]+S*(v[0]-CAM[0]),PC[1]+S*(v[1]-CAM[1])]}
+function imgRect(){const ps=[[15,40],[962,40],[15,1228],[962,1228]].map(F),xs=ps.map(p=>p[0]),ys=ps.map(p=>p[1]);
+ return{x0:Math.max(PN.x,Math.min(...xs)),x1:Math.min(PN.x+PN.w,Math.max(...xs)),y0:Math.max(PN.y,Math.min(...ys)),y1:Math.min(PN.y+PN.h,Math.max(...ys))}}
+
+/* drawing pieces */
+function drawLine(a,b,p,col,w,dash,op){if(p<=0)return;const e=lerp2(a,b,p);
+ el('line',{x1:a[0],y1:a[1],x2:e[0],y2:e[1],stroke:col,'stroke-width':w||9,'stroke-linecap':'round','stroke-dasharray':dash||'',opacity:op==null?1:op},ovC)}
+function longPts(a,b,l1,l2){const d=nrm(sub(b,a));return[[a[0]-d[0]*l1,a[1]-d[1]*l1],[a[0]+d[0]*l2,a[1]+d[1]*l2]]}
+function dot(p,col,r,op){el('circle',{cx:p[0],cy:p[1],r:r||14,fill:col,stroke:'#000','stroke-width':4,opacity:op==null?1:op},ovC)}
+function label(p,s,col,o){o=o||{};const q=F(p),size=o.size||(VERT?34:32);let x=q[0]+(o.dx==null?24:o.dx),y=q[1]+(o.dy==null?-18:o.dy);
+ const w=s.length*size*.55;if(o.anchor!=='end'&&x+w>PN.x+PN.w-10)x=q[0]-w-24;if(x<PN.x+10)x=PN.x+10;
+ y=cl(y,PN.y+size+6,PN.y+PN.h-12);txt(ovP,x,y,s,{col,size,op:o.op})}
+function arc(cn,d0,d1,r,p,col,w){const a0=Math.atan2(d0[1],d0[0]);let a1=Math.atan2(d1[1],d1[0]),da=a1-a0;
+ while(da>Math.PI)da-=2*Math.PI;while(da<-Math.PI)da+=2*Math.PI;const n=40,pts=[];
+ for(let i=0;i<=n;i++){const a=a0+da*p*i/n;pts.push([cn[0]+r*Math.cos(a),cn[1]+r*Math.sin(a)])}
+ el('path',{d:'M'+pts.map(q=>q.join(',')).join(' L'),stroke:col,'stroke-width':w||8,fill:'none','stroke-linecap':'round'},ovC);
+ const am=a0+da*p*.5;return[cn[0]+(r+70)*Math.cos(am),cn[1]+(r+70)*Math.sin(am)]}
+
+function caption(tag,s,op){if(op<=0)return;
+ if(tag)txt(ovF,W/2,LAY.tag,tag,{anchor:'middle',col:C.accent,size:VERT?40:30,ls:4,op,stroke:false});
+ const size=fitSize(s,VERT?66:52,W-80);txt(ovF,W/2,LAY.cap,s,{anchor:'middle',size,op,stroke:false})}
+function brand(op){if(!LAY.brand||op<=0)return;
+ txt(ovF,W/2,LAY.brand,SITE+'  ·  Lesson 1',{anchor:'middle',col:C.muted,size:38,weight:600,ls:2,op,stroke:false})}
+function credit(op){if(op<=0)return;
+ txt(ovF,W/2,LAY.cred,'Ultrasound image: Walter et al. 2022, CC BY 4.0',{anchor:'middle',col:C.muted,size:VERT?28:24,weight:500,op,stroke:false})}
+
+function readout(a,b,op,showType){if(op<=0)return;const c=classify(a,b,6);
+ if(VERT){const y=PN.y+PN.h+125;
+  txt(ovF,300,y,'α '+Math.round(a)+'°',{anchor:'middle',col:C.roof,size:100,op,stroke:false});
+  txt(ovF,780,y,'β '+Math.round(b)+'°',{anchor:'middle',col:C.cart,size:100,op,stroke:false});
+  if(showType>0){txt(ovF,W/2,y+140,'Type '+c[0],{anchor:'middle',size:112,op:op*showType,stroke:false});
+   txt(ovF,W/2,y+205,c[1],{anchor:'middle',col:C.muted,size:fitSize(c[1],40,W-80),weight:500,op:op*showType,stroke:false})}}
+ else{const x=PN.x+24,y=PN.y+PN.h-24-170;
+  el('rect',{x,y,width:400,height:170,rx:18,fill:'rgba(17,22,29,.88)',stroke:'#2c3744','stroke-width':2,opacity:op},ovF);
+  txt(ovF,x+24,y+68,'α '+Math.round(a)+'°',{col:C.roof,size:58,op,stroke:false});
+  txt(ovF,x+210,y+68,'β '+Math.round(b)+'°',{col:C.cart,size:58,op,stroke:false});
+  if(showType>0)txt(ovF,x+24,y+142,'Type '+c[0],{size:62,op:op*showType,stroke:false})}}
+
+function compassScreen(t0,t,op){const r=imgRect(),s=VERT?40:36,cy=(r.y0+r.y1)/2,cx=(r.x0+r.x1)/2;
+ const A=[['↑ LATERAL (probe / skin)',cx,r.y0+s+14,'middle',[0,-1]],['↓ MEDIAL (deep)',cx,r.y1-20,'middle',[0,1]],
+  ['← CRANIAL',r.x0+14,cy-30,'start',[-1,0]],['(head, ilium)',r.x0+14,cy+16,'start',[-1,0]],
+  ['CAUDAL →',r.x1-14,cy-30,'end',[1,0]],['(femur)',r.x1-14,cy+16,'end',[1,0]]];
+ const order=[0,1,2,2,3,3];
+ A.forEach((d,i)=>{const p=back(seg(t,t0+order[i]*.3,t0+order[i]*.3+.6));if(p<=0)return;const off=(1-p)*220;
+  txt(ovP,d[1]+d[4][0]*off,d[2]+d[4][1]*off,d[0],{anchor:d[3],col:C.compass,size:i===3||i===5?s*.7:s,op:Math.min(op,seg(t,t0+order[i]*.3,t0+order[i]*.3+.25))})})}
+function compassGraf(side,op){if(op<=0)return;const r=imgRect(),s=VERT?40:36,cy=(r.y0+r.y1)/2,cx=(r.x0+r.x1)/2;
+ txt(ovP,cx,r.y0+s+14,'↑ CRANIAL',{anchor:'middle',col:C.compass,size:s,op});
+ txt(ovP,cx,r.y1-20,'↓ caudal',{anchor:'middle',col:C.compass,size:s,op});
+ if(side==='R'){txt(ovP,r.x0+12,cy,'← LATERAL',{col:C.compass,size:s,op});txt(ovP,r.x1-12,cy,'medial →',{anchor:'end',col:C.compass,size:s,op})}
+ else{txt(ovP,r.x0+12,cy,'← medial',{col:C.compass,size:s,op});txt(ovP,r.x1-12,cy,'LATERAL →',{anchor:'end',col:C.compass,size:s,op})}}
+
+/* ---------------- timeline ---------------- */
+const T={title:[0,3],lesson:[3,5.5],orient:[5.5,13],anat:[13,20],meas:[20,27],key:[27,34.5],flip:[34.5,39.5],close:[39.5,44]};
+const DURATION=44;
+
+/* the Radyssey logo: an R whose bowl is a femoral head. pr = draw progress of [stem, head, leg] */
+function drawMark(cx,top,size,pr,op){const g=el('g',{transform:`translate(${cx-size/2},${top}) scale(${size/64})`,opacity:op,fill:'none','stroke-width':5.5,'stroke-linecap':'round'},ovF);
+ const d=(e,p)=>{e.setAttribute('pathLength',1);e.setAttribute('stroke-dasharray',`${p} 1`);if(p<=0)e.setAttribute('opacity',0)};
+ d(el('path',{d:'M14 54V10',stroke:C.ink},g),pr[0]);
+ d(el('circle',{cx:31,cy:24,r:12,stroke:C.ink,transform:'rotate(180 31 24)'},g),pr[1]);
+ d(el('path',{d:'M28 36L48 54',stroke:C.accent},g),pr[2])}
+
+function sceneTitle(t){const [a,b]=T.title,op=env(t,a,b,.01,.4),cx=W/2,cy=VERT?HH*.42:HH*.4;
+ drawMark(cx,cy-(VERT?400:370),VERT?230:200,[ease(seg(t,.05,.45)),ease(seg(t,.3,.8)),ease(seg(t,.65,1.0))],op);
+ const p=eout(seg(t,.6,1.3));
+ txt(ovF,cx,cy+(1-p)*40,SITE,{anchor:'middle',size:fitSize(SITE,VERT?168:150,W-160),weight:800,op:op*p,stroke:false,ls:-2});
+ const q=eout(seg(t,1.1,1.8));
+ txt(ovF,cx,cy+110,'free interactive lessons',{anchor:'middle',col:C.ink,size:VERT?64:56,weight:500,op:op*q,stroke:false});
+ txt(ovF,cx,cy+190,'for radiology residents',{anchor:'middle',col:C.muted,size:VERT?64:56,weight:500,op:op*q,stroke:false})}
+
+function sceneLesson(t){const [a,b]=T.lesson,op=env(t,a,b),cx=W/2,cy=VERT?HH*.44:HH*.46,lt=t-a;
+ txt(ovF,cx,cy-120,'LESSON 1',{anchor:'middle',col:C.accent,size:VERT?56:48,ls:10,op:op*eout(seg(lt,0,.5)),stroke:false});
+ const w=(VERT?760:700)*ease(seg(lt,.2,1));
+ el('rect',{x:cx-w/2,y:cy-80,width:w,height:8,rx:4,fill:C.accent,opacity:op},ovF);
+ const p=eout(seg(lt,.4,1.1));
+ txt(ovF,cx,cy+40+(1-p)*30,'Graf hip',{anchor:'middle',size:VERT?124:108,weight:800,op:op*p,stroke:false});
+ txt(ovF,cx,cy+170+(1-p)*30,'ultrasound',{anchor:'middle',size:VERT?124:108,weight:800,op:op*p,stroke:false});
+ txt(ovF,cx,cy+270,'12 steps on one real image',{anchor:'middle',col:C.muted,size:VERT?50:44,weight:500,op:op*eout(seg(lt,.9,1.5)),stroke:false})}
+
+/* baby, probe and scan plane, drawn in pane pixels */
+function sceneBaby(lt,op){if(op<=0)return;const g=el('g',{transform:`translate(${PN.x},${PN.y+(PN.h-870)/2})`,opacity:op},ovP);
+ const bIn=eout(seg(lt,0,.7));const bg=el('g',{transform:`translate(${(1-bIn)*-120},0)`,opacity:bIn},g);
+ el('path',{d:'M680,440 Q790,410 930,470 M680,505 Q800,535 930,565',stroke:C.body,'stroke-width':46,'stroke-linecap':'round',fill:'none'},bg);
+ el('rect',{x:330,y:395,width:370,height:150,rx:70,fill:C.body},bg);
+ el('circle',{cx:250,cy:465,r:100,fill:C.body},bg);
+ el('path',{d:'M420,470 Q470,560 540,575',stroke:'#8499ad','stroke-width':34,'stroke-linecap':'round',fill:'none'},bg);
+ txt(bg,250,615,'head (cranial)',{anchor:'middle',size:36,col:C.ink});
+ txt(bg,880,640,'legs (caudal)',{anchor:'middle',size:36,col:C.ink});
+ /* probe slides down onto the lateral hip */
+ const pp=eout(seg(lt,.8,2.0)),py=(1-pp)*-420;
+ const pg=el('g',{transform:`translate(0,${py})`,opacity:seg(lt,.8,1.0)},g);
+ el('path',{d:'M640,220 Q640,120 760,60',stroke:'#3b8fd6','stroke-width':10,fill:'none'},pg);
+ el('rect',{x:612,y:215,width:56,height:140,rx:14,fill:'#3b8fd6'},pg);
+ el('rect',{x:565,y:345,width:150,height:48,rx:10,fill:C.roof,stroke:'#000','stroke-width':3},pg);
+ txt(pg,545,300,'probe on the',{anchor:'end',size:36,col:C.roof});txt(pg,545,342,'lateral hip',{anchor:'end',size:36,col:C.roof});
+ /* beam fills down through the hip, then the coronal plane opens to the full image */
+ const bp=ease(seg(lt,2.0,3.0));
+ if(bp>0){const ex=ease(seg(lt,3.2,4.4)),r0={x:565,y:395,w:150,h:245*bp},iw=1188*FIT_SCREEN,ih=947*FIT_SCREEN,
+   r1={x:(PN.w-iw)/2,y:(870-ih)/2,w:iw,h:ih};
+  const r={x:lerp(r0.x,r1.x,ex),y:lerp(r0.y,r1.y,ex),w:lerp(r0.w,r1.w,ex),h:lerp(r0.h,r1.h,ex)};
+  el('rect',{x:r.x,y:r.y,width:r.w,height:r.h,fill:C.roof,'fill-opacity':.28*(1-ex),stroke:C.roof,'stroke-width':4,'stroke-dasharray':'14 8',opacity:1-seg(lt,4.2,4.6)},g);
+  if(lt<3.3)txt(g,500,700,'coronal plane',{anchor:'middle',size:36,col:C.roof,op:seg(lt,2.4,2.7)*(1-seg(lt,3.1,3.3))})}
+ el('circle',{cx:640,cy:470,r:14,fill:C.rim,stroke:'#000','stroke-width':3,opacity:bIn*(1-seg(lt,3.2,3.6))},g)}
+
+function renderAt(t){
+ clear(ovC);clear(ovP);clear(ovF);
+ let phi=180,psi=0,fit=FIT_SCREEN,cam=[0,0],z=1,imgOp=0;
+ const L=(k)=>t-T[k][0],inS=(k)=>t>=T[k][0]&&t<T[k][1];
+ /* camera and image visibility */
+ if(inS('orient')){imgOp=ease(seg(L('orient'),3.4,4.6))}
+ if(inS('anat')){imgOp=1;const p=ease(seg(L('anat'),0,1.5));cam=lerp2([0,0],[-40,110],p);z=lerp(1,1.22,p)}
+ if(inS('meas')){imgOp=1;const p=ease(seg(L('meas'),0,1.2));cam=lerp2([-40,110],[-150,170],p);z=lerp(1.22,1.5,p)}
+ if(inS('key')){imgOp=1;const p=ease(seg(L('key'),0,1.2));cam=lerp2([-150,170],[-90,150],p);z=lerp(1.5,1.3,p)}
+ if(inS('flip')){imgOp=1;const lt=L('flip'),p0=ease(seg(lt,0,.6));cam=lerp2([-90,150],[0,0],p0);z=lerp(1.3,1,p0);
+  const f=ease(seg(lt,.7,2.2));phi=lerp(180,0,f);fit=lerp(FIT_SCREEN,FIT_GRAF,f);psi=180*ease(seg(lt,3.0,4.0))}
+ if(inS('close'))imgOp=0;
+ setView(phi,psi,fit,cam,z);
+ img.setAttribute('opacity',imgOp);paneBg.setAttribute('opacity',inS('orient')||inS('anat')||inS('meas')||inS('key')||inS('flip')?1:0);
+
+ if(inS('title'))sceneTitle(t);
+ if(inS('lesson'))sceneLesson(t);
+
+ if(inS('orient')){const lt=L('orient'),op=env(t,...T.orient,.3,.01);
+  brand(op);sceneBaby(lt,1-seg(lt,3.4,4.4));
+  const cs=lt<3.2?['ORIENTATION','Probe on the lateral hip, head to foot']:lt<4.4?['ORIENTATION','It cuts a coronal slice through the hip']:['ORIENTATION','Screen: top lateral, left cranial'];
+  caption(cs[0],cs[1],op*(lt<3.2?seg(lt,0,.4):lt<4.4?seg(lt,3.2,3.5):seg(lt,4.4,4.7)));
+  compassScreen(4.5,lt,1-seg(lt,7.2,7.5));credit(seg(lt,3.6,4.2))}
+
+ if(inS('anat')){const lt=L('anat'),op=env(t,...T.anat,.01,.3);brand(1);credit(1);
+  caption('ANATOMY',lt<5?'Name every structure first':'Usable only if all three show',op*(lt<5?seg(lt,0,.3):seg(lt,5,5.3)));
+  const fade=1-seg(lt,6.6,7);
+  const hp=ease(seg(lt,.2,1.2)),circ=2*Math.PI*160;
+  el('circle',{cx:LM.head[0],cy:LM.head[1],r:160,fill:C.head,'fill-opacity':.12*hp,stroke:C.head,'stroke-width':8,'stroke-dasharray':`${circ*hp} ${circ}`,opacity:fade,transform:`rotate(-90 ${LM.head[0]} ${LM.head[1]})`},ovC);
+  if(hp>.3&&lt<2.6)label([LM.head[0]-60,LM.head[1]+40],'femoral head',C.head,{op:seg(lt,.6,.9)*(1-seg(lt,2.3,2.6))});
+  drawLine([LM.wingTop[0],LM.wingTop[1]-120],LM.rim,ease(seg(lt,1.0,1.8)),C.wing,14,'',.85*fade);
+  if(lt>1.2&&lt<2.6)label(LM.wingTop,'iliac wing',C.wing,{op:seg(lt,1.2,1.5)*(1-seg(lt,2.3,2.6))});
+  const rp=ease(seg(lt,1.8,2.6));
+  if(rp>0){const pth=el('path',{d:'M'+LM.rim+' Q720,520 '+LM.ll,stroke:'#fff','stroke-width':10,fill:'none',opacity:.85*fade,pathLength:1,'stroke-dasharray':`${rp} 1`},ovC)}
+  const items=[[LM.chb,'1 chondro-osseous border',C.rim],[LM.head,'2 femoral head',C.head],[LM.fold,'3 synovial fold',C.rim],[LM.caps,'4 joint capsule',C.rim],
+   [LM.lab,'5 labrum',C.labrum],[LM.cart,'6 cartilage roof',C.cartRoof],[LM.roof,'7 bony roof','#fff'],[LM.rim,'8 bony rim',C.rim]];
+  items.forEach((d,i)=>{const s0=2.6+i*.28,p=back(seg(lt,s0,s0+.35));if(p<=0)return;const o=Math.min(1,seg(lt,s0,s0+.15))*(1-seg(lt,4.8,5.1));
+   const pt=i===1?[LM.head[0]-60,LM.head[1]+40]:d[0];
+   el('circle',{cx:pt[0],cy:pt[1],r:11*p,fill:d[2],stroke:'#000','stroke-width':3,opacity:o},ovC);
+   label(pt,d[1].split(' ')[0],d[2],{op:o,size:VERT?44:40,dx:18,dy:-10});
+   const lo=Math.min(1,seg(lt,s0,s0+.2))*(1-seg(lt,4.8,5.1));
+   if(VERT){const col=i<4?0:1,row=i%4,x=60+col*510,y=PN.y+PN.h+80+row*66;
+    txt(ovF,x,y,d[1],{col:d[2],size:40,weight:600,op:lo,stroke:false})}
+   else if(lt<s0+.28||i===7){const name=d[1],w=name.length*19+60;
+    el('rect',{x:W/2-w/2,y:PN.y+PN.h-86,width:w,height:62,rx:31,fill:'rgba(17,22,29,.9)',stroke:d[2],'stroke-width':3,opacity:lo},ovP);
+    txt(ovP,W/2,PN.y+PN.h-43,name,{anchor:'middle',col:d[2],size:34,op:lo,stroke:false})}});
+  dot(LM.ll,C.roof,14,seg(lt,2.2,2.5)*fade);
+  /* usability circles pulse */
+  if(lt>5){const us=[[LM.ll,'① lower limb'],[[649,280],'② straight wing'],[LM.lab,'③ labrum']];
+   us.forEach((d,i)=>{const s0=5+i*.2,o=seg(lt,s0,s0+.2)*fade,pu=1+.18*Math.sin((lt-s0)*2*Math.PI*1.4)*Math.exp(-(lt-s0)*.4);
+    el('circle',{cx:d[0][0],cy:d[0][1],r:40*pu,fill:'none',stroke:C.wing,'stroke-width':10,opacity:o},ovC);
+    label(d[0],d[1],C.wing,{dx:50,dy:12,op:o})})}}
+
+ if(inS('meas')){const lt=L('meas'),op=env(t,...T.meas,.01,.3),S0=sim(64);brand(1);credit(1);
+  caption('MEASUREMENT',lt<3.9?'Three lines from the iliac wing':'α = bony roof · β = cartilage roof',op*(lt<3.9?seg(lt,0,.3):seg(lt,3.9,4.2)));
+  el('circle',{cx:LM.head[0],cy:LM.head[1],r:160,fill:C.head,'fill-opacity':.1,stroke:C.head,'stroke-width':6,'stroke-dasharray':'18 10',opacity:.6},ovC);
+  const bl=longPts([646,170],S0.rim,250,700),rl=longPts(S0.ll,S0.rim,250,700),cl2=longPts(S0.rim,S0.lab,500,900);
+  drawLine(bl[0],bl[1],ease(seg(lt,.3,1.5)),C.base,9);
+  drawLine(rl[1],rl[0],ease(seg(lt,1.5,2.7)),C.roof,9);
+  drawLine(cl2[0],cl2[1],ease(seg(lt,2.7,3.9)),C.cart,9,'26 14');
+  if(lt>.6&&lt<3.9)label([646,250],'① baseline',C.base,{op:seg(lt,.6,.9)*(1-seg(lt,3.6,3.9))});
+  if(lt>1.8&&lt<3.9)label(S0.ll,'② bony roof line',C.roof,{dx:30,dy:50,op:seg(lt,1.8,2.1)*(1-seg(lt,3.6,3.9))});
+  if(lt>3.0&&lt<3.9)label(S0.lab,'③ cartilage roof line',C.cart,{op:seg(lt,3.0,3.3)*(1-seg(lt,3.6,3.9))});
+  dot(S0.rim,C.rim,14,seg(lt,1.4,1.7));dot(S0.ll,C.roof,14,seg(lt,1.6,1.9));
+  const down=nrm(sub(S0.rim,[646,170])),pa=ease(seg(lt,3.9,5.0)),pb=ease(seg(lt,4.6,5.7));
+  let aVal=0,bVal=0;
+  if(pa>0){const q=arc(S0.rim,down,nrm(sub(S0.ll,S0.rim)),120,pa,C.roof,10);aVal=64*pa;label(q,'α '+Math.round(aVal)+'°',C.roof,{dx:-10,dy:12,size:VERT?44:40})}
+  if(pb>0){const q=arc(S0.rim,down,nrm(sub(S0.lab,S0.rim)),190,pb,C.cart,10);bVal=S0.b*pb;label(q,'β '+Math.round(bVal)+'°',C.cart,{dx:-60,dy:12,size:VERT?44:40})}
+  readout(aVal,bVal,seg(lt,3.9,4.2)*op,eout(seg(lt,5.7,6.2)));
+  if(lt>5.7){const p=back(seg(lt,5.7,6.2));const q=F([300,330]);
+   if(!VERT)0;}}
+
+ if(inS('key')){const lt=L('key'),op=env(t,...T.key,.01,.3);brand(1);credit(1);
+  caption('KEY MOMENT','Shallower socket: watch the hip decentre',op*seg(lt,0,.3));
+  const stops=[[0,64],[.6,64],[1.6,56],[2.2,56],[3.2,47],[3.8,47],[4.6,44],[5.2,44],[6.3,37]];
+  let a=64;for(let i=1;i<stops.length;i++){if(lt<=stops[i][0]){a=lerp(stops[i-1][1],stops[i][1],ease(seg(lt,stops[i-1][0],stops[i][0])));break}if(i===stops.length-1)a=37}
+  const s=sim(a),fade=1-seg(lt,7.1,7.5);
+  el('path',{d:'M'+s.rim+' L'+s.ll+' L1000,'+(s.ll[1]+40)+' L1000,'+(s.rim[1]-150)+' L'+s.rim[0]+','+(s.rim[1]-150)+'Z',fill:C.socket,'fill-opacity':.35*fade,stroke:'none'},ovC);
+  el('circle',{cx:s.hc[0],cy:s.hc[1],r:160,fill:C.head,'fill-opacity':.18*fade,stroke:C.head,'stroke-width':8,'stroke-dasharray':'18 10',opacity:fade},ovC);
+  const bl=longPts([646,170],s.rim,250,700),rl=longPts(s.ll,s.rim,250,700),cl2=longPts(s.rim,s.lab,500,900);
+  drawLine(bl[0],bl[1],1,C.base,9,'',fade);drawLine(rl[0],rl[1],1,C.roof,9,'',fade);drawLine(cl2[0],cl2[1],1,C.cart,9,'26 14',fade);
+  el('path',{d:'M'+(s.lab[0]-30)+','+(s.lab[1]-20)+' l60,10 l-25,45z',fill:C.labrum,opacity:fade},ovC);
+  dot(s.ll,C.roof,14,fade);dot(s.rim,C.rim,14,fade);
+  const down=nrm(sub(s.rim,[646,170]));arc(s.rim,down,nrm(sub(s.ll,s.rim)),120,1,C.roof,10);arc(s.rim,down,nrm(sub(s.lab,s.rim)),190,1,C.cart,10);
+  label(s.hc,'femoral head',C.head,{dx:-60,dy:0,op:fade});label(s.lab,'labrum',C.labrum,{dx:30,dy:0,op:fade});
+  label([990,600],'bony socket',C.socket,{op:fade});
+  readout(a,s.b,fade,1)}
+
+ if(inS('flip')){const lt=L('flip'),op=env(t,...T.flip,.01,.4);brand(op);credit(op);
+  const f=seg(lt,.7,2.2);
+  const cs=lt<2.8?['QUICK FLIP','Screen view ⟳ Graf view']:['QUICK FLIP','Right hip ↔ left hip'];
+  caption(cs[0],cs[1],op*(lt<2.8?seg(lt,0,.3):seg(lt,2.8,3.1)));
+  if(lt<.6)compassScreen(-5,lt,1-seg(lt,.3,.6));
+  if(lt>2.2&&lt<2.95)compassGraf('R',seg(lt,2.2,2.5)*(1-seg(lt,2.75,2.95)));
+  if(lt>4.0)compassGraf('L',seg(lt,4.0,4.3)*op);
+  const side=psi=>psi<90?'RIGHT hip':'LEFT hip';const pv=180*ease(seg(lt,3.0,4.0));
+  if(lt>2.2){const r=imgRect(),o=seg(lt,2.2,2.5)*op,lbl=lt<3.5?'RIGHT hip':'LEFT hip',w=VERT?250:230;
+   el('rect',{x:W/2-w/2,y:r.y1-140,width:w,height:62,rx:31,fill:'rgba(17,22,29,.88)',stroke:C.rim,'stroke-width':3,opacity:o},ovP);
+   txt(ovP,W/2,r.y1-96,lbl,{anchor:'middle',col:C.rim,size:36,op:o,stroke:false})}
+  if(lt>1.6&&lt<2.9){const r=imgRect();txt(ovP,W/2,r.y0+120,'like an AP X-ray of the hip',{anchor:'middle',col:'#fff',size:VERT?40:34,op:seg(lt,1.9,2.2)*(1-seg(lt,2.6,2.9))})}}
+
+ if(inS('close')){const lt=L('close'),op=env(t,...T.close,.5,.01),cx=W/2,cy=VERT?HH*.4:HH*.36;
+  const p=eout(seg(lt,.2,.9));
+  drawMark(cx,cy-(VERT?330:290),VERT?180:150,[1,1,1],op*p);
+  txt(ovF,cx,cy+(1-p)*30,SITE,{anchor:'middle',size:fitSize(SITE,VERT?150:130,W-160),weight:800,op:op*p,stroke:false,ls:-2});
+  const q=eout(seg(lt,.7,1.3)),bw=Math.min(W-80,URLTXT.length*(VERT?30:28)+80);
+  el('rect',{x:cx-bw/2,y:cy+60,width:bw,height:VERT?96:86,rx:VERT?48:43,fill:'#1d2a3d',stroke:C.accent,'stroke-width':3,opacity:op*q},ovF);
+  txt(ovF,cx,cy+(VERT?122:116),URLTXT,{anchor:'middle',col:C.accent,size:fitSize(URLTXT,VERT?52:46,bw-60),op:op*q,stroke:false});
+  const r=eout(seg(lt,1.2,1.8));
+  txt(ovF,cx,cy+(VERT?260:235),'Free · works on your phone',{anchor:'middle',size:VERT?58:50,weight:600,op:op*r,stroke:false});
+  txt(ovF,cx,cy+(VERT?340:305),'new lessons coming',{anchor:'middle',col:C.muted,size:VERT?58:50,weight:600,op:op*r,stroke:false});
+  txt(ovF,cx,VERT?HH-170:HH-80,'For education only, not clinical advice',{anchor:'middle',col:C.muted,size:VERT?38:32,weight:500,op:op*eout(seg(lt,1.6,2.2)),stroke:false});
+  credit(op*eout(seg(lt,1.6,2.2)))}
+}
+
+/* ready signal for the renderer; a scrub bar when opened by hand */
+window.DURATION=DURATION;window.renderAt=renderAt;
+const pre=new Image();pre.src=IMG;
+pre.decode().catch(()=>{}).then(()=>{renderAt(0);window.READY=true;
+ if(!navigator.webdriver){const s=document.createElement('input');s.type='range';s.id='scrub';s.min=0;s.max=DURATION;s.step=1/30;s.value=0;
+  s.oninput=()=>renderAt(+s.value);document.body.appendChild(s)}});
+</script></body></html>

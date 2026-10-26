@@ -1,0 +1,29 @@
+/*-- scss:defaults --*/
+// Radyssey light theme: warm paper background, one blue accent (the lesson's).
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size-root: 17px;
+$line-height-base: 1.65;
+$headings-font-weight: 680;
+
+$body-bg: #fbfaf7;
+$body-color: #1b1f24;
+$primary: #1d5fd1;
+$link-color: #1d5fd1;
+$border-color: #e7e3da;
+$text-muted: #6b7280;
+
+$navbar-bg: #fbfaf7;
+$navbar-fg: #1b1f24;
+$navbar-hl: #1d5fd1;
+$footer-bg: #fbfaf7;
+$footer-fg: #6b7280;
+
+/*-- scss:rules --*/
+:root {
+  --rv-ink: #1b1f24;
+  --rv-muted: #6b7280;
+  --rv-line: #e7e3da;
+  --rv-accent: #1d5fd1;
+  --rv-accent-ink: #ffffff;
+  --rv-card: #ffffff;
+}

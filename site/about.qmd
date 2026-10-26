@@ -1,0 +1,17 @@
+---
+title: "About"
+---
+
+Radyssey is a free set of interactive lessons for radiology residents, written by Hasan, a radiologist.
+
+Each lesson takes one real image and teaches a technique on it, step by step. The overlays are drawn over the image, and some have handles you can drag, sliders and a short self-test. The lessons work in a phone browser and need no sign-up.
+
+**How the lessons are made**
+
+- Images are openly licensed (for example CC BY) and credited on the page, or drawn by the author. No patient data is used.
+- Facts are cited to primary sources. Teaching points that were not checked against a source are marked "general knowledge".
+- There are no ads and no tracking.
+
+**Feedback.** Corrections and requests for topics are welcome.
+
+*For education only, not clinical advice. The lessons are study aids and do not replace supervised training or local protocols.*

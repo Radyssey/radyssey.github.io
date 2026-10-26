@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graf Hip Ultrasound</title>
+<style>
+:root{--bg:#f6f7f9;--panel:#fff;--ink:#16202c;--muted:#5b6675;--line:#d8dde4;--accent:#1d5fd1;--accent-soft:#e8f0fd;--ok:#2f9e44;--bad:#c92a2a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11161d;--panel:#18202a;--ink:#e6ebf1;--muted:#9aa6b4;--line:#2c3744;--accent:#6ea2ff;--accent-soft:#1d2a3d;--ok:#5fd17a;--bad:#ff6b6b}}
+:root[data-theme="dark"]{--bg:#11161d;--panel:#18202a;--ink:#e6ebf1;--muted:#9aa6b4;--line:#2c3744;--accent:#6ea2ff;--accent-soft:#1d2a3d;--ok:#5fd17a;--bad:#ff6b6b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,"Segoe UI",sans-serif}
+.wrap{max-width:1280px;margin:0 auto;padding:20px 16px}
+h1{font-size:26px;margin:0 0 4px}h2{margin:34px 0 10px;border-top:1px solid var(--line);padding-top:18px}.sub{color:var(--muted);margin:0}
+.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:16px;margin-top:16px}
+.pane{background:#000;border-radius:10px;overflow:hidden;position:relative}
+#us{width:100%;height:auto;display:block;touch-action:none;user-select:none}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.steps{display:flex;flex-wrap:wrap;gap:4px}.steps button{min-width:34px;padding:4px 8px}
+.steps button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+button{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}button:hover{border-color:var(--accent)}
+.stitle{font-size:19px;font-weight:700;margin:0}.stext p{margin:6px 0}.stext ul,.stext ol{margin:6px 0;padding-left:20px}
+.read{background:var(--accent-soft);border-radius:8px;padding:10px 12px}.big{font-size:22px;font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center}.ctl input{width:100%}
+.gk{color:var(--muted);font-size:12.5px;font-style:italic}
+table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--accent-soft)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
+.q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+@media (max-width:900px){.app{grid-template-columns:1fr}.pane{position:sticky;top:0;z-index:3;box-shadow:0 6px 16px rgba(0,0,0,.45)}.wrap{padding:10px 10px}h1{font-size:21px}.side{padding:12px}.steps button{min-width:38px;padding:7px 8px}button{padding:8px 12px}table{display:block;overflow-x:auto;white-space:nowrap}.stext{font-size:15px}}
+.home{display:inline-block;margin:0 0 8px;color:var(--accent);text-decoration:none;font-weight:600}
+.foot{margin:34px 0 8px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:14px;text-align:center}
+</style></head><body><div class="wrap">
+<a class="home" href="../../index.html" target="_top">← Radyssey lessons</a>
+<h1>Graf hip ultrasound: learn it on one image</h1>
+<p class="sub">An interactive teaching brief built on a real Graf standard-plane image. Work through steps 1–12 beside the image: each step changes what is drawn on it. It is a study aid, not a substitute for supervised scanning.</p>
+
+<div class="app">
+<div><div class="pane"><svg id="us" viewBox="40 15 1188 947" role="img" aria-label="Interactive infant hip ultrasound with Graf overlays"></svg></div>
+<p class="gk">Image: Walter SG et al., Front Pediatr 2022;10:990806, Fig. 2 (cropped; in screen view rotated and flipped so that cranial is on the left), CC BY 4.0. The original authors' printed labels and arrows were removed digitally (inpainted); faint smoothing may remain where they were. All labels now come from this page. The coloured overlays are added here: landmark positions are hand-placed approximations, and the simulation in step 12 is a schematic drawn over the image, not a real dysplastic scan.</p></div>
+<div class="side">
+<div class="steps" id="steps"></div>
+<p class="stitle" id="stitle"></p>
+<div class="stext" id="stext"></div>
+<div id="extra"></div>
+<div class="row"><button id="prev">◀ Back</button><button id="next" style="font-weight:700">Next ▶</button>
+<button id="view">⟳ Screen / Graf view</button><button id="labs">Labels on/off</button><button id="side" style="font-weight:700">Hip: RIGHT</button></div>
+</div></div>
+
+<h2 id="table">The classification at a glance</h2>
+<table><tr><th>Type</th><th>α (bony roof)</th><th>β (cartilage roof)</th><th>Age</th><th>Meaning</th></tr>
+<tr><td>Ia</td><td>≥60°</td><td>≤55°</td><td>any</td><td>Mature hip</td></tr>
+<tr><td>Ib</td><td>≥60°</td><td>&gt;55°</td><td>any</td><td>Mature hip (transitional cartilage roof)</td></tr>
+<tr><td>IIa (+/−)</td><td>50–59°</td><td>&gt;55°</td><td>≤3 months</td><td>Physiologically immature. IIa+ is α 55–59° (on track); IIa− is α 50–54° at about 6 weeks (lagging).</td></tr>
+<tr><td>IIb</td><td>50–59°</td><td>&gt;55°</td><td>&gt;3 months</td><td>Delayed ossification</td></tr>
+<tr><td>IIc</td><td>43–49°</td><td>≤77°</td><td>any</td><td>Critical: a shallow socket, but the head is still centred</td></tr>
+<tr><td>D</td><td>43–49°</td><td>&gt;77°</td><td>any</td><td>Decentring: the head is starting to leave the socket</td></tr>
+<tr><td>III / IV</td><td>&lt;43°</td><td>—</td><td>any</td><td>Dislocated. III and IV are told apart by the position of the labrum (general knowledge), not by angles.</td></tr></table>
+<p class="gk">Thresholds: Ömeroğlu 2014, Table 1 [2]. Management depends on local protocol and is not covered here.</p>
+
+<h2 id="quiz">Self-test</h2><div id="quizbox"></div>
+
+<h2 id="refs">References</h2>
+<ol style="font-size:14px">
+<li>Graf R. Classification of hip joint dysplasia by means of sonography. Arch Orthop Trauma Surg. 1984;102(4):248–55. <a href="https://doi.org/10.1007/BF00436138">doi:10.1007/BF00436138</a></li>
+<li>Ömeroğlu H. Use of ultrasonography in developmental dysplasia of the hip. J Child Orthop. 2014;8(2):105–13. <a href="https://doi.org/10.1007/s11832-014-0561-8">doi:10.1007/s11832-014-0561-8</a> (Table 1; standard plane)</li>
+<li>Walter SG, et al. Four decades of developmental dysplastic hip screening according to Graf: what have we learned? Front Pediatr. 2022;10:990806. <a href="https://doi.org/10.3389/fped.2022.990806">doi:10.3389/fped.2022.990806</a> (Fig. 2: checklists and the image used here, CC BY 4.0)</li>
+</ol>
+<p class="gk">Points marked "general knowledge" are standard teaching that was not checked against these sources. This applies especially to the practical scanning tips in steps 1–2.</p>
+<p class="foot">Radyssey · For education only, not clinical advice.</p>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",R=Math.PI/180,SV=document.getElementById("us");
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+var K=1;function txt(p,x,y,s,col,size){var t=el("text",{x:x,y:y},p);t.textContent=s;t.setAttribute("style","fill:"+(col||"#fff")+";font:700 "+((size||28)*(p===SV?K:1))+"px system-ui,sans-serif;paint-order:stroke;stroke:#000;stroke-width:7px;stroke-linejoin:round");return t}
+function sub(a,b){return[a[0]-b[0],a[1]-b[1]]}function nrm(v){var l=Math.hypot(v[0],v[1])||1;return[v[0]/l,v[1]/l]}
+function classify(a,b,w){
+ if(a>=60)return b<=55?["Ia","Mature hip."]:["Ib","Mature hip, transitional cartilage roof."];
+ if(a>=50)return w<=13?["IIa"+(a>=55?"+":"−"),"Physiologically immature. Normal for age under 3 months; check that it matures."]:["IIb","Delayed ossification: the same α is not normal after 3 months."];
+ if(a>=43)return b<=77?["IIc","Critical. The socket is shallow, but the head is still centred."]:["D","Decentring. The head is starting to leave the shallow socket."];
+ return["III / IV","Dislocated. The socket is too shallow to hold the head."];}
+
+/* landmarks, in Graf-view image coordinates (image is 1000 x 1300) */
+var LM={wingTop:[652,170],rim:[640,492],ll:[805,612],lab:[515,612],head:[640,770],
+ roof:[725,550],cart:[575,555],caps:[470,700],fold:[445,800],chb:[600,1000]};
+var HSTART={b1:[652,170],b2:[646,390],ll:[805,612],rim:[640,492],lab:[515,612]},H=JSON.parse(JSON.stringify(HSTART));
+var SIDE="R",MODE="screen",LABS=true,AGE=6,SIMA=64,step=0,drag=null;
+function T(p){return MODE==="screen"?[p[1],p[0]]:(SIDE==="L"?[977-p[0],p[1]]:p)}
+function Ti(p){return MODE==="screen"?[p[1],p[0]]:(SIDE==="L"?[977-p[0],p[1]]:p)}
+
+var S=[
+{t:"1. Position the baby and the probe",l:["inset"],
+ x:"<p>The baby lies on its <b>side</b>, with the hip to be scanned uppermost, slightly flexed and turned in. A positioning cradle helps.</p><p>Put a <b>linear probe</b> on the outside (<b>lateral</b>) of the hip, over the greater trochanter. Hold it <b>head-to-foot</b> (cranio-caudal), parallel to the body. This cuts a <b>coronal</b> slice through the hip joint.</p><p>The inset at the top right is drawn in the <b>same orientation as the image</b>. In screen view the probe is at the top and the baby's head (cranial) is to the left. The beam goes down through the hip joint (yellow dot), and the probe's long axis lies along the body. <span class='gk'>(Positioning details are general knowledge.)</span></p>"},
+{t:"2. Know your orientation on the screen",l:["inset","compass"],
+ x:"<p>The image opens in <b>screen view</b>, as acquired. The yellow arrows give the directions:</p><ul><li><b>Top</b> = where the probe touches the skin: <b>lateral</b>.</li><li><b>Bottom</b> = deep: <b>medial</b>, towards the pelvis.</li><li><b>Left</b> = <b>cranial</b>: towards the baby's head and the iliac crest. <b>Right</b> = <b>caudal</b>: towards the femur. This is the usual set-up, with the probe marker towards the head. If the marker is reversed, the sides swap, so check the femur and ilium on every scan.</li></ul><p>Press <b>⟳ Screen / Graf view</b> to rotate the image 90°. That is the Graf standard display, which looks like an AP X-ray of a right hip: cranial up, lateral on the left. Most papers, and the rest of this brief, think in that view.</p><p><b>Hip: RIGHT / LEFT.</b> For the left hip the baby lies on its right side. With the probe marker towards the head, the <b>screen image looks the same for either hip</b>: lateral up, cranial left. Only the Graf view differs. Shown like an AP X-ray of that hip, a left hip has lateral on the <b>right</b>. <span class='gk'>(Some labs display every hip in the right-hip orientation. Follow your local convention; general knowledge.)</span></p>"},
+{t:"3. Find the femoral head",l:["compass","head"],
+ x:"<p>Look for a <b>round, dark (hypoechoic) ball with fine speckles</b> (dashed green). In infants it is mostly cartilage, which is why it is dark and not bright like bone.</p><p>Below it is the bright, curved <b>chondro-osseous border</b> (1), where the femoral neck is ossifying. Centre the head on the screen.</p>"},
+{t:"4. Find the iliac wing: it must be straight",l:["compass","head","wing"],
+ x:"<p>Above the head, the <b>outer surface of the ilium</b> is a bright straight line (orange).</p><p>Tilt or rotate the probe until this line is <b>straight and parallel to the probe face</b>, which is horizontal in screen view. If it curves or slopes, you are too far anterior or posterior. <span class='gk'>(Probe-correction tips: general knowledge.)</span></p>"},
+{t:"5. Bony roof, bony rim and lower limb",l:["compass","head","wing","roof"],
+ x:"<p>Follow the iliac wing down towards the joint. At the <b>bony rim</b> (8, yellow dot), the straight line turns into the <b>bony roof</b> (7), the bright curve that forms the bony socket over the head.</p><p>Deep in the socket the roof ends at the <b>lower limb of the os ilium</b> (blue dot): a small bright point. If it is missing, the plane is wrong.</p>"},
+{t:"6. The full anatomy checklist",l:["compass","anat"],
+ x:"<p>Graf's rule is to name every structure before measuring anything [3]:</p><ol><li>Chondro-osseous border</li><li>Femoral head</li><li>Synovial fold</li><li>Joint capsule</li><li>Labrum (the lip at the edge of the socket)</li><li>Cartilage roof (grey, between the bony rim and the labrum)</li><li>Bony roof</li><li>Bony rim (the turning point)</li></ol><p>The numbers on the image are drawn by this page. The source image's own labels were removed digitally. Toggle <b>Labels</b> to test yourself. On a phone only the numbers are shown, to save space; match them to the list.</p>"},
+{t:"7. Usability check: is this image measurable?",l:["compass","usab"],
+ x:"<p>Three things must <b>all</b> be visible, or the image may not be measured [2,3]:</p><ol><li><b>Lower limb</b> of the os ilium</li><li><b>Straight iliac wing</b> (the plane is right)</li><li><b>Labrum</b></li></ol><p>Freeze the image only when all three are present. If one is missing, adjust the probe and scan again. Dislocated hips can be described, but not measured, off-plane [2].</p>"},
+{t:"8. Line ① the baseline",l:["compass","m1"],
+ x:"<p>Draw the <b>baseline</b> (red) along the straight outer contour of the iliac wing and extend it. Both angles are measured from it.</p><p>Drag the two <b>red handles</b> onto the wing and try it yourself.</p>"},
+{t:"9. Line ② the bony roof line and α",l:["compass","m1","m2"],
+ x:"<p>From the <b>lower limb</b> (blue handle), draw a line that just touches the <b>bony roof</b> at the <b>bony rim</b> (yellow handle).</p><p><b>α</b> is the angle between this line and the baseline. It measures how <b>deep the bony socket is</b>: a bigger α means a flatter, more horizontal roof and better cover. Mature is ≥60°.</p>"},
+{t:"10. Line ③ the cartilage roof line and β",l:["compass","m1","m2","m3"],
+ x:"<p>From the <b>bony rim</b>, draw a line through the <b>centre of the labrum</b> (green handle).</p><p><b>β</b> is the angle between this line and the baseline. It shows how much the <b>cartilage roof</b> has to cover. When the head pushes outwards, the labrum is lifted and β rises.</p>"},
+{t:"11. Measure it yourself and classify",l:["compass","m1","m2","m3","read"],
+ x:"<p>Drag all five handles onto the landmarks. α, β and the type update live. Set the baby's <b>age</b>: α of 50–59° is IIa up to 3 months and IIb after.</p><p>Notice how a few millimetres of handle error shifts α by several degrees. That is why the standard plane and exact landmarks matter.</p>",ctl:"age"},
+{t:"12. See what a shallow socket looks like",l:["compass","sim","read"],
+ x:"<p>Move the <b>α slider</b> to make the bony socket shallower. The overlay redraws over the image:</p><ul><li>the <b>bony roof</b> (blue) gets steeper;</li><li>the <b>bony socket</b> (shaded) loses depth;</li><li>the <b>femoral head</b> drifts outwards and upwards;</li><li>the <b>labrum</b> is pushed up, so β rises.</li></ul><p>Watch the type go from Ia → IIa → IIc → D → III/IV. <span class='gk'>(A schematic drawn on top of the real image; real dysplastic hips vary.)</span></p>",ctl:"sim"}];
+
+function angles(P){var u=nrm(sub(P.b2,P.b1));if(u[1]<0)u=[-u[0],-u[1]];var w=nrm(sub(P.rim,P.ll)),c=nrm(sub(P.lab,P.rim));
+ return{a:Math.acos(Math.min(1,Math.abs(u[0]*w[0]+u[1]*w[1])))/R,b:Math.acos(Math.max(-1,Math.min(1,u[0]*c[0]+u[1]*c[1])))/R}}
+function longLine(g,a,b,col,dash,w){var d=nrm(sub(b,a));el("line",{x1:a[0]-d[0]*1600,y1:a[1]-d[1]*1600,x2:a[0]+d[0]*1600,y2:a[1]+d[1]*1600,stroke:col,"stroke-width":w||6,"stroke-dasharray":dash||""},g)}
+function dot(g,p,col,r){el("circle",{cx:p[0],cy:p[1],r:r||13,fill:col,stroke:"#000","stroke-width":3},g)}
+function lab(p,s,col,dx,dy){if(!LABS)return;if(K>1.6&&/^\d /.test(s))s=s.split(" ")[0];var q=T(p),w=s.length*15*K,mx=MODE==="screen"?1228:962,x=q[0]+(dx||22)*K;if(x+w>mx-6)x=q[0]-w-22*K;if(x<(MODE==="screen"?44:18))x=MODE==="screen"?44:18;txt(SV,x,q[1]+(dy||-16)*K,s,col)}
+function render(){
+ var cw=SV.clientWidth||800;K=Math.max(1,((MODE==="screen"?1188:947)/cw)*15/28);
+ var st=S[step],L={};st.l.forEach(function(k){L[k]=1});
+ while(SV.firstChild)SV.removeChild(SV.firstChild);
+ SV.setAttribute("viewBox",MODE==="screen"?"40 15 1188 947":"15 40 947 1188");
+ var g=el("g",{transform:MODE==="screen"?"matrix(0,1,1,0,0,0)":(SIDE==="L"?"matrix(-1,0,0,1,977,0)":"")},SV);
+ var im=el("image",{x:15,y:40,width:947,height:1188,href:"Graf_us_Walter2022_clean.jpg"},g);im.setAttributeNS("http://www.w3.org/1999/xlink","href","Graf_us_Walter2022_clean.jpg");
+ if(L.head||L.anat)el("circle",{cx:LM.head[0],cy:LM.head[1],r:160,fill:"#63e6be","fill-opacity":.12,stroke:"#63e6be","stroke-width":6,"stroke-dasharray":"18 10"},g);
+ if(L.wing)el("line",{x1:LM.wingTop[0],y1:LM.wingTop[1]-120,x2:LM.rim[0],y2:LM.rim[1],stroke:"#ff922b","stroke-width":12,"stroke-linecap":"round",opacity:.8},g);
+ if(L.roof){el("path",{d:"M"+LM.rim+" Q720,520 "+LM.ll,stroke:"#ffffff","stroke-width":10,fill:"none",opacity:.85},g);dot(g,LM.rim,"#ffd43b");dot(g,LM.ll,"#4dabf7")}
+ if(L.usab)[LM.ll,[649,280],LM.lab].forEach(function(p){el("circle",{cx:p[0],cy:p[1],r:36,fill:"none",stroke:"#ff922b","stroke-width":8},g)});
+ var P=H;
+ if(L.m1)longLine(g,P.b1,P.b2,"#ff6b6b");
+ if(L.m2)longLine(g,P.ll,P.rim,"#4dabf7");
+ if(L.m3)longLine(g,P.rim,P.lab,"#51cf66","26 12");
+ var SIM=null;
+ if(L.sim){var a=SIMA,rim=LM.rim,ll=[rim[0]+190*Math.sin(a*R),rim[1]+190*Math.cos(a*R)];
+  var k=Math.max(0,60-a),hc=[LM.head[0]-k*4.2,LM.head[1]-k*5.4];
+  var BT=[[34,105],[43,88],[45,82],[47,72],[50,63],[55,58],[60,52],[70,48]],bb=105;for(var z=1;z<BT.length;z++){if(a<=BT[z][0]){bb=BT[z-1][1]+(BT[z][1]-BT[z-1][1])*(a-BT[z-1][0])/(BT[z][0]-BT[z-1][0]);break}}var labp=[rim[0]-150*Math.sin(bb*R),rim[1]+150*Math.cos(bb*R)];
+  el("path",{d:"M"+rim+" L"+ll+" L1000,"+(ll[1]+40)+" L1000,"+(rim[1]-150)+" L"+rim[0]+","+(rim[1]-150)+"Z",fill:"#ffd8a8","fill-opacity":.35,stroke:"none"},g);
+  el("circle",{cx:hc[0],cy:hc[1],r:160,fill:"#63e6be","fill-opacity":.18,stroke:"#63e6be","stroke-width":6,"stroke-dasharray":"18 10"},g);
+  longLine(g,[646,170],rim,"#ff6b6b");longLine(g,ll,rim,"#4dabf7");longLine(g,rim,labp,"#51cf66","26 12");
+  el("path",{d:"M"+(labp[0]-30)+","+(labp[1]-20)+" l60,10 l-25,45z",fill:"#ff8787"},g);dot(g,ll,"#4dabf7");dot(g,rim,"#ffd43b");
+  SIM={a:a,b:bb,hc:hc,lab:labp,ll:ll}}
+ if(L.head||L.anat)lab([LM.head[0]-60,LM.head[1]+40],L.anat?"2 femoral head":"femoral head","#63e6be");
+ if(L.wing)lab(LM.wingTop,"iliac wing (must be straight)","#ff922b");
+ if(L.roof){lab(LM.rim,"bony rim (8)","#ffd43b");lab(LM.ll,"lower limb of ilium","#4dabf7",22,40);lab(LM.roof,"bony roof (7)","#fff",22,-30)}
+ if(L.anat){[[LM.chb,"1 chondro-osseous border","#ffd43b"],[LM.fold,"3 synovial fold","#ffd43b"],[LM.caps,"4 joint capsule","#ffd43b"],[LM.lab,"5 labrum","#ff8787"],[LM.cart,"6 cartilage roof","#a5d8ff"],[LM.roof,"7 bony roof","#fff"],[LM.rim,"8 bony rim","#ffd43b"],[LM.ll,"lower limb","#4dabf7"]].forEach(function(d){var q=T(d[0]);el("circle",{cx:q[0],cy:q[1],r:9,fill:d[2],stroke:"#000","stroke-width":3},SV);lab(d[0],d[1],d[2])})}
+ if(L.usab){lab(LM.ll,"① lower limb","#ff922b",40,10);lab([649,280],"② straight iliac wing","#ff922b",40,10);lab(LM.lab,"③ labrum","#ff922b",40,10)}
+ if(SIM){lab(SIM.hc,"femoral head","#63e6be",-60,0);lab(SIM.lab,"labrum","#ff8787",30,0);lab(SIM.ll,"bony roof","#4dabf7",20,30);var q=T([820,300]);txt(SV,q[0]-100,q[1],"bony socket","#ffd8a8")}
+ var mh=L.m3?["b1","b2","ll","rim","lab"]:L.m2?["b1","b2","ll","rim"]:L.m1?["b1","b2"]:[];
+ var HC={b1:"#ff6b6b",b2:"#ff6b6b",ll:"#4dabf7",rim:"#ffd43b",lab:"#51cf66"},HN={b1:"baseline",b2:"baseline",ll:"lower limb",rim:"bony rim",lab:"labrum centre"};
+ mh.forEach(function(h){var q=T(P[h]);var c=el("circle",{cx:q[0],cy:q[1],r:24*Math.max(1,K*1.3),fill:HC[h],"fill-opacity":.35,stroke:HC[h],"stroke-width":6,style:"cursor:grab"},SV);
+  c.addEventListener("pointerdown",function(e){drag=h;SV.setPointerCapture(e.pointerId);e.preventDefault()});lab(P[h],HN[h],HC[h],30,-20)});
+ if(L.compass){var c=MODE==="screen"?[["↑ LATERAL (probe / skin)",470,50],["↓ MEDIAL (deep)",520,950],["← CRANIAL (head, ilium)",48,520],["caudal (femur) →",1000,520]]:
+  (SIDE==="R"?[["↑ CRANIAL",420,80],["↓ caudal",440,1215],["← LATERAL (probe)",22,700],["medial →",820,700]]:[["↑ CRANIAL",420,80],["↓ caudal",440,1215],["← medial",22,700],["LATERAL (probe) →",680,700]]);
+  var mxc=MODE==="screen"?1228:962,mnc=MODE==="screen"?44:18;c.forEach(function(d){var w=d[0].length*16*K,x=Math.max(mnc,Math.min(d[1],mxc-w-8));txt(SV,x,d[2],d[0],"#ffe066",30)})}
+ if(L.inset){
+  /* The inset is drawn in the same orientation as the image: screen view = probe up, cranial right;
+     Graf view = cranial up, probe (lateral) left. Base drawing: head right, legs left, probe on top. */
+  var scr=MODE==="screen",W=scr?1228:962,bw=scr?330:250,bh=scr?250:380,kk=Math.min(K,1.5),ig=el("g",{transform:"translate("+(W-bw*kk-12)+","+((scr?31:56)+48*(K-1))+") scale("+kk+")"},SV);
+  el("rect",{x:0,y:0,width:bw,height:bh,rx:14,fill:"rgba(20,26,34,.92)",stroke:"#ffe066","stroke-width":3},ig);
+  var bg=el("g",{transform:scr?"translate(320,40) scale(-1,1)":(SIDE==="R"?"translate(40,360) rotate(-90)":"translate("+bw+",0) scale(-1,1) translate(40,360) rotate(-90)")},ig);
+  el("ellipse",{cx:250,cy:120,rx:38,ry:34,fill:"#8aa"},bg);el("rect",{x:92,y:92,width:120,height:58,rx:24,fill:"#8aa"},bg);
+  el("path",{d:"M92,112 L18,92 M92,132 L18,150",stroke:"#8aa","stroke-width":16,"stroke-linecap":"round"},bg);
+  el("circle",{cx:96,cy:100,r:10,fill:"#ffd43b"},bg);
+  el("rect",{x:66,y:64,width:62,height:16,rx:4,fill:"#4dabf7"},bg);
+  el("path",{d:"M72,82 L122,82 L122,100 L72,100Z",fill:"#4dabf7","fill-opacity":.35},bg);
+  if(scr){txt(ig,12,28,"same orientation as the image","#ffe066",19);txt(ig,250,82,"probe","#4dabf7",19);txt(ig,12,214,"head (cranial)","#fff",17);
+   txt(ig,200,214,"legs (caudal)","#fff",17);txt(ig,12,240,(SIDE==="R"?"RIGHT":"LEFT")+" hip · yellow dot = joint","#ffd43b",17)}
+  else{txt(ig,12,28,"same orientation","#ffe066",19);txt(ig,12,50,"as the image","#ffe066",19);txt(ig,200,112,"head","#fff",19);txt(ig,200,134,"(cranial)","#fff",17);txt(ig,140,362,"legs (caudal)","#fff",17);txt(ig,SIDE==="R"?8:bw-62,250,"probe","#4dabf7",19);txt(ig,12,72,(SIDE==="R"?"RIGHT":"LEFT")+" hip","#ffd43b",17);txt(ig,150,240,"● hip","#ffd43b",17)}}
+ var st2="";
+ if(L.read&&!SIM){var A=angles(P),cl=classify(A.a,A.b,AGE);st2='<div class="read"><span class="big" style="color:#4dabf7">α '+A.a.toFixed(0)+'°</span> · <span class="big" style="color:#51cf66">β '+A.b.toFixed(0)+'°</span><div class="big">Type '+cl[0]+'</div>'+cl[1]+'</div>'}
+ if(SIM){var cl2=classify(SIM.a,SIM.b,AGE);st2='<div class="read"><span class="big" style="color:#4dabf7">α '+SIM.a+'°</span> · <span class="big" style="color:#51cf66">β ≈'+SIM.b.toFixed(0)+'°</span><div class="big">Type '+cl2[0]+'</div>'+cl2[1]+'</div>'}
+ var ro=document.getElementById("readout");if(ro)ro.innerHTML=st2;}
+function setStep(i){step=Math.max(0,Math.min(S.length-1,i));var st=S[step];
+ document.getElementById("stitle").textContent=st.t;document.getElementById("stext").innerHTML=st.x;
+ var ex='<div id="readout"></div>';
+ if(st.ctl==="age")ex+='<div class="ctl"><label for="age">Age</label><input id="age" type="range" min="1" max="24" value="'+AGE+'"><span id="agev">'+AGE+' wk</span></div><div class="row"><button id="reset">Reset handles</button></div>';
+ if(st.ctl==="sim")ex+='<div class="ctl"><label for="sima">α</label><input id="sima" type="range" min="34" max="70" value="'+SIMA+'"><span id="simv">'+SIMA+'°</span></div><div class="row"><button data-a="66">Ia</button><button data-a="56">IIa</button><button data-a="47">IIc</button><button data-a="44">D</button><button data-a="37">III/IV</button></div>';
+ document.getElementById("extra").innerHTML=ex;
+ var a=document.getElementById("age");if(a)a.oninput=function(){AGE=+a.value;document.getElementById("agev").textContent=AGE+" wk";render()};
+ var r=document.getElementById("reset");if(r)r.onclick=function(){H=JSON.parse(JSON.stringify(HSTART));render()};
+ var s=document.getElementById("sima");if(s)s.oninput=function(){SIMA=+s.value;document.getElementById("simv").textContent=SIMA+"°";render()};
+ document.querySelectorAll("#extra button[data-a]").forEach(function(b){b.onclick=function(){SIMA=+b.dataset.a;s.value=SIMA;document.getElementById("simv").textContent=SIMA+"°";render()}});
+ document.querySelectorAll("#steps button").forEach(function(b,j){b.classList.toggle("on",j===step)});render()}
+var sb=document.getElementById("steps");S.forEach(function(s,i){var b=document.createElement("button");b.textContent=i+1;b.title=s.t;b.onclick=function(){setStep(i)};sb.appendChild(b)});
+document.getElementById("prev").onclick=function(){setStep(step-1)};document.getElementById("next").onclick=function(){setStep(step+1)};
+document.getElementById("view").onclick=function(){MODE=MODE==="screen"?"graf":"screen";render()};
+document.getElementById("labs").onclick=function(){LABS=!LABS;render()};
+document.getElementById("side").onclick=function(){SIDE=SIDE==="R"?"L":"R";this.textContent="Hip: "+(SIDE==="R"?"RIGHT":"LEFT");render()};
+SV.addEventListener("pointermove",function(e){if(!drag)return;var pt=SV.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;var q=pt.matrixTransform(SV.getScreenCTM().inverse());H[drag]=Ti([q.x,q.y]);render()});
+SV.addEventListener("pointerup",function(){drag=null});SV.addEventListener("pointercancel",function(){drag=null});
+var rz;window.addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,150)});
+document.addEventListener("keydown",function(e){if(e.target.tagName==="INPUT")return;if(e.key==="ArrowRight")setStep(step+1);if(e.key==="ArrowLeft")setStep(step-1)});
+var m=location.search.match(/step=(\d+)/),sa=location.search.match(/sima=(\d+)/);if(sa)SIMA=+sa[1];if(location.search.indexOf("graf")>-1)MODE="graf";if(location.search.indexOf("left")>-1){SIDE="L";document.getElementById("side").textContent="Hip: LEFT"}setStep(m?+m[1]-1:0);
+var Q=[["You see a dark speckled ball under a bright line. What is the ball?",["Femoral head","Bladder","Labrum"],0,"In infants the femoral head is cartilage, so it is dark (hypoechoic)."],
+["On the scanner screen (as acquired), the top of the image is…",["Medial","Lateral, the probe side","Cranial"],1,"The probe sits on the lateral hip, so the near field at the top is lateral."],
+["The iliac wing on your frozen image curves. What do you do?",["Measure anyway","Re-scan","Use β only"],1,"It fails the usability check. Adjust the probe and re-scan."],
+["α 62°, β 50°",["Ia","IIa","D"],0,"α ≥60° with β ≤55° is Ia."],
+["α 56° at 6 weeks",["IIa","IIb","IIc"],0,"50–59° under 3 months is IIa (IIa+ because α ≥55°)."],
+["α 56° at 18 weeks",["IIa","IIb","III"],1,"The same angle after 3 months is delayed ossification: IIb."],
+["α 46°, β 82°",["IIc","D","Ib"],1,"α 43–49° with β >77° is D (decentring)."],
+["As the socket gets shallower, the labrum is…",["pushed up and out, so β rises","pulled in, so β falls","unchanged"],0,"The head pushes the labrum away, so the cartilage roof line flattens and β rises."]];
+var qb=document.getElementById("quizbox");Q.forEach(function(q){var d=document.createElement("div");d.className="q card";d.innerHTML="<b>"+q[0]+"</b>";var o=document.createElement("div");o.className="opts";var f=document.createElement("div");
+ q[1].forEach(function(x,i){var b=document.createElement("button");b.textContent=x;b.onclick=function(){f.innerHTML=(i===q[2]?"<span style='color:var(--ok)'>✓ Correct.</span> ":"<span style='color:var(--bad)'>✗ Not quite.</span> ")+q[3]};o.appendChild(b)});d.appendChild(o);d.appendChild(f);qb.appendChild(d)});
+})();
+</script></body></html>

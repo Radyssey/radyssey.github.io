@@ -1,0 +1,29 @@
+/*-- scss:defaults --*/
+// Radyssey dark theme: reading-room dark, same accent as the lesson's dark mode.
+$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+$font-size-root: 17px;
+$line-height-base: 1.65;
+$headings-font-weight: 680;
+
+$body-bg: #0e1116;
+$body-color: #e6ebf1;
+$primary: #6ea2ff;
+$link-color: #6ea2ff;
+$border-color: #232a33;
+$text-muted: #9aa6b4;
+
+$navbar-bg: #0e1116;
+$navbar-fg: #e6ebf1;
+$navbar-hl: #6ea2ff;
+$footer-bg: #0e1116;
+$footer-fg: #9aa6b4;
+
+/*-- scss:rules --*/
+:root {
+  --rv-ink: #e6ebf1;
+  --rv-muted: #9aa6b4;
+  --rv-line: #232a33;
+  --rv-accent: #6ea2ff;
+  --rv-accent-ink: #0e1116;
+  --rv-card: #151a21;
+}

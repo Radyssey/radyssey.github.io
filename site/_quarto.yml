@@ -1,0 +1,33 @@
+project:
+  type: website
+  resources:
+    - lessons/**
+    - logo-*.svg
+
+website:
+  title: "Radyssey"
+  description: "Free interactive radiology lessons for residents: real images, overlays you can move, and self-tests."
+  # Placeholder until the site is published; RSS and share links use it.
+  site-url: https://radyssey.github.io
+  favicon: favicon.svg
+  search: true
+  open-graph: true
+  navbar:
+    right:
+      - text: Lessons
+        href: index.qmd
+      - about.qmd
+      - icon: rss
+        href: index.xml
+        aria-label: RSS feed
+  page-footer:
+    center: "For education only, not clinical advice."
+
+format:
+  html:
+    theme:
+      light: [cosmo, theme-light.scss]
+      dark: [darkly, theme-dark.scss]
+    respect-user-color-scheme: true
+    css: styles.css
+    lang: en

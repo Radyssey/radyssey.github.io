@@ -1,0 +1,52 @@
+/* Radyssey: shared rules. Colours come from theme-light.scss / theme-dark.scss (--rv-*). */
+
+/* Header: no bar, just a hairline */
+.navbar { border-bottom: 1px solid var(--rv-line); box-shadow: none; }
+.navbar-brand .navbar-title { font-weight: 700; letter-spacing: -0.01em; }
+.navbar-brand::before {
+  content: ""; display: inline-block; width: 24px; height: 24px; margin-right: 8px; vertical-align: -5px;
+  background: url(logo-light.svg) center / contain no-repeat;
+}
+body.quarto-dark .navbar-brand::before { background-image: url(logo-dark.svg); }
+
+/* Home hero */
+.hero { padding: 3.5rem 0 1.5rem; }
+.hero-mark { width: 64px; height: 64px; display: block; margin: 0 0 1rem -6px; }
+.hero-mark .i { stroke: var(--rv-ink); }
+.hero-mark .a { stroke: var(--rv-accent); }
+.hero-title { font-size: clamp(2.6rem, 7vw, 3.6rem); font-weight: 750; letter-spacing: -0.03em; line-height: 1.05; margin: 0 0 1rem; border: 0; }
+.hero-lede { font-size: 1.2rem; line-height: 1.6; max-width: 38rem; margin: 0 0 0.75rem; }
+.hero-meta { color: var(--rv-muted); font-size: 0.95rem; margin: 0; }
+.section-label {
+  font-size: 0.8rem; font-weight: 650; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--rv-muted); border: 0; margin: 2.5rem 0 0.25rem; padding: 0;
+}
+
+/* Lesson list: calm rows with hairlines, figure on the right */
+#lessons .quarto-post { border-bottom: 1px solid var(--rv-line); padding: 1.5rem 0; margin: 0; }
+#lessons .quarto-post .listing-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3; }
+#lessons .quarto-post .listing-description { color: var(--rv-muted); font-size: 0.98rem; }
+#lessons .quarto-post .listing-date { color: var(--rv-muted); font-size: 0.85rem; }
+#lessons .quarto-post .thumbnail img { border-radius: 8px; border: 1px solid var(--rv-line); object-fit: cover; }
+#lessons .quarto-post:hover .listing-title { color: var(--rv-accent); }
+
+/* Posts: plain title block, comfortable measure */
+#title-block-header .title { font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 750; letter-spacing: -0.02em; line-height: 1.15; }
+#title-block-header .description { color: var(--rv-muted); font-size: 1.1rem; }
+#title-block-header .quarto-title-meta-heading { color: var(--rv-muted); font-size: 0.75rem; letter-spacing: 0.08em; }
+main.content h2 { font-size: 1.35rem; font-weight: 680; border-bottom: 0; margin-top: 2.4rem; }
+
+/* Lesson call to action */
+.lesson-cta {
+  display: inline-block; margin: 0.5rem 0 1.25rem; padding: 0.7rem 1.3rem; border-radius: 999px;
+  background: var(--rv-accent); color: var(--rv-accent-ink) !important; font-weight: 650; text-decoration: none;
+}
+.lesson-cta:hover { filter: brightness(1.08); }
+.lesson-cta::after { content: " →"; }
+
+.lesson-shot img { border-radius: 10px; border: 1px solid var(--rv-line); }
+
+.credit { font-size: 0.9rem; color: var(--rv-muted); }
+
+/* Footer */
+.nav-footer { border-top: 1px solid var(--rv-line); color: var(--rv-muted); font-size: 0.85rem; }

@@ -1,0 +1,24 @@
+# Quarto build output (rebuilt by GitHub Actions)
+_site/
+.quarto/
+/site/_site/
+/site/.quarto/
+/site/_freeze/
+
+# Video build files (frames and stills are temporary; MP4s are shared by hand)
+/video/out/
+/video/stills/
+/video/frames/
+*.tmp.mp4
+
+# Private planning notes: not for the public repository
+/PLAN.md
+/LAUNCH_PROMPT.md
+/handoff_journal.md
+
+# Python and OS clutter
+__pycache__/
+*.pyc
+desktop.ini
+Thumbs.db
+.DS_Store
