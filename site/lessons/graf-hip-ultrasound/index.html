@@ -3,41 +3,58 @@
 <title>Graf Hip Ultrasound</title>
 <link rel="icon" href="../../favicon.svg"><link rel="stylesheet" href="../../fonts/fonts.css">
 <style>
-:root{color-scheme:light;--bg:#F2F1EE;--panel:#F2F1EE;--sunk:#E9E7E2;--ink:#121316;--muted:rgba(18,19,22,.62);--ink-3:rgba(18,19,22,.45);--line:rgba(18,19,22,.14);--accent:#F5C518;--on-accent:#121316;--accent-soft:#E9E7E2;--ok:#2E7D32;--bad:#C2462B;--display:"Archivo","Segoe UI",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,Consolas,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#121316;--panel:#121316;--sunk:#0C0D0F;--ink:#F2F1EE;--muted:rgba(242,241,238,.62);--ink-3:rgba(242,241,238,.4);--line:rgba(242,241,238,.12);--accent-soft:#0C0D0F;--ok:#8EE07A;--bad:#FF8A70}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#121316;--panel:#121316;--sunk:#0C0D0F;--ink:#F2F1EE;--muted:rgba(242,241,238,.62);--ink-3:rgba(242,241,238,.4);--line:rgba(242,241,238,.12);--accent-soft:#0C0D0F;--ok:#8EE07A;--bad:#FF8A70}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-::selection{background:var(--accent);color:var(--on-accent)}:focus-visible{outline:2px solid var(--ink);outline-offset:2px;box-shadow:0 0 0 5px var(--accent)}
-h1,h2,h3,.stitle{font-family:var(--display);font-weight:620;letter-spacing:-.03em}
-.wrap{max-width:1280px;margin:0 auto;padding:20px 16px}
-h1{font-size:clamp(26px,3.4vw,40px);line-height:1.04;letter-spacing:-.04em;margin:0 0 8px}h2{margin:34px 0 10px;border-top:1px solid var(--line);padding-top:18px}.sub{color:var(--muted);margin:0}
-.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);grid-template-rows:auto 1fr;gap:0 16px;margin-top:16px}
-.pane{background:#000;border-radius:0;overflow:hidden;position:relative;grid-column:1;grid-row:1;align-self:start}
+/* Radyssey "Explorable" look: warm paper, Newsreader headings, pill controls, and text colour-coded like the lines on the image */
+:root{color-scheme:light;--bg:#FBFAF6;--panel:#FFFFFF;--sunk:#F3F1EA;--ink:#1A1A1A;--muted:#5A5A55;--ink-3:#8C8B85;--line:#E6E3DA;--hl:#FCEFB4;
+ --base:#E4572E;--roof:#2B66D9;--cart:#2E9E6A;--rim:#B7791F;--brand:#D93A2B;--ok:#2E7D32;--bad:#C2462B;
+ --serif:"Newsreader",Georgia,serif;--mono:"Geist Mono",ui-monospace,Consolas,monospace;--spring:cubic-bezier(.34,1.56,.64,1);--shadow:0 30px 60px -40px rgba(0,0,0,.35)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#141413;--panel:#1C1C1A;--sunk:#232320;--ink:#EEECE6;--muted:#A9A79F;--ink-3:#75736C;--line:#2C2B28;--hl:#4A3F12;--base:#FF7A52;--roof:#6EA2FF;--cart:#4FD08F;--rim:#F2C14E;--brand:#E5533F;--ok:#8EE07A;--bad:#FF8A70;--shadow:0 30px 60px -40px rgba(0,0,0,.8)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#141413;--panel:#1C1C1A;--sunk:#232320;--ink:#EEECE6;--muted:#A9A79F;--ink-3:#75736C;--line:#2C2B28;--hl:#4A3F12;--base:#FF7A52;--roof:#6EA2FF;--cart:#4FD08F;--rim:#F2C14E;--brand:#E5533F;--ok:#8EE07A;--bad:#FF8A70;--shadow:0 30px 60px -40px rgba(0,0,0,.8)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::selection{background:var(--hl);color:var(--ink)}:focus-visible{outline:2px solid var(--roof);outline-offset:3px;border-radius:6px}
+h1,h2,h3,.stitle{font-family:var(--serif);font-weight:560;letter-spacing:-.02em}
+.wrap{max-width:1280px;margin:0 auto;padding:14px 20px 20px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px}
+.brand{display:flex;align-items:center;gap:10px;font:600 20px/1 var(--serif);text-decoration:none;color:var(--ink)}
+.brand img{width:30px;height:30px;transition:transform .4s var(--spring)}.brand:hover img{transform:rotate(-8deg) scale(1.08)}
+.home{color:var(--muted);text-decoration:none;font-size:15px}.home:hover{color:var(--ink)}
+h1{font-size:clamp(30px,4.2vw,50px);line-height:1.05;margin:0 0 10px}
+h2{font-size:30px;margin:44px 0 12px}
+.sub{color:var(--muted);margin:0;max-width:52em;font-size:17px}
+.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);grid-template-rows:auto 1fr;gap:0 20px;margin-top:22px}
+.pane{background:#000;border-radius:18px;overflow:hidden;position:relative;grid-column:1;grid-row:1;align-self:start;box-shadow:var(--shadow)}
 .cap{grid-column:1;grid-row:2;align-self:start}
 .side{grid-column:2;grid-row:1/span 2;align-self:start}
 #us{width:100%;height:auto;display:block;touch-action:none;user-select:none}
-.side{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:16px;display:flex;flex-direction:column;gap:10px}
-.steps{display:flex;flex-wrap:wrap;gap:4px}.steps button{min-width:34px;padding:4px 8px}
-.steps button{font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
-.steps button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-button{font:inherit;padding:6px 12px;border-radius:0;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;transition:background .2s,color .2s,border-color .2s}button:hover{border-color:var(--ink)}
-.stitle{font-size:19px;font-weight:700;margin:0}.stext p{margin:6px 0}.stext ul,.stext ol{margin:6px 0;padding-left:20px}
-.read{background:var(--sunk);border-left:3px solid var(--accent);border-radius:0;padding:10px 12px}.big{font-family:var(--display);font-size:24px;font-weight:620;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
-.row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center}.ctl input{width:100%}input[type=range]{accent-color:var(--ink)}
-.gk{color:var(--muted);font-size:12.5px;font-style:italic}
-table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--sunk);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:0;padding:14px;margin:10px 0}
-.q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-@media (max-width:900px){.app{grid-template-columns:1fr;grid-template-rows:auto;gap:10px}.pane{position:sticky;top:0;z-index:3;box-shadow:0 6px 16px rgba(0,0,0,.45);grid-row:1}.side{grid-column:1;grid-row:2}.cap{grid-row:3;margin:0}#us{max-height:58vh}.wrap{padding:10px 10px}h1{font-size:21px}.side{padding:12px}.steps button{min-width:38px;padding:7px 8px}button{padding:8px 12px}table{display:block;overflow-x:auto;white-space:nowrap}.stext{font-size:15px}}
-.play{align-self:flex-start;background:var(--ink);color:var(--bg);border-color:var(--ink);font:700 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;border-radius:0;padding:12px 16px}
-.play:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.steps button{min-width:36px;padding:5px 9px;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+.steps button.on{background:var(--ink);color:var(--bg);border-color:var(--ink);transform:scale(1.08)}
+button{font:inherit;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;transition:transform .3s var(--spring),background .2s,color .2s,border-color .2s}
+button:hover{border-color:var(--ink);transform:translateY(-1px)}button:active{transform:scale(.94)}
+.stitle{font-size:26px;line-height:1.15;margin:4px 0 0}.stext p{margin:8px 0}.stext ul,.stext ol{margin:8px 0;padding-left:22px}
+.stext.swap{animation:swap .45s var(--spring)}@keyframes swap{from{opacity:0;transform:translateY(8px)}}
+.read{background:var(--sunk);border-radius:16px;padding:14px 16px}
+.big{font:600 28px/1.1 var(--serif);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.c-roof{color:var(--roof);font-weight:600}.c-cart{color:var(--cart);font-weight:600}.c-base{color:var(--base);font-weight:600}.c-rim{color:var(--rim);font-weight:600}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:center}.ctl input{width:100%}input[type=range]{accent-color:var(--roof)}
+.gk{color:var(--muted);font-size:13px;font-style:italic}
+table{border-collapse:separate;border-spacing:0;width:100%;font-size:15px;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+th,td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}tr:last-child td{border-bottom:0}
+th{background:var(--sunk);font:500 12px/1.4 var(--mono);letter-spacing:.04em;color:var(--muted)}
+td:first-child{font:600 18px/1.3 var(--serif)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:12px 0}
+.q .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.play{align-self:flex-start;background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600;padding:11px 20px}
+.play:hover{background:var(--ink);box-shadow:0 10px 24px -12px rgba(0,0,0,.45);transform:translateY(-2px)}
 .play.on{display:none}
-.home{display:inline-block;margin:0 0 14px;color:var(--muted);text-decoration:none;font:500 11px/1.4 var(--mono);letter-spacing:.15em;text-transform:uppercase}.home:hover{color:var(--ink)}
-a{color:inherit;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
-.foot{margin:34px 0 8px;border-top:1px solid var(--line);padding-top:14px;color:var(--ink-3);font:500 10.5px/1.5 var(--mono);letter-spacing:.1em;text-transform:uppercase;text-align:center}
+a{color:inherit;text-decoration-color:color-mix(in srgb,var(--roof) 55%,transparent);text-decoration-thickness:1.5px;text-underline-offset:3px}
+ol li::marker{font-family:var(--serif);font-weight:600;color:var(--ink-3)}
+.foot{margin:40px 0 8px;border-top:1px solid var(--line);padding-top:16px;color:var(--ink-3);font-size:14px;text-align:center}
+@media (max-width:900px){.app{grid-template-columns:1fr;grid-template-rows:auto;gap:12px}.pane{position:sticky;top:0;z-index:3;border-radius:0 0 16px 16px;margin:0 -12px;box-shadow:0 8px 18px rgba(0,0,0,.35);grid-row:1}.side{grid-column:1;grid-row:2;padding:16px;border-radius:18px}.cap{grid-row:3;margin:0}#us{max-height:58vh}.wrap{padding:10px 12px}h1{font-size:28px}.steps button{min-width:40px;padding:7px 8px}table{display:block;overflow-x:auto;white-space:nowrap}.stitle{font-size:22px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body><div class="wrap">
-<a class="home" href="../../index.html" target="_top">← Radyssey lessons</a>
+<div class="top"><a class="brand" href="../../index.html" target="_top"><img src="../../logo.svg" alt="">Radyssey</a><a class="home" href="../../posts/2026-10-26-graf-hip-ultrasound/" target="_top">← About this lesson</a></div>
 <h1>Graf hip ultrasound: learn it on one image</h1>
 <p class="sub">An interactive teaching brief built on a real Graf standard-plane image. Work through steps 1–12 beside the image: each step changes what is drawn on it. It is a study aid, not a substitute for supervised scanning.</p>
 
@@ -80,7 +97,7 @@ a{color:inherit;text-decoration-color:var(--accent);text-decoration-thickness:2p
 (function(){
 var NS="http://www.w3.org/2000/svg",R=Math.PI/180,SV=document.getElementById("us");
 function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
-var K=1;function txt(p,x,y,s,col,size){var t=el("text",{x:x,y:y},p);t.textContent=s;t.setAttribute("style","fill:"+(col||"#fff")+";font:700 "+((size||28)*(p===SV?K:1))+"px system-ui,sans-serif;paint-order:stroke;stroke:#000;stroke-width:7px;stroke-linejoin:round");return t}
+var K=1;function txt(p,x,y,s,col,size){var t=el("text",{x:x,y:y},p);t.textContent=s;t.setAttribute("style","fill:"+(col||"#fff")+";font:700 "+((size||28)*(p===SV?K:1))+"px Inter,system-ui,sans-serif;paint-order:stroke;stroke:#000;stroke-width:7px;stroke-linejoin:round");return t}
 function sub(a,b){return[a[0]-b[0],a[1]-b[1]]}function nrm(v){var l=Math.hypot(v[0],v[1])||1;return[v[0]/l,v[1]/l]}
 function classify(a,b,w){
  if(a>=60)return b<=55?["Ia","Mature hip."]:["Ib","Mature hip, transitional cartilage roof."];
@@ -191,11 +208,16 @@ function render(){
    txt(ig,200,214,"legs (caudal)","#fff",17);txt(ig,12,240,(SIDE==="R"?"RIGHT":"LEFT")+" hip · yellow dot = joint","#ffd43b",17)}
   else{txt(ig,12,28,"same orientation","#ffe066",19);txt(ig,12,50,"as the image","#ffe066",19);txt(ig,200,112,"head","#fff",19);txt(ig,200,134,"(cranial)","#fff",17);txt(ig,140,362,"legs (caudal)","#fff",17);txt(ig,SIDE==="R"?8:bw-62,250,"probe","#4dabf7",19);txt(ig,12,72,(SIDE==="R"?"RIGHT":"LEFT")+" hip","#ffd43b",17);txt(ig,150,240,"● hip","#ffd43b",17)}}
  var st2="";
- if(L.read&&!SIM){var A=angles(P),cl=classify(A.a,A.b,AGE);st2='<div class="read"><span class="big" style="color:#4dabf7">α '+A.a.toFixed(0)+'°</span> · <span class="big" style="color:#51cf66">β '+A.b.toFixed(0)+'°</span><div class="big">Type '+cl[0]+'</div>'+cl[1]+'</div>'}
- if(SIM){var cl2=classify(SIM.a,SIM.b,AGE);st2='<div class="read"><span class="big" style="color:#4dabf7">α '+SIM.a+'°</span> · <span class="big" style="color:#51cf66">β ≈'+SIM.b.toFixed(0)+'°</span><div class="big">Type '+cl2[0]+'</div>'+cl2[1]+'</div>'}
+ if(L.read&&!SIM){var A=angles(P),cl=classify(A.a,A.b,AGE);st2='<div class="read"><span class="big c-roof">α '+A.a.toFixed(0)+'°</span> · <span class="big c-cart">β '+A.b.toFixed(0)+'°</span><div class="big">Type '+cl[0]+'</div>'+cl[1]+'</div>'}
+ if(SIM){var cl2=classify(SIM.a,SIM.b,AGE);st2='<div class="read"><span class="big c-roof">α '+SIM.a+'°</span> · <span class="big c-cart">β ≈'+SIM.b.toFixed(0)+'°</span><div class="big">Type '+cl2[0]+'</div>'+cl2[1]+'</div>'}
  var ro=document.getElementById("readout");if(ro)ro.innerHTML=st2;}
+/* Colour the key words in the step text like their lines on the image (baseline red, bony roof blue, cartilage roof green, rim yellow). */
+var TINT=[[/\b(cartilage roof line|cartilage roof)\b/g,"c-cart"],[/\b(bony roof line|bony roof)\b/g,"c-roof"],[/\b(baseline)\b/g,"c-base"],[/\b(bony rim)\b/g,"c-rim"],[/(α)/g,"c-roof"],[/(β)/g,"c-cart"]];
+function tint(root){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[],n;while(n=w.nextNode())if(!n.parentNode.closest(".c-roof,.c-cart,.c-base,.c-rim"))ns.push(n);
+ ns.forEach(function(t){var h=t.nodeValue.replace(/&/g,"&amp;").replace(/</g,"&lt;"),o=h;TINT.forEach(function(r){h=h.replace(r[0],function(m){return "\u0001"+r[1]+"\u0002"+m+"\u0003"})});
+  if(h===o)return;h=h.replace(/\u0001([^\u0002]+)\u0002/g,'<span class="$1">').replace(/\u0003/g,"</span>");var sp=document.createElement("span");sp.innerHTML=h;t.parentNode.replaceChild(sp,t)})}
 function setStep(i){step=Math.max(0,Math.min(S.length-1,i));var st=S[step];
- document.getElementById("stitle").textContent=st.t;document.getElementById("stext").innerHTML=st.x;
+ document.getElementById("stitle").textContent=st.t;var tx=document.getElementById("stext");tx.innerHTML=st.x;tint(tx);tx.classList.remove("swap");void tx.offsetWidth;tx.classList.add("swap");
  var ex='<div id="readout"></div>';
  if(st.ctl==="age")ex+='<div class="ctl"><label for="age">Age</label><input id="age" type="range" min="1" max="24" value="'+AGE+'"><span id="agev">'+AGE+' wk</span></div><div class="row"><button id="reset">Reset handles</button></div>';
  if(st.ctl==="sim")ex+='<div class="ctl"><label for="sima">α</label><input id="sima" type="range" min="34" max="70" value="'+SIMA+'"><span id="simv">'+SIMA+'°</span></div><div class="row"><button data-a="66">Ia</button><button data-a="56">IIa</button><button data-a="47">IIc</button><button data-a="44">D</button><button data-a="37">III/IV</button></div>';

@@ -1,42 +1,44 @@
 /*-- scss:defaults --*/
-// Radyssey dark theme: the "Craft" ink look of smhasan-yad.github.io.
+// No web fonts from Google: Bootswatch would otherwise import Source Sans Pro / Lato.
+$web-font-path: false;
+// Radyssey dark theme: the "Explorable" look at night.
 $font-family-sans-serif: "Inter", "Segoe UI", system-ui, sans-serif;
-$headings-font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+$headings-font-family: "Newsreader", Georgia, serif;
 $font-family-monospace: "Geist Mono", ui-monospace, Consolas, monospace;
 $font-size-root: 17px;
-$line-height-base: 1.6;
-$headings-font-weight: 620;
+$line-height-base: 1.65;
+$headings-font-weight: 560;
 
-$body-bg: #121316;
-$body-color: #F2F1EE;
-$primary: #F5C518;
-$link-color: #F2F1EE;
-$border-color: rgba(242, 241, 238, .12);
-$text-muted: rgba(242, 241, 238, .62);
+$body-bg: #141413;
+$body-color: #EEECE6;
+$primary: #6EA2FF;
+$link-color: #EEECE6;
+$border-color: #2C2B28;
+$text-muted: #A9A79F;
 
-$border-radius: 0;
-$border-radius-sm: 0;
-$border-radius-lg: 0;
-$btn-border-radius: 0;
-$input-border-radius: 0;
+$border-radius: 14px;
+$border-radius-sm: 10px;
+$border-radius-lg: 20px;
 
-$navbar-bg: #121316;
-$navbar-fg: rgba(242, 241, 238, .62);
-$navbar-hl: #F2F1EE;
-$footer-bg: #121316;
-$footer-fg: rgba(242, 241, 238, .4);
+$navbar-bg: #141413;
+$navbar-fg: #A9A79F;
+$navbar-hl: #EEECE6;
+$footer-bg: #141413;
+$footer-fg: #75736C;
 
 /*-- scss:rules --*/
 :root {
-  --rv-box: #121316;
-  --rv-sunk: #0C0D0F;
-  --rv-ink: #F2F1EE;
-  --rv-ink-2: rgba(242, 241, 238, .62);
-  --rv-ink-3: rgba(242, 241, 238, .4);
-  --rv-line: rgba(242, 241, 238, .12);
-  --rv-accent: #F5C518;
-  --rv-on-accent: #121316;
-  --rv-accent-text: #F5C518;
-  --rv-ac-color: #F5C518;
-  --rv-ac-mark: none;
+  --rv-paper: #141413;
+  --rv-card: #1C1C1A;
+  --rv-ink: #EEECE6;
+  --rv-ink-2: #A9A79F;
+  --rv-ink-3: #75736C;
+  --rv-line: #2C2B28;
+  --rv-hl: #4A3F12;
+  --rv-base: #FF7A52;
+  --rv-roof: #6EA2FF;
+  --rv-cart: #4FD08F;
+  --rv-rim: #F2C14E;
+  --rv-brand: #E5533F;
+  --rv-shadow: 0 30px 60px -40px rgba(0, 0, 0, .8);
 }

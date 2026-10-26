@@ -9,7 +9,7 @@ image-alt: "Infant hip ultrasound with the Graf baseline, bony roof line and car
 
 ## What this lesson is
 
-The **Graf method** is the standard way to assess an infant hip with ultrasound for developmental dysplasia of the hip (DDH). You take one coronal image of the hip in a standard plane, check that the image is usable, draw three lines, and read two angles: **α**, for the bony roof, and **β**, for the cartilage roof. Those two angles and the baby's age give the hip a type, from Ia (mature) to III/IV (dislocated).
+The **Graf method** is the standard way to assess an infant hip with ultrasound for developmental dysplasia of the hip (DDH). You take one coronal image of the hip in a standard plane, check that the image is usable, draw three lines, and read two angles: [**α**]{.c-roof}, for the [bony roof]{.c-roof}, and [**β**]{.c-cart}, for the [cartilage roof]{.c-cart}. Those two angles and the baby's age give the hip a type, from Ia (mature) to III/IV (dislocated).
 
 The lesson is for **radiology residents**, and for anyone else who is learning to scan or report infant hips. It assumes basic ultrasound knowledge and nothing about Graf.
 
@@ -24,7 +24,7 @@ The lesson is one ultrasound image with a panel of 12 steps beside it. Each step
 1. **Steps 1–2, orientation.** Where the baby and the probe go, and which way is up on the screen. The **⟳ Screen / Graf view** button rotates the image between the scanner's view and the Graf standard view. **Hip: RIGHT / LEFT** shows how the left hip is displayed.
 2. **Steps 3–6, anatomy.** Find the femoral head, the iliac wing, the bony roof and the lower limb of the os ilium, then the full eight-point checklist. Turn **Labels** off to test yourself.
 3. **Step 7, usability.** The image may be measured only if the lower limb, a straight iliac wing and the labrum are all visible.
-4. **Steps 8–11, measurement.** Draw the baseline, the bony roof line and the cartilage roof line. In step 11, drag the five handles yourself, set the baby's age, and watch α, β and the type update.
+4. **Steps 8–11, measurement.** Draw the [baseline]{.c-base}, the [bony roof line]{.c-roof} and the [cartilage roof line]{.c-cart}. In step 11, drag the five handles yourself, set the baby's age, and watch α, β and the type update.
 5. **Step 12, play with the angles.** The lines start on this image's own landmarks (α about 56°). Move the α slider and watch the bony roof steepen, the head drift out and up, and the type change from Ia to III/IV. The **Play with the angles** button jumps straight here.
 
 Below the image are the classification table, an eight-question self-test and the references.

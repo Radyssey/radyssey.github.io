@@ -1,44 +1,45 @@
 /*-- scss:defaults --*/
-// Radyssey light theme: the "Craft" look of smhasan-yad.github.io.
-// Warm paper, near-black ink, one yellow accent, square corners.
+// No web fonts from Google: Bootswatch would otherwise import Source Sans Pro / Lato.
+$web-font-path: false;
+// Radyssey light theme: the "Explorable" look. Warm paper, a serif for headings,
+// and the lesson's overlay colours (baseline coral, bony roof blue, cartilage green) as the only colour.
 $font-family-sans-serif: "Inter", "Segoe UI", system-ui, sans-serif;
-$headings-font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+$headings-font-family: "Newsreader", Georgia, serif;
 $font-family-monospace: "Geist Mono", ui-monospace, Consolas, monospace;
 $font-size-root: 17px;
-$line-height-base: 1.6;
-$headings-font-weight: 620;
+$line-height-base: 1.65;
+$headings-font-weight: 560;
 
-$body-bg: #F2F1EE;
-$body-color: #121316;
-$primary: #121316;
-$link-color: #121316;
-$border-color: rgba(18, 19, 22, .14);
-$text-muted: rgba(18, 19, 22, .62);
+$body-bg: #FBFAF6;
+$body-color: #1A1A1A;
+$primary: #2B66D9;
+$link-color: #1A1A1A;
+$border-color: #E6E3DA;
+$text-muted: #5A5A55;
 
-$border-radius: 0;
-$border-radius-sm: 0;
-$border-radius-lg: 0;
-$btn-border-radius: 0;
-$input-border-radius: 0;
+$border-radius: 14px;
+$border-radius-sm: 10px;
+$border-radius-lg: 20px;
 
-$navbar-bg: #F2F1EE;
-$navbar-fg: rgba(18, 19, 22, .62);
-$navbar-hl: #121316;
-$footer-bg: #F2F1EE;
-$footer-fg: rgba(18, 19, 22, .45);
+$navbar-bg: #FBFAF6;
+$navbar-fg: #5A5A55;
+$navbar-hl: #1A1A1A;
+$footer-bg: #FBFAF6;
+$footer-fg: #8C8B85;
 
 /*-- scss:rules --*/
 :root {
-  --rv-box: #F2F1EE;
-  --rv-sunk: #E9E7E2;
-  --rv-ink: #121316;
-  --rv-ink-2: rgba(18, 19, 22, .62);
-  --rv-ink-3: rgba(18, 19, 22, .45);
-  --rv-line: rgba(18, 19, 22, .14);
-  --rv-accent: #F5C518;
-  --rv-on-accent: #121316;
-  --rv-accent-text: #7A5C00;
-  /* accent word: highlighter stroke in light, yellow text in dark */
-  --rv-ac-color: #121316;
-  --rv-ac-mark: linear-gradient(transparent 66%, #F5C518 66% 92%, transparent 92%);
+  --rv-paper: #FBFAF6;
+  --rv-card: #FFFFFF;
+  --rv-ink: #1A1A1A;
+  --rv-ink-2: #5A5A55;
+  --rv-ink-3: #8C8B85;
+  --rv-line: #E6E3DA;
+  --rv-hl: #FCEFB4;
+  --rv-base: #E4572E;
+  --rv-roof: #2B66D9;
+  --rv-cart: #2E9E6A;
+  --rv-rim: #B7791F;
+  --rv-brand: #D93A2B;
+  --rv-shadow: 0 30px 60px -40px rgba(0, 0, 0, .35);
 }
