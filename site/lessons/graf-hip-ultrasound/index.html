@@ -8,8 +8,10 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,"Segoe UI",sans-serif}
 .wrap{max-width:1280px;margin:0 auto;padding:20px 16px}
 h1{font-size:26px;margin:0 0 4px}h2{margin:34px 0 10px;border-top:1px solid var(--line);padding-top:18px}.sub{color:var(--muted);margin:0}
-.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);gap:16px;margin-top:16px}
-.pane{background:#000;border-radius:10px;overflow:hidden;position:relative}
+.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);grid-template-rows:auto 1fr;gap:0 16px;margin-top:16px}
+.pane{background:#000;border-radius:10px;overflow:hidden;position:relative;grid-column:1;grid-row:1;align-self:start}
+.cap{grid-column:1;grid-row:2;align-self:start}
+.side{grid-column:2;grid-row:1/span 2;align-self:start}
 #us{width:100%;height:auto;display:block;touch-action:none;user-select:none}
 .side{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px}
 .steps{display:flex;flex-wrap:wrap;gap:4px}.steps button{min-width:34px;padding:4px 8px}
@@ -23,7 +25,7 @@ button{font:inherit;padding:6px 12px;border-radius:6px;border:1px solid var(--li
 table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}th{background:var(--accent-soft)}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
 .q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-@media (max-width:900px){.app{grid-template-columns:1fr}.pane{position:sticky;top:0;z-index:3;box-shadow:0 6px 16px rgba(0,0,0,.45)}.wrap{padding:10px 10px}h1{font-size:21px}.side{padding:12px}.steps button{min-width:38px;padding:7px 8px}button{padding:8px 12px}table{display:block;overflow-x:auto;white-space:nowrap}.stext{font-size:15px}}
+@media (max-width:900px){.app{grid-template-columns:1fr;grid-template-rows:auto;gap:10px}.pane{position:sticky;top:0;z-index:3;box-shadow:0 6px 16px rgba(0,0,0,.45);grid-row:1}.side{grid-column:1;grid-row:2}.cap{grid-row:3;margin:0}#us{max-height:58vh}.wrap{padding:10px 10px}h1{font-size:21px}.side{padding:12px}.steps button{min-width:38px;padding:7px 8px}button{padding:8px 12px}table{display:block;overflow-x:auto;white-space:nowrap}.stext{font-size:15px}}
 .home{display:inline-block;margin:0 0 8px;color:var(--accent);text-decoration:none;font-weight:600}
 .foot{margin:34px 0 8px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:14px;text-align:center}
 </style></head><body><div class="wrap">
@@ -32,8 +34,8 @@ table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid 
 <p class="sub">An interactive teaching brief built on a real Graf standard-plane image. Work through steps 1–12 beside the image: each step changes what is drawn on it. It is a study aid, not a substitute for supervised scanning.</p>
 
 <div class="app">
-<div><div class="pane"><svg id="us" viewBox="40 15 1188 947" role="img" aria-label="Interactive infant hip ultrasound with Graf overlays"></svg></div>
-<p class="gk">Image: Walter SG et al., Front Pediatr 2022;10:990806, Fig. 2 (cropped; in screen view rotated and flipped so that cranial is on the left), CC BY 4.0. The original authors' printed labels and arrows were removed digitally (inpainted); faint smoothing may remain where they were. All labels now come from this page. The coloured overlays are added here: landmark positions are hand-placed approximations, and the simulation in step 12 is a schematic drawn over the image, not a real dysplastic scan.</p></div>
+<div class="pane"><svg id="us" viewBox="40 15 1188 947" role="img" aria-label="Interactive infant hip ultrasound with Graf overlays"></svg></div>
+<p class="gk cap">Image: Walter SG et al., Front Pediatr 2022;10:990806, Fig. 2 (cropped; in screen view rotated and flipped so that cranial is on the left), CC BY 4.0. The original authors' printed labels and arrows were removed digitally (inpainted); faint smoothing may remain where they were. All labels now come from this page. The coloured overlays are added here: landmark positions are hand-placed approximations, and the simulation in step 12 is a schematic drawn over the image, not a real dysplastic scan.</p>
 <div class="side">
 <div class="steps" id="steps"></div>
 <p class="stitle" id="stitle"></p>
