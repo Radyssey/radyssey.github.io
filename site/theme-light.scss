@@ -1,29 +1,44 @@
 /*-- scss:defaults --*/
-// Radyssey light theme: warm paper background, one blue accent (the lesson's).
-$font-family-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+// Radyssey light theme: the "Craft" look of smhasan-yad.github.io.
+// Warm paper, near-black ink, one yellow accent, square corners.
+$font-family-sans-serif: "Inter", "Segoe UI", system-ui, sans-serif;
+$headings-font-family: "Archivo", "Segoe UI", system-ui, sans-serif;
+$font-family-monospace: "Geist Mono", ui-monospace, Consolas, monospace;
 $font-size-root: 17px;
-$line-height-base: 1.65;
-$headings-font-weight: 680;
+$line-height-base: 1.6;
+$headings-font-weight: 620;
 
-$body-bg: #fbfaf7;
-$body-color: #1b1f24;
-$primary: #1d5fd1;
-$link-color: #1d5fd1;
-$border-color: #e7e3da;
-$text-muted: #6b7280;
+$body-bg: #F2F1EE;
+$body-color: #121316;
+$primary: #121316;
+$link-color: #121316;
+$border-color: rgba(18, 19, 22, .14);
+$text-muted: rgba(18, 19, 22, .62);
 
-$navbar-bg: #fbfaf7;
-$navbar-fg: #1b1f24;
-$navbar-hl: #1d5fd1;
-$footer-bg: #fbfaf7;
-$footer-fg: #6b7280;
+$border-radius: 0;
+$border-radius-sm: 0;
+$border-radius-lg: 0;
+$btn-border-radius: 0;
+$input-border-radius: 0;
+
+$navbar-bg: #F2F1EE;
+$navbar-fg: rgba(18, 19, 22, .62);
+$navbar-hl: #121316;
+$footer-bg: #F2F1EE;
+$footer-fg: rgba(18, 19, 22, .45);
 
 /*-- scss:rules --*/
 :root {
-  --rv-ink: #1b1f24;
-  --rv-muted: #6b7280;
-  --rv-line: #e7e3da;
-  --rv-accent: #1d5fd1;
-  --rv-accent-ink: #ffffff;
-  --rv-card: #ffffff;
+  --rv-box: #F2F1EE;
+  --rv-sunk: #E9E7E2;
+  --rv-ink: #121316;
+  --rv-ink-2: rgba(18, 19, 22, .62);
+  --rv-ink-3: rgba(18, 19, 22, .45);
+  --rv-line: rgba(18, 19, 22, .14);
+  --rv-accent: #F5C518;
+  --rv-on-accent: #121316;
+  --rv-accent-text: #7A5C00;
+  /* accent word: highlighter stroke in light, yellow text in dark */
+  --rv-ac-color: #121316;
+  --rv-ac-mark: linear-gradient(transparent 66%, #F5C518 66% 92%, transparent 92%);
 }

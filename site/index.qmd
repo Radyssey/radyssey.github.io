@@ -17,16 +17,12 @@ page-layout: article
 
 ```{=html}
 <section class="hero">
-  <svg class="hero-mark" viewBox="0 0 64 64" aria-hidden="true">
-    <g fill="none" stroke-width="5.5" stroke-linecap="round">
-      <path class="i" d="M14 54V10"/><circle class="i" cx="31" cy="24" r="12"/><path class="a" d="M28 36L48 54"/>
-    </g>
-  </svg>
-  <h1 class="hero-title">Radyssey</h1>
-  <p class="hero-lede">Interactive radiology lessons for residents. Each one is built on a single real image: you work through it step by step, move the overlays yourself, and finish with a self-test.</p>
-  <p class="hero-meta">Free · works on your phone · no sign-up</p>
+  <p class="hero-tag rv-mono">Interactive radiology lessons · for residents</p>
+  <h1 class="hero-title">Radyssey<span>learn on <em class="ac">one image</em></span></h1>
+  <p class="hero-lede">Each lesson is built on a single real image: you work through it step by step, move the overlays yourself, and finish with a self-test.</p>
+  <p class="hero-meta rv-mono">Free · works on your phone · no sign-up</p>
 </section>
-<h2 class="section-label">Lessons</h2>
+<h2 class="section-label"><span>01 / Lessons</span><span>Newest first</span></h2>
 ```
 
 ::: {#lessons}

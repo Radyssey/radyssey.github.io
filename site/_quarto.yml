@@ -3,6 +3,7 @@ project:
   resources:
     - lessons/**
     - logo-*.svg
+    - fonts/**
 
 website:
   title: "Radyssey"
