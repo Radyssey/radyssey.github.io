@@ -1,0 +1,7 @@
+# The lessons on the home page. Each entry links straight to its single interactive lesson page.
+- title: "Graf hip ultrasound: learn it on one image"
+  description: "An interactive lesson on the Graf method for infant hip ultrasound: orientation, anatomy, the usability check, the three lines, α and β, and the types, all on one real image."
+  date: 2026-10-26
+  path: lessons/graf-hip-ultrasound/index.html
+  image: lessons/graf-hip-ultrasound/card.png
+  image-alt: "Schematic infant hip: the Graf baseline, bony roof line and cartilage roof line, with angle alpha at the bony rim"

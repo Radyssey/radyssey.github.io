@@ -1,133 +1,157 @@
-/* Radyssey: shared rules, in the "Explorable" look. Colours come from theme-light.scss /
-   theme-dark.scss (--rv-*). Fonts are self-hosted. Motion respects prefers-reduced-motion. */
+/* Radyssey: shared rules in Material 3. Colour tokens (--md-*) come from theme-light.scss / theme-dark.scss,
+   which are generated from one seed colour. Type is Roboto Flex on the M3 type scale. Fonts are self-hosted.
+   Motion uses M3's emphasized easing and respects prefers-reduced-motion. */
 @import url(fonts/fonts.css);
 
 :root {
-  --rv-serif: "Newsreader", Georgia, serif;
-  --rv-mono: "Geist Mono", ui-monospace, Consolas, monospace;
-  --rv-spring: cubic-bezier(.34, 1.56, .64, 1);
-  --rv-ease: cubic-bezier(.2, .8, .2, 1);
+  --md-font: "Roboto Flex", Roboto, "Segoe UI", system-ui, sans-serif;
+  --rv-serif: "Newsreader", Georgia, serif; /* headings: the serif from the Explorable look */
+  --md-emph: cubic-bezier(.2, 0, 0, 1);
+  --md-emph-dec: cubic-bezier(.05, .7, .1, 1);
+  --md-std: cubic-bezier(.2, 0, 0, 1);
 }
 
-body { -webkit-font-smoothing: antialiased; }
+body { font-family: var(--md-font); font-size: 16px; line-height: 24px; letter-spacing: .5px; -webkit-font-smoothing: antialiased; }
 h1, h2, h3, h4, .title { font-family: var(--rv-serif); font-weight: 560; letter-spacing: -.02em; }
-::selection { background: var(--rv-hl); color: var(--rv-ink); }
-:focus-visible { outline: 2px solid var(--rv-roof); outline-offset: 3px; border-radius: 6px; }
-.rv-mono { font: 500 12px/1.4 var(--rv-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--rv-ink-3); }
+::selection { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+:focus-visible { outline: 3px solid var(--md-secondary); outline-offset: 2px; border-radius: 8px; }
+a { color: var(--md-primary); }
 
-/* Colour-coded words: the same colours as the lines on the image */
-.c-base { color: var(--rv-base); font-weight: 600; }
-.c-roof { color: var(--rv-roof); font-weight: 600; }
-.c-cart { color: var(--rv-cart); font-weight: 600; }
-.c-rim  { color: var(--rv-rim);  font-weight: 600; }
+/* Colour-coded words: the same colours as the lines drawn on the lesson images */
+.c-base { color: var(--md-base); font-weight: 600; }
+.c-roof { color: var(--md-roof); font-weight: 600; }
+.c-cart { color: var(--md-cart); font-weight: 600; }
+.c-rim  { color: var(--md-rim);  font-weight: 600; }
 
-/* Prose links: ink text, a soft blue underline that thickens on hover */
-main.content a:not(.lesson-cta):not(.quarto-xref):not(.quarto-listing a):not(.rv-btn):not(.stop-card) {
-  color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--rv-roof) 55%, transparent);
-  text-decoration-thickness: 1.5px; text-underline-offset: 3px; transition: text-decoration-thickness .2s;
+/* ---------- state layer + ripple, shared by every button ---------- */
+.md-btn, .lesson-cta, .navbar .nav-link, .quarto-grid-item { position: relative; overflow: hidden; isolation: isolate; }
+.md-btn::before, .lesson-cta::before, .navbar .nav-link::before {
+  content: ""; position: absolute; inset: 0; background: currentColor; opacity: 0; transition: opacity .2s var(--md-std); z-index: -1; border-radius: inherit;
 }
-main.content a:not(.lesson-cta):not(.quarto-listing a):not(.rv-btn):not(.stop-card):hover { text-decoration-thickness: 3px; text-decoration-color: var(--rv-roof); }
+.md-btn:hover::before, .lesson-cta:hover::before, .navbar .nav-link:hover::before { opacity: .08; }
+.md-btn:focus-visible::before, .lesson-cta:focus-visible::before, .md-btn:active::before, .lesson-cta:active::before { opacity: .1; }
+.md-ripple { position: absolute; border-radius: 50%; background: currentColor; opacity: .12; transform: scale(0); pointer-events: none; animation: md-ripple .55s var(--md-emph-dec) forwards; z-index: -1; }
+@keyframes md-ripple { to { transform: scale(1); opacity: 0; } }
 
-/* ---------- header ---------- */
-.navbar { border-bottom: 0; box-shadow: none; padding-top: .55rem; padding-bottom: .55rem; }
-.navbar-brand { display: flex; align-items: center; gap: 10px; }
-.navbar-brand .navbar-title { font: 600 1.3rem/1 var(--rv-serif); letter-spacing: -.01em; color: var(--rv-ink); }
-.navbar-brand::before { content: ""; width: 30px; height: 30px; flex: none; background: url(logo.svg) center / contain no-repeat; transition: transform .4s var(--rv-spring); }
-.navbar-brand:hover::before { transform: rotate(-8deg) scale(1.08); }
-.navbar .nav-link { font-size: .95rem; }
-.navbar .nav-link.active { color: var(--rv-ink) !important; text-decoration: underline; text-decoration-color: var(--rv-brand); text-decoration-thickness: 2px; text-underline-offset: 6px; }
-
-/* ---------- buttons: pills with a little spring ---------- */
-.rv-btn, .lesson-cta {
-  display: inline-flex; align-items: center; gap: 10px; margin: .4rem .35rem 1rem 0; padding: 13px 22px; border-radius: 999px;
-  background: var(--rv-ink); color: var(--rv-paper) !important; font-weight: 600; font-size: 1rem; text-decoration: none; border: 0;
-  transition: transform .35s var(--rv-spring), box-shadow .35s;
+/* ---------- buttons (M3: 40 px tall, fully rounded, label-large) ---------- */
+.md-btn, .lesson-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 10px 24px; margin: 4px 8px 12px 0;
+  border-radius: 20px; border: 0; font: 500 14px/20px var(--md-font); letter-spacing: .1px; text-decoration: none; cursor: pointer;
+  transition: box-shadow .2s var(--md-std);
 }
-.rv-btn:hover, .lesson-cta:hover { transform: translateY(-3px); box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .45); }
-.rv-btn:active, .lesson-cta:active { transform: scale(.95); transition-duration: .1s; }
-.rv-btn .arr, .lesson-cta::after { display: inline-block; transition: transform .35s var(--rv-spring); }
-.lesson-cta::after { content: "→"; }
-.rv-btn:hover .arr, .lesson-cta:hover::after { transform: translateX(4px); }
-.lesson-cta-alt, .rv-btn.ghost { background: transparent; color: var(--rv-ink) !important; box-shadow: inset 0 0 0 1.5px var(--rv-line); }
-.lesson-cta-alt:hover, .rv-btn.ghost:hover { box-shadow: inset 0 0 0 1.5px var(--rv-ink); }
+.md-btn.filled, .lesson-cta { background: var(--md-primary); color: var(--md-on-primary) !important; }
+.md-btn.filled:hover, .lesson-cta:hover { box-shadow: var(--md-elev-1); }
+@media (prefers-reduced-motion: no-preference) {
+  .md-btn, .lesson-cta { transition: box-shadow .2s var(--md-std), transform .18s cubic-bezier(.2, .8, .2, 1); }
+  .md-btn:hover, .lesson-cta:hover { transform: translateY(-2px); }
+  .md-btn:active, .lesson-cta:active { transform: translateY(0) scale(.98); transition-duration: 70ms; }
+}
+.md-btn.tonal { background: var(--md-secondary-container); color: var(--md-on-secondary-container) !important; }
+.md-btn.outlined, .lesson-cta-alt { background: transparent; color: var(--md-primary) !important; box-shadow: inset 0 0 0 1px var(--md-outline); }
+.md-btn.outlined:hover, .lesson-cta-alt:hover { box-shadow: inset 0 0 0 1px var(--md-outline); }
+.md-btn svg, .lesson-cta svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
+.lesson-cta::after { content: ""; width: 18px; height: 18px; background: currentColor; -webkit-mask: var(--md-icon-arrow) center / contain no-repeat; mask: var(--md-icon-arrow) center / contain no-repeat; transition: transform .3s var(--md-emph); }
+.lesson-cta:hover::after { transform: translateX(3px); }
+:root { --md-icon-arrow: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg>'); }
 
-/* ---------- home: hero with the Graf toy ---------- */
-.rv-wrap { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
-.rv-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 48px; align-items: center; padding: 2.5rem 0 4rem; }
-.rv-hero .rv-h1 { font: 560 clamp(2.6rem, 5.6vw, 4.3rem)/1.03 var(--rv-serif); letter-spacing: -.02em; margin: 0; }
-.rv-hero .rv-h1 i { color: var(--rv-roof); }
-.rv-hero .lede { color: var(--rv-ink-2); font-size: 1.15rem; margin: 1.3rem 0 1.5rem; max-width: 28em; }
-.rv-hero .small { color: var(--rv-ink-3); font-size: .9rem; margin: .4rem 0 0; }
-.toy { background: var(--rv-card); border: 1px solid var(--rv-line); border-radius: 22px; padding: 16px; box-shadow: var(--rv-shadow); }
-.toy svg { display: block; width: 100%; height: auto; touch-action: none; user-select: none; }
-.toy .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 6px 0; flex-wrap: wrap; }
-.toy .read { font-size: .95rem; color: var(--rv-ink-2); }
-.toy .read b { font: 600 1.6rem/1 var(--rv-serif); color: var(--rv-roof); font-variant-numeric: tabular-nums; display: inline-block; min-width: 2.4em; }
-.toy .badge { padding: 7px 14px; border-radius: 999px; font-weight: 600; font-size: .9rem; background: color-mix(in srgb, var(--t) 14%, transparent); color: var(--t); transition: background .3s, color .3s; }
-.toy .badge.pop { animation: rv-pop .5s var(--rv-spring); }
-@keyframes rv-pop { from { transform: scale(.8); } }
-.toy .reset { border: 0; background: none; color: var(--rv-ink-3); font: inherit; font-size: .9rem; cursor: pointer; opacity: 0; transition: opacity .3s; }
-.toy .reset.show { opacity: 1; } .toy .reset:hover { color: var(--rv-ink); }
+/* ---------- top app bar ---------- */
+.navbar { min-height: 64px; padding-top: 0; padding-bottom: 0; border: 0; box-shadow: none; background: var(--md-surface) !important; transition: background .25s var(--md-std); }
+body.md-scrolled .navbar { background: var(--md-surface-container) !important; }
+.navbar-brand { display: flex; align-items: center; gap: 12px; }
+/* the logo follows radbase.co: a two-shape R (teal bowl + ink block) and an Outfit ExtraBold wordmark, traced to SVG.
+   _m3.html swaps in an inline copy so the mark can tilt on hover; logo.svg is the no-script fallback. */
+.navbar-brand .navbar-title { display: block; width: 132px; height: 28px; font-size: 0; color: transparent; background: url(logo.svg) left center / contain no-repeat; }
+.navbar-brand .navbar-title.rv-inline { background: none; }
+.rv-logo { height: 28px; width: auto; display: block; overflow: visible; }
+.rv-logo .mk { transform-box: fill-box; transform-origin: center; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.navbar-brand:hover .rv-logo .mk { transform: rotate(-5deg); }
+:root { --logo-brand: #0d9488; --logo-ink: #191d20; }
+body.quarto-dark { --logo-brand: #2dd4bf; --logo-ink: #f9f9f9; }
+body.quarto-dark .navbar-brand .navbar-title { background-image: url(logo-dark.svg); }
+.navbar .nav-link { font: 500 14px/20px var(--md-font); letter-spacing: .1px; padding: 10px 16px !important; border-radius: 20px; color: var(--md-on-surface-variant) !important; }
+.navbar .nav-link.active { background: var(--md-secondary-container); color: var(--md-on-secondary-container) !important; }
+.navbar .navbar-nav { gap: 4px; }
+
+/* header icon buttons (search, theme, RSS) as 48 px M3 icon buttons */
+.navbar .aa-DetachedSearchButton, .navbar .quarto-color-scheme-toggle, .navbar .nav-link .bi { min-width: 48px; min-height: 48px; }
+.navbar .aa-DetachedSearchButton, .navbar .quarto-color-scheme-toggle { display: inline-flex; align-items: center; justify-content: center; border-radius: 24px; }
+.navbar .aa-DetachedSearchButton:hover, .navbar .quarto-color-scheme-toggle:hover { background: color-mix(in srgb, var(--md-on-surface) 8%, transparent); }
+#quarto-search { display: flex; align-items: center; }
+
+/* ---------- home ---------- */
+.rv-wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+.rv-hero { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 40px; align-items: center; margin: 8px 0 48px; padding: 48px 40px; border-radius: 28px; background: var(--md-surface-container-low); }
+.rv-hero .rv-h1 { font: 560 clamp(40px, 5.4vw, 66px) / 1.04 var(--rv-serif); letter-spacing: -.02em; margin: 0; color: var(--md-on-surface); }
+.rv-hero .rv-h1 em { font-style: italic; color: var(--md-primary); }
+.rv-hero .lede { font-size: 16px; line-height: 24px; color: var(--md-on-surface-variant); margin: 16px 0 24px; max-width: 30em; }
+.rv-hero .small { font: 500 12px/16px var(--md-font); letter-spacing: .5px; color: var(--md-on-surface-variant); margin: 8px 0 0; }
+.toy { background: var(--md-surface-container-lowest); border-radius: 16px; padding: 16px; box-shadow: var(--md-elev-1); }
+.toy #toy { display: block; width: 100%; height: auto; touch-action: none; user-select: none; }
+.toy .bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 4px 0; flex-wrap: wrap; }
+.toy .read { font: 400 14px/20px var(--md-font); color: var(--md-on-surface-variant); }
+.toy .read b { font: 400 28px/36px var(--md-font); color: var(--md-roof); font-variant-numeric: tabular-nums; display: inline-block; min-width: 2.2em; }
+/* the type badge is an M3 assist chip that changes colour */
+.toy .badge { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 8px; font: 500 14px/20px var(--md-font); background: var(--bg); color: var(--fg); transition: background .3s, color .3s; }
+.toy .badge.pop { animation: md-pop .4s var(--md-emph-dec); }
+@keyframes md-pop { from { transform: scale(.85); } }
+.toy .reset { display: none; }
+.toy .reset.show { display: inline-flex; margin: 0; }
 .toy .handle { cursor: grab; } .toy .handle:active { cursor: grabbing; }
-.toy .ring { animation: rv-ring 1.8s ease-out infinite; transform-origin: center; transform-box: fill-box; }
-@keyframes rv-ring { 0% { transform: scale(.6); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
-.toy .caption { margin: 8px 6px 0; font-size: .82rem; color: var(--rv-ink-3); }
-.rv-spark { position: absolute; width: 7px; height: 7px; border-radius: 50%; pointer-events: none; z-index: 50; }
+.toy .ring { animation: md-ring 1.8s ease-out infinite; transform-origin: center; transform-box: fill-box; }
+@keyframes md-ring { 0% { transform: scale(.6); opacity: .7; } 100% { transform: scale(2.2); opacity: 0; } }
+.toy .caption { margin: 8px 4px 0; font: 400 12px/16px var(--md-font); letter-spacing: .4px; color: var(--md-on-surface-variant); }
 
-/* ---------- home: the route through the lessons ---------- */
-.rv-sec-head { text-align: center; padding: 2rem 0 1rem; }
-.rv-sec-head h2 { font-size: clamp(2rem, 4vw, 3rem); border: 0; margin: 0; }
-.rv-sec-head p { color: var(--rv-ink-2); margin: .6rem auto 0; max-width: 32em; }
-.route { position: relative; padding: 1rem 0 2rem; }
-.route svg.line { position: absolute; left: 50%; top: 0; height: 100%; width: 240px; translate: -50% 0; overflow: visible; pointer-events: none; }
-.stop { position: relative; display: grid; grid-template-columns: 1fr 64px 1fr; align-items: center; min-height: 170px; }
-.stop .dot { grid-column: 2; justify-self: center; width: 22px; height: 22px; border-radius: 50%; background: var(--rv-paper); border: 3px solid var(--rv-line); z-index: 1; transition: transform .5s var(--rv-spring); }
-.stop.live .dot { border-color: var(--rv-brand); background: var(--rv-brand); box-shadow: 0 0 0 6px color-mix(in srgb, var(--rv-brand) 20%, transparent); }
-.stop-card { grid-row: 1; display: block; background: var(--rv-card); border: 1px solid var(--rv-line); border-radius: 18px; padding: 18px 20px; color: inherit; text-decoration: none; transition: transform .45s var(--rv-spring), box-shadow .45s, opacity .6s, translate .8s var(--rv-spring); }
-.stop:nth-child(odd) .stop-card { grid-column: 1; } .stop:nth-child(even) .stop-card { grid-column: 3; }
-.stop.live .stop-card:hover { transform: translateY(-4px) rotate(-.6deg); box-shadow: 0 22px 40px -26px rgba(0, 0, 0, .45); }
-.stop.live:hover .dot { transform: scale(1.25); }
-.stop-card .k { font: 500 12px/1 var(--rv-mono); letter-spacing: .06em; color: var(--rv-ink-3); text-transform: uppercase; }
-.stop-card h3 { font-size: 1.5rem; margin: 8px 0 4px; line-height: 1.15; }
-.stop-card p { margin: 0; font-size: .92rem; color: var(--rv-ink-2); }
-.stop-card img { display: block; width: 100%; border-radius: 10px; margin: 12px 0 10px; }
-.stop:not(.live) .stop-card { background: transparent; border-style: dashed; }
-.stop:not(.live) h3 { color: var(--rv-ink-3); }
-.stop .lock { display: inline-block; margin-left: 6px; font-size: .8rem; }
-.stop:not(.live) .stop-card:hover .lock { animation: rv-wiggle .5s; }
-@keyframes rv-wiggle { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
-html.rv-motion .stop .stop-card { opacity: 0; translate: 0 30px; }
-html.rv-motion .stop.in .stop-card { opacity: 1; translate: none; }
+.rv-sec { font: 560 36px/42px var(--rv-serif); letter-spacing: -.02em; margin: 0 0 4px; border: 0; }
+.rv-sec-sub { color: var(--md-on-surface-variant); margin: 0 0 20px; }
 
-/* "All lessons" listing (also feeds RSS) */
-#listing-lessons .quarto-post { border-bottom: 1px solid var(--rv-line); padding: 1.4rem 0; margin: 0; }
-#listing-lessons .quarto-post a { color: inherit; text-decoration: none; }
-#listing-lessons .quarto-post .listing-title { font-family: var(--rv-serif); font-size: 1.55rem; font-weight: 560; line-height: 1.2; }
-#listing-lessons .quarto-post .listing-description { color: var(--rv-ink-2); font-size: .98rem; }
-#listing-lessons .quarto-post .listing-date { font: 500 12px/1.4 var(--rv-mono); color: var(--rv-ink-3); text-transform: uppercase; letter-spacing: .06em; }
-#listing-lessons .quarto-post .thumbnail img { border-radius: 12px; object-fit: cover; transition: transform .45s var(--rv-spring); }
-#listing-lessons .quarto-post:hover .thumbnail img { transform: rotate(-1deg) scale(1.03); }
-.rv-section-label { font-family: var(--rv-serif); font-size: 1.8rem; border: 0; margin: 2.5rem 0 .2rem; }
+/* Lesson listing as M3 elevated cards */
+#listing-lessons .list.grid { gap: 16px; }
+#listing-lessons .quarto-grid-item.card { border: 0; border-radius: 12px; background: var(--md-surface-container-low); box-shadow: var(--md-elev-1); transition: box-shadow .25s var(--md-std), transform .35s var(--md-emph); }
+#listing-lessons .quarto-grid-item.card:hover { box-shadow: var(--md-elev-2); transform: translateY(-2px); }
+#listing-lessons .quarto-grid-item .card-img-top { border-radius: 12px 12px 0 0; }
+#listing-lessons .quarto-grid-item .listing-item-img-placeholder { display: none; }
+#listing-lessons .quarto-grid-item .card-body { padding: 16px; }
+#listing-lessons .quarto-grid-item .card-title { font: 560 24px/30px var(--rv-serif); letter-spacing: -.01em; color: var(--md-on-surface); }
+#listing-lessons .quarto-grid-item .card-text { color: var(--md-on-surface-variant); font-size: 14px; line-height: 20px; letter-spacing: .25px; }
+#listing-lessons .quarto-grid-item .listing-date { font: 500 12px/16px var(--md-font); letter-spacing: .5px; color: var(--md-on-surface-variant); }
+#listing-lessons .quarto-grid-item .card-footer { background: none; border: 0; padding: 0 16px 16px; }
+#listing-lessons .quarto-grid-item a, main.content #listing-lessons a { color: inherit !important; text-decoration: none !important; }
 
-/* ---------- posts ---------- */
-#title-block-header .title { font-size: clamp(2.2rem, 5.4vw, 3.2rem); line-height: 1.05; letter-spacing: -.025em; }
-#title-block-header .description { color: var(--rv-ink-2); font-size: 1.15rem; }
-#title-block-header .quarto-title-meta-heading { font: 500 11px/1.4 var(--rv-mono); letter-spacing: .06em; color: var(--rv-ink-3); }
-.quarto-category { border-radius: 999px; border: 1px solid var(--rv-line); color: var(--rv-ink-2); padding: 2px 10px; font-size: .78rem; }
-main.content h2 { font-size: 1.85rem; border-bottom: 0; margin-top: 2.6rem; }
-.lesson-shot img { border-radius: 16px; border: 1px solid var(--rv-line); box-shadow: var(--rv-shadow); transition: transform .5s var(--rv-spring); }
-.lesson-shot img:hover { transform: rotate(-.5deg) scale(1.01); }
-.credit { font-size: .9rem; color: var(--rv-ink-2); background: var(--rv-card); border: 1px solid var(--rv-line); border-radius: 14px; padding: 14px 16px; }
-main.content ol > li::marker { font-family: var(--rv-serif); font-weight: 600; color: var(--rv-ink-3); }
+/* progress chips on lesson cards (kept in this browser only) */
+.rv-progress { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.rv-chip { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 8px; font: 500 14px/20px var(--md-font); letter-spacing: .1px;
+  box-shadow: inset 0 0 0 1px var(--md-outline-variant); color: var(--md-on-surface-variant); text-decoration: none !important; position: relative; z-index: 2; }
+.rv-chip.on { background: var(--md-secondary-container); color: var(--md-on-secondary-container) !important; box-shadow: none; }
+
+/* ---------- posts and pages ---------- */
+main.content { font-size: 16px; line-height: 24px; }
+#title-block-header .title { font: 560 clamp(34px, 5vw, 50px) / 1.08 var(--rv-serif); letter-spacing: -.02em; }
+#title-block-header .description { color: var(--md-on-surface-variant); font-size: 16px; line-height: 24px; }
+#title-block-header .quarto-title-meta-heading { font: 500 12px/16px var(--md-font); letter-spacing: .5px; color: var(--md-on-surface-variant); text-transform: uppercase; }
+#title-block-header .quarto-title-meta-contents { font: 400 14px/20px var(--md-font); }
+.quarto-category { display: inline-flex; align-items: center; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--md-outline-variant); background: none; color: var(--md-on-surface-variant); font: 500 14px/20px var(--md-font); letter-spacing: .1px; opacity: 1; }
+main.content h2 { font: 560 28px/34px var(--rv-serif); letter-spacing: -.02em; border-bottom: 0; margin-top: 40px; }
+main.content a:not(.lesson-cta):not(.md-btn):not(.quarto-xref) { color: var(--md-primary); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.lesson-shot img { border-radius: 16px; box-shadow: var(--md-elev-1); transition: box-shadow .25s var(--md-std); }
+.lesson-shot img:hover { box-shadow: var(--md-elev-3); }
+.credit { font-size: 14px; line-height: 20px; letter-spacing: .25px; color: var(--md-on-surface-variant); background: var(--md-surface-container-highest); border-radius: 12px; padding: 16px; }
+.callout { border-radius: 12px; }
 
 /* ---------- footer ---------- */
-.nav-footer { border-top: 1px solid var(--rv-line); color: var(--rv-ink-3); font-size: .85rem; }
+.nav-footer { background: var(--md-surface-container); border-top: 0; color: var(--md-on-surface-variant); font: 400 14px/20px var(--md-font); }
 
+/* very small phones: keep the top app bar on one row */
+@media (max-width: 400px) {
+  .navbar .navbar-container { flex-wrap: nowrap; }
+  .navbar-brand { gap: 8px; margin-right: 0; min-width: 0; }
+  .navbar-brand .navbar-title, .rv-logo { width: 118px; height: 25px; }
+  .navbar .quarto-navbar-tools { margin-left: auto; }
+  .rv-hero { padding: 20px 12px; }
+  .toy { padding: 10px; }
+}
 @media (max-width: 860px) {
-  .rv-hero { grid-template-columns: 1fr; gap: 28px; padding: 1rem 0 2.5rem; }
-  .route svg.line { left: 22px; translate: 0 0; width: 2px; }
-  .stop { grid-template-columns: 44px 1fr; min-height: 0; margin-bottom: 18px; }
-  .stop .dot { grid-column: 1; } .stop:nth-child(n) .stop-card { grid-column: 2; }
+  .rv-hero { grid-template-columns: 1fr; gap: 24px; padding: 28px 20px; border-radius: 24px; margin-bottom: 32px; }
+  .rv-wrap { padding: 0 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }

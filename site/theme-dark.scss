@@ -1,44 +1,82 @@
 /*-- scss:defaults --*/
-// No web fonts from Google: Bootswatch would otherwise import Source Sans Pro / Lato.
+// Radyssey dark theme: Material 3, generated from seed teal with Google's material-color-utilities
+// (tonal-spot scheme). The lesson's line colours (base, roof, cart, rim) are M3 custom colours, unblended so they
+// keep the hues drawn on the images. Regenerate rather than hand-edit.
 $web-font-path: false;
-// Radyssey dark theme: the "Explorable" look at night.
-$font-family-sans-serif: "Inter", "Segoe UI", system-ui, sans-serif;
-$headings-font-family: "Newsreader", Georgia, serif;
+$font-family-sans-serif: "Roboto Flex", Roboto, "Segoe UI", system-ui, sans-serif;
+$headings-font-family: "Roboto Flex", Roboto, "Segoe UI", system-ui, sans-serif;
 $font-family-monospace: "Geist Mono", ui-monospace, Consolas, monospace;
-$font-size-root: 17px;
-$line-height-base: 1.65;
-$headings-font-weight: 560;
-
-$body-bg: #141413;
-$body-color: #EEECE6;
-$primary: #6EA2FF;
-$link-color: #EEECE6;
-$border-color: #2C2B28;
-$text-muted: #A9A79F;
-
-$border-radius: 14px;
-$border-radius-sm: 10px;
-$border-radius-lg: 20px;
-
-$navbar-bg: #141413;
-$navbar-fg: #A9A79F;
-$navbar-hl: #EEECE6;
-$footer-bg: #141413;
-$footer-fg: #75736C;
+$font-size-root: 16px;
+$line-height-base: 1.5;
+$headings-font-weight: 400;
+$body-bg: #0e1514;
+$body-color: #dde4e2;
+$primary: #80d5d0;
+$secondary: #b0ccca;
+$link-color: #80d5d0;
+$border-color: #3f4948;
+$text-muted: #bec9c7;
+$border-radius: 12px;
+$border-radius-sm: 8px;
+$border-radius-lg: 16px;
+$navbar-bg: #0e1514;
+$navbar-fg: #bec9c7;
+$navbar-hl: #dde4e2;
+$footer-bg: #1a2120;
+$footer-fg: #bec9c7;
 
 /*-- scss:rules --*/
 :root {
-  --rv-paper: #141413;
-  --rv-card: #1C1C1A;
-  --rv-ink: #EEECE6;
-  --rv-ink-2: #A9A79F;
-  --rv-ink-3: #75736C;
-  --rv-line: #2C2B28;
-  --rv-hl: #4A3F12;
-  --rv-base: #FF7A52;
-  --rv-roof: #6EA2FF;
-  --rv-cart: #4FD08F;
-  --rv-rim: #F2C14E;
-  --rv-brand: #E5533F;
-  --rv-shadow: 0 30px 60px -40px rgba(0, 0, 0, .8);
+  --md-primary: #80d5d0;
+  --md-on-primary: #003735;
+  --md-primary-container: #00504d;
+  --md-on-primary-container: #9cf1ec;
+  --md-secondary: #b0ccca;
+  --md-on-secondary: #1b3533;
+  --md-secondary-container: #324b4a;
+  --md-on-secondary-container: #cce8e6;
+  --md-tertiary: #b1c9e8;
+  --md-on-tertiary: #1a324b;
+  --md-tertiary-container: #314862;
+  --md-on-tertiary-container: #d1e4ff;
+  --md-error: #ffb4ab;
+  --md-on-error: #690005;
+  --md-error-container: #93000a;
+  --md-on-error-container: #ffdad6;
+  --md-surface: #0e1514;
+  --md-on-surface: #dde4e2;
+  --md-on-surface-variant: #bec9c7;
+  --md-surface-container-lowest: #090f0f;
+  --md-surface-container-low: #161d1c;
+  --md-surface-container: #1a2120;
+  --md-surface-container-high: #252b2b;
+  --md-surface-container-highest: #2f3635;
+  --md-surface-dim: #0e1514;
+  --md-surface-bright: #343a3a;
+  --md-outline: #889391;
+  --md-outline-variant: #3f4948;
+  --md-inverse-surface: #dde4e2;
+  --md-inverse-on-surface: #2b3231;
+  --md-inverse-primary: #006a67;
+  --md-shadow: #000000;
+  --md-scrim: #000000;
+  --md-base: #ffb3b0;
+  --md-on-base: #68000f;
+  --md-base-container: #8c1520;
+  --md-on-base-container: #ffdad8;
+  --md-roof: #97cbff;
+  --md-on-roof: #003354;
+  --md-roof-container: #004a77;
+  --md-on-roof-container: #cee5ff;
+  --md-cart: #62df74;
+  --md-on-cart: #003910;
+  --md-cart-container: #00531b;
+  --md-on-cart-container: #7ffc8d;
+  --md-rim: #ecc228;
+  --md-on-rim: #3c2f00;
+  --md-rim-container: #564500;
+  --md-on-rim-container: #ffe082;
+  --md-elev-1: 0 1px 2px rgba(0, 0, 0, .3), 0 1px 3px 1px rgba(0, 0, 0, .15);
+  --md-elev-2: 0 1px 2px rgba(0, 0, 0, .3), 0 2px 6px 2px rgba(0, 0, 0, .15);
+  --md-elev-3: 0 4px 8px 3px rgba(0, 0, 0, .15), 0 1px 3px rgba(0, 0, 0, .3);
 }

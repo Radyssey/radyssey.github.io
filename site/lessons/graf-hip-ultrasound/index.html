@@ -1,85 +1,182 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Graf Hip Ultrasound</title>
+<title>Graf hip ultrasound: learn it on one image – Radyssey</title>
+<meta name="description" content="An interactive lesson on the Graf method for infant hip ultrasound: orientation, anatomy, the usability check, the three lines, alpha and beta, and the types, all on one real image.">
+<meta property="og:title" content="Graf hip ultrasound: learn it on one image">
+<meta property="og:description" content="An interactive lesson on the Graf method for infant hip ultrasound: orientation, anatomy, the usability check, the three lines, alpha and beta, and the types, all on one real image.">
+<meta property="og:image" content="https://radyssey.github.io/lessons/graf-hip-ultrasound/card.png">
 <link rel="icon" href="../../favicon.svg"><link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="preload" href="../../fonts/RobotoFlex-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../fonts/Newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Radyssey "Explorable" look: warm paper, Newsreader headings, pill controls, and text colour-coded like the lines on the image */
-:root{color-scheme:light;--bg:#FBFAF6;--panel:#FFFFFF;--sunk:#F3F1EA;--ink:#1A1A1A;--muted:#5A5A55;--ink-3:#8C8B85;--line:#E6E3DA;--hl:#FCEFB4;
- --base:#E4572E;--roof:#2B66D9;--cart:#2E9E6A;--rim:#B7791F;--brand:#D93A2B;--ok:#2E7D32;--bad:#C2462B;
- --serif:"Newsreader",Georgia,serif;--mono:"Geist Mono",ui-monospace,Consolas,monospace;--spring:cubic-bezier(.34,1.56,.64,1);--shadow:0 30px 60px -40px rgba(0,0,0,.35)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#141413;--panel:#1C1C1A;--sunk:#232320;--ink:#EEECE6;--muted:#A9A79F;--ink-3:#75736C;--line:#2C2B28;--hl:#4A3F12;--base:#FF7A52;--roof:#6EA2FF;--cart:#4FD08F;--rim:#F2C14E;--brand:#E5533F;--ok:#8EE07A;--bad:#FF8A70;--shadow:0 30px 60px -40px rgba(0,0,0,.8)}}
-:root[data-theme="dark"]{color-scheme:dark;--bg:#141413;--panel:#1C1C1A;--sunk:#232320;--ink:#EEECE6;--muted:#A9A79F;--ink-3:#75736C;--line:#2C2B28;--hl:#4A3F12;--base:#FF7A52;--roof:#6EA2FF;--cart:#4FD08F;--rim:#F2C14E;--brand:#E5533F;--ok:#8EE07A;--bad:#FF8A70;--shadow:0 30px 60px -40px rgba(0,0,0,.8)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Inter","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
-::selection{background:var(--hl);color:var(--ink)}:focus-visible{outline:2px solid var(--roof);outline-offset:3px;border-radius:6px}
-h1,h2,h3,.stitle{font-family:var(--serif);font-weight:560;letter-spacing:-.02em}
-.wrap{max-width:1280px;margin:0 auto;padding:14px 20px 20px}
-.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 18px}
-.brand{display:flex;align-items:center;gap:10px;font:600 20px/1 var(--serif);text-decoration:none;color:var(--ink)}
-.brand img{width:30px;height:30px;transition:transform .4s var(--spring)}.brand:hover img{transform:rotate(-8deg) scale(1.08)}
-.home{color:var(--muted);text-decoration:none;font-size:15px}.home:hover{color:var(--ink)}
-h1{font-size:clamp(30px,4.2vw,50px);line-height:1.05;margin:0 0 10px}
-h2{font-size:30px;margin:44px 0 12px}
-.sub{color:var(--muted);margin:0;max-width:52em;font-size:17px}
-.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,1fr);grid-template-rows:auto 1fr;gap:0 20px;margin-top:22px}
-.pane{background:#000;border-radius:18px;overflow:hidden;position:relative;grid-column:1;grid-row:1;align-self:start;box-shadow:var(--shadow)}
+/* Radyssey lesson, Material 3. Colour tokens are generated from the site's seed with material-color-utilities;
+   --md-base/roof/cart/rim are the colours of the lines drawn on the image (red, blue, green, yellow). */
+:root{color-scheme:light;--md-primary:#006a67;--md-on-primary:#ffffff;--md-primary-container:#9cf1ec;--md-on-primary-container:#00504d;--md-secondary:#4a6361;--md-on-secondary:#ffffff;--md-secondary-container:#cce8e6;--md-on-secondary-container:#324b4a;--md-tertiary:#49607b;--md-on-tertiary:#ffffff;--md-tertiary-container:#d1e4ff;--md-on-tertiary-container:#314862;--md-error:#ba1a1a;--md-on-error:#ffffff;--md-error-container:#ffdad6;--md-on-error-container:#93000a;--md-surface:#f4fbf9;--md-on-surface:#161d1c;--md-on-surface-variant:#3f4948;--md-surface-container-lowest:#ffffff;--md-surface-container-low:#eff5f3;--md-surface-container:#e9efee;--md-surface-container-high:#e3e9e8;--md-surface-container-highest:#dde4e2;--md-surface-dim:#d5dbda;--md-surface-bright:#f4fbf9;--md-outline:#6f7978;--md-outline-variant:#bec9c7;--md-inverse-surface:#2b3231;--md-inverse-on-surface:#ecf2f1;--md-inverse-primary:#80d5d0;--md-shadow:#000000;--md-scrim:#000000;--md-base:#ae2f34;--md-on-base:#ffffff;--md-base-container:#ffdad8;--md-on-base-container:#410006;--md-roof:#00639c;--md-on-roof:#ffffff;--md-roof-container:#cee5ff;--md-on-roof-container:#001d33;--md-cart:#006e26;--md-on-cart:#ffffff;--md-cart-container:#7ffc8d;--md-on-cart-container:#002106;--md-rim:#725c00;--md-on-rim:#ffffff;--md-rim-container:#ffe082;--md-on-rim-container:#231b00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--logo-brand:#2dd4bf;--logo-ink:#f9f9f9;color-scheme:dark;--md-primary:#80d5d0;--md-on-primary:#003735;--md-primary-container:#00504d;--md-on-primary-container:#9cf1ec;--md-secondary:#b0ccca;--md-on-secondary:#1b3533;--md-secondary-container:#324b4a;--md-on-secondary-container:#cce8e6;--md-tertiary:#b1c9e8;--md-on-tertiary:#1a324b;--md-tertiary-container:#314862;--md-on-tertiary-container:#d1e4ff;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6;--md-surface:#0e1514;--md-on-surface:#dde4e2;--md-on-surface-variant:#bec9c7;--md-surface-container-lowest:#090f0f;--md-surface-container-low:#161d1c;--md-surface-container:#1a2120;--md-surface-container-high:#252b2b;--md-surface-container-highest:#2f3635;--md-surface-dim:#0e1514;--md-surface-bright:#343a3a;--md-outline:#889391;--md-outline-variant:#3f4948;--md-inverse-surface:#dde4e2;--md-inverse-on-surface:#2b3231;--md-inverse-primary:#006a67;--md-shadow:#000000;--md-scrim:#000000;--md-base:#ffb3b0;--md-on-base:#68000f;--md-base-container:#8c1520;--md-on-base-container:#ffdad8;--md-roof:#97cbff;--md-on-roof:#003354;--md-roof-container:#004a77;--md-on-roof-container:#cee5ff;--md-cart:#62df74;--md-on-cart:#003910;--md-cart-container:#00531b;--md-on-cart-container:#7ffc8d;--md-rim:#ecc228;--md-on-rim:#3c2f00;--md-rim-container:#564500;--md-on-rim-container:#ffe082}}
+:root[data-theme="dark"]{--logo-brand:#2dd4bf;--logo-ink:#f9f9f9;color-scheme:dark;--md-primary:#80d5d0;--md-on-primary:#003735;--md-primary-container:#00504d;--md-on-primary-container:#9cf1ec;--md-secondary:#b0ccca;--md-on-secondary:#1b3533;--md-secondary-container:#324b4a;--md-on-secondary-container:#cce8e6;--md-tertiary:#b1c9e8;--md-on-tertiary:#1a324b;--md-tertiary-container:#314862;--md-on-tertiary-container:#d1e4ff;--md-error:#ffb4ab;--md-on-error:#690005;--md-error-container:#93000a;--md-on-error-container:#ffdad6;--md-surface:#0e1514;--md-on-surface:#dde4e2;--md-on-surface-variant:#bec9c7;--md-surface-container-lowest:#090f0f;--md-surface-container-low:#161d1c;--md-surface-container:#1a2120;--md-surface-container-high:#252b2b;--md-surface-container-highest:#2f3635;--md-surface-dim:#0e1514;--md-surface-bright:#343a3a;--md-outline:#889391;--md-outline-variant:#3f4948;--md-inverse-surface:#dde4e2;--md-inverse-on-surface:#2b3231;--md-inverse-primary:#006a67;--md-shadow:#000000;--md-scrim:#000000;--md-base:#ffb3b0;--md-on-base:#68000f;--md-base-container:#8c1520;--md-on-base-container:#ffdad8;--md-roof:#97cbff;--md-on-roof:#003354;--md-roof-container:#004a77;--md-on-roof-container:#cee5ff;--md-cart:#62df74;--md-on-cart:#003910;--md-cart-container:#00531b;--md-on-cart-container:#7ffc8d;--md-rim:#ecc228;--md-on-rim:#3c2f00;--md-rim-container:#564500;--md-on-rim-container:#ffe082}
+:root{--serif:"Newsreader",Georgia,serif;--font:"Roboto Flex",Roboto,"Segoe UI",system-ui,sans-serif;--emph:cubic-bezier(.2,0,0,1);--emph-dec:cubic-bezier(.05,.7,.1,1);
+ --elev-1:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);--elev-3:0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--md-surface);color:var(--md-on-surface);font:400 16px/24px var(--font);letter-spacing:.5px;-webkit-font-smoothing:antialiased}
+::selection{background:var(--md-primary-container);color:var(--md-on-primary-container)}
+:focus-visible{outline:3px solid var(--md-secondary);outline-offset:2px;border-radius:8px}
+a{color:var(--md-primary);text-underline-offset:3px}
+/* top app bar */
+.appbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:4px;height:64px;padding:0 8px;background:var(--md-surface);transition:background .25s var(--emph)}
+body.scrolled .appbar{background:var(--md-surface-container)}
+.iconbtn{width:48px;height:48px;display:grid;place-items:center;border-radius:24px;color:var(--md-on-surface-variant);position:relative;overflow:hidden}
+.iconbtn svg{width:24px;height:24px;fill:currentColor}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--md-on-surface);font:500 22px/28px var(--font);letter-spacing:0;min-width:0}
+.brand img{width:auto;height:26px;flex:none}.brand span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand .lesson{color:var(--md-on-surface-variant);font-weight:400}
+.wrap{max-width:1280px;margin:0 auto;padding:8px 24px 24px}
+h1{font:560 clamp(32px,4.4vw,50px)/1.08 var(--serif);letter-spacing:-.02em;margin:8px 0 8px}
+h2{font:560 30px/36px var(--serif);letter-spacing:-.02em;margin:48px 0 16px}
+.sub{color:var(--md-on-surface-variant);margin:0;max-width:52em}
+.app{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,1fr);grid-template-rows:auto 1fr;gap:0 24px;margin-top:24px}
+.pane{background:var(--md-surface-container-lowest);border-radius:20px;padding:12px;position:relative;grid-column:1;grid-row:1;align-self:start;box-shadow:var(--elev-1)}
+.img{background:#000;border-radius:12px;overflow:hidden}
+.bar{padding:12px 4px 2px}.bar:empty{display:none}
+.nums{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.num{font:400 14px/20px var(--font);color:var(--md-on-surface-variant)}.num small{font:400 20px/36px var(--font);margin-right:2px}.num b{font:400 28px/36px var(--font);font-variant-numeric:tabular-nums}
+.badge{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:8px;font:500 14px/20px var(--font);margin-left:auto;animation:pop .35s var(--emph-dec)}
+@keyframes pop{from{transform:scale(.88)}}
+.desc{margin:6px 0 0;font-size:14px;line-height:20px;letter-spacing:.25px;color:var(--md-on-surface-variant)}
+.handle{cursor:grab;outline:none}.handle:active{cursor:grabbing}
+.handle:focus-visible circle:nth-last-child(2){stroke:var(--md-on-surface);stroke-width:5}
+/* self-test */
+.rv-score{position:sticky;top:64px;z-index:2;display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;padding:12px 16px;border-radius:12px;background:var(--md-surface-container);font:500 14px/20px var(--font)}
+.rv-score span:last-of-type{color:var(--md-on-surface-variant);margin-left:auto}.rv-score b{font-size:18px}
+.rv-score i{flex-basis:100%;height:4px;border-radius:2px;background:linear-gradient(var(--md-primary),var(--md-primary)) 0 0/var(--p) 100% no-repeat,var(--md-secondary-container)}
+.q .opts button.right{background:var(--md-cart-container);color:var(--md-on-cart-container);box-shadow:none}
+.q .opts button.wrong{background:var(--md-error-container);color:var(--md-on-error-container);box-shadow:none}
+.q .opts button:disabled{cursor:default}.q .opts button:disabled:not(.right):not(.wrong){opacity:.5}
+.q .fb{margin:8px 0 0;font-size:14px;line-height:20px}.q .fb .ok{color:var(--md-cart);font-weight:600}.q .fb .bad{color:var(--md-error);font-weight:600}
+.q .again,.rv-result .retake{margin-top:8px;height:36px;padding:0 16px;border-radius:18px;box-shadow:inset 0 0 0 1px var(--md-outline);color:var(--md-primary)}
+.rv-result{margin:16px 0;padding:20px;border-radius:16px;background:var(--md-primary-container);color:var(--md-on-primary-container)}
+.rv-result .big{font:560 28px/34px var(--serif);margin:0 0 4px}.rv-result p{margin:0 0 8px}
+.rv-result .retake{color:var(--md-on-primary-container);box-shadow:inset 0 0 0 1px currentColor}
+/* snackbar */
+.rv-snack{position:fixed;left:50%;bottom:24px;z-index:9;display:flex;align-items:center;gap:8px;max-width:calc(100% - 32px);padding:6px 8px 6px 16px;border-radius:4px;
+ background:var(--md-inverse-surface);color:var(--md-inverse-on-surface);font:400 14px/20px var(--font);box-shadow:var(--elev-3);transform:translate(-50%,24px);opacity:0;transition:transform .3s var(--emph-dec),opacity .2s}
+.rv-snack.on{transform:translate(-50%,0);opacity:1}.rv-snack button{height:36px;padding:0 12px;border-radius:18px;color:var(--md-inverse-primary);font-weight:500}
+@media (max-width:900px) and (orientation:portrait),(max-width:600px){.rv-snack{bottom:96px}.rv-score{top:0;position:static}}
+.ring{transform-box:fill-box;transform-origin:center;animation:ring 2.2s ease-out infinite}
+@keyframes ring{0%{transform:scale(.7);opacity:.75}100%{transform:scale(2.1);opacity:0}}
+.rv-logo{height:28px;width:auto;display:block;overflow:visible}.rv-logo .mk{transform-box:fill-box;transform-origin:center;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.brand:hover .rv-logo .mk{transform:rotate(-5deg)}
+:root{--logo-brand:#0d9488;--logo-ink:#191d20}
 .cap{grid-column:1;grid-row:2;align-self:start}
-.side{grid-column:2;grid-row:1/span 2;align-self:start}
 #us{width:100%;height:auto;display:block;touch-action:none;user-select:none}
-.side{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:var(--shadow)}
-.steps{display:flex;flex-wrap:wrap;gap:6px}
-.steps button{min-width:36px;padding:5px 9px;font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
-.steps button.on{background:var(--ink);color:var(--bg);border-color:var(--ink);transform:scale(1.08)}
-button{font:inherit;padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer;transition:transform .3s var(--spring),background .2s,color .2s,border-color .2s}
-button:hover{border-color:var(--ink);transform:translateY(-1px)}button:active{transform:scale(.94)}
-.stitle{font-size:26px;line-height:1.15;margin:4px 0 0}.stext p{margin:8px 0}.stext ul,.stext ol{margin:8px 0;padding-left:22px}
-.stext.swap{animation:swap .45s var(--spring)}@keyframes swap{from{opacity:0;transform:translateY(8px)}}
-.read{background:var(--sunk);border-radius:16px;padding:14px 16px}
-.big{font:600 28px/1.1 var(--serif);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.c-roof{color:var(--roof);font-weight:600}.c-cart{color:var(--cart);font-weight:600}.c-base{color:var(--base);font-weight:600}.c-rim{color:var(--rim);font-weight:600}
+/* the step panel is an M3 filled card */
+.side{grid-column:2;grid-row:1/span 2;align-self:start;background:var(--md-surface-container-low);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.progress{display:grid;gap:8px}.progress .lbl{font:500 12px/16px var(--font);letter-spacing:.5px;color:var(--md-on-surface-variant)}
+.track{height:4px;border-radius:2px;background:var(--md-secondary-container);overflow:hidden}.track i{display:block;height:100%;width:0;background:var(--md-primary);border-radius:2px;transition:width .5s var(--emph)}
+/* buttons: state layer + ripple */
+button{font:500 14px/20px var(--font);letter-spacing:.1px;cursor:pointer;border:0;color:inherit;background:none;position:relative;overflow:hidden;isolation:isolate}
+button::before,.iconbtn::before{content:"";position:absolute;inset:0;background:currentColor;opacity:0;transition:opacity .2s var(--emph);z-index:-1;border-radius:inherit}
+button:hover::before,.iconbtn:hover::before{opacity:.08}button:active::before,button:focus-visible::before{opacity:.1}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.12;transform:scale(0);pointer-events:none;animation:ripple .55s var(--emph-dec) forwards;z-index:-1}
+@keyframes ripple{to{transform:scale(1);opacity:0}}
+button svg{width:18px;height:18px;fill:currentColor;flex:none}
+/* step chips (M3 filter chips) */
+.steps{display:flex;flex-wrap:wrap;gap:8px}
+.steps button{min-width:40px;height:32px;padding:0 12px;border-radius:8px;box-shadow:inset 0 0 0 1px var(--md-outline-variant);color:var(--md-on-surface-variant);font-variant-numeric:tabular-nums}
+.steps button.on{background:var(--md-secondary-container);color:var(--md-on-secondary-container);box-shadow:none}
+.stitle{font:560 26px/32px var(--serif);letter-spacing:-.02em;margin:0}
+.stext p{margin:8px 0}.stext ul,.stext ol{margin:8px 0;padding-left:22px}
+.stext.swap{animation:swap .4s var(--emph-dec)}@keyframes swap{from{opacity:0;transform:translateY(8px)}}
+.c-roof{color:var(--md-roof);font-weight:600}.c-cart{color:var(--md-cart);font-weight:600}.c-base{color:var(--md-base);font-weight:600}.c-rim{color:var(--md-rim);font-weight:600}
+/* readout: M3 filled card with display numbers */
+.read{background:var(--md-surface-container-highest);border-radius:16px;padding:16px}
+.big{font:400 32px/40px var(--font);letter-spacing:0;font-variant-numeric:tabular-nums}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:center}.ctl input{width:100%}input[type=range]{accent-color:var(--roof)}
-.gk{color:var(--muted);font-size:13px;font-style:italic}
-table{border-collapse:separate;border-spacing:0;width:100%;font-size:15px;background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-th,td{border-bottom:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}tr:last-child td{border-bottom:0}
-th{background:var(--sunk);font:500 12px/1.4 var(--mono);letter-spacing:.04em;color:var(--muted)}
-td:first-child{font:600 18px/1.3 var(--serif)}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px 18px;margin:12px 0}
-.q .opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.play{align-self:flex-start;background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600;padding:11px 20px}
-.play:hover{background:var(--ink);box-shadow:0 10px 24px -12px rgba(0,0,0,.45);transform:translateY(-2px)}
-.play.on{display:none}
-a{color:inherit;text-decoration-color:color-mix(in srgb,var(--roof) 55%,transparent);text-decoration-thickness:1.5px;text-underline-offset:3px}
-ol li::marker{font-family:var(--serif);font-weight:600;color:var(--ink-3)}
-.foot{margin:40px 0 8px;border-top:1px solid var(--line);padding-top:16px;color:var(--ink-3);font-size:14px;text-align:center}
-@media (max-width:900px){.app{grid-template-columns:1fr;grid-template-rows:auto;gap:12px}.pane{position:sticky;top:0;z-index:3;border-radius:0 0 16px 16px;margin:0 -12px;box-shadow:0 8px 18px rgba(0,0,0,.35);grid-row:1}.side{grid-column:1;grid-row:2;padding:16px;border-radius:18px}.cap{grid-row:3;margin:0}#us{max-height:58vh}.wrap{padding:10px 12px}h1{font-size:28px}.steps button{min-width:40px;padding:7px 8px}table{display:block;overflow-x:auto;white-space:nowrap}.stitle{font-size:22px}}
+#extra .row button,#reset{height:40px;padding:0 16px;border-radius:20px;box-shadow:inset 0 0 0 1px var(--md-outline);color:var(--md-primary)}
+.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:8px 12px;align-items:center;font:500 14px/20px var(--font)}.ctl input{width:100%}
+input[type=range]{accent-color:var(--md-primary);height:24px}
+/* tools: M3 filter chips */
+.tools{display:flex;flex-wrap:wrap;gap:8px}
+.tools button{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 16px 0 8px;border-radius:8px;box-shadow:inset 0 0 0 1px var(--md-outline);color:var(--md-on-surface-variant)}
+.tools button[aria-pressed="true"]{background:var(--md-secondary-container);color:var(--md-on-secondary-container);box-shadow:none}
+/* back / next: M3 common buttons */
+.stepnav{display:flex;gap:8px}
+.stepnav button{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 24px;border-radius:20px}
+#prev{box-shadow:inset 0 0 0 1px var(--md-outline);color:var(--md-primary)}
+#next{background:var(--md-primary);color:var(--md-on-primary)}#next:hover{box-shadow:var(--elev-1)}
+/* play with the angles: M3 extended FAB */
+.play{align-self:flex-start;display:inline-flex;align-items:center;gap:12px;height:56px;padding:0 20px 0 16px;border-radius:16px;background:var(--md-tertiary-container);color:var(--md-on-tertiary-container);font:500 14px/20px var(--font);box-shadow:var(--elev-3);transition:box-shadow .2s var(--emph)}
+.play svg{width:24px;height:24px}.play.on{display:none}
+.gk{color:var(--md-on-surface-variant);font-size:14px;line-height:20px;letter-spacing:.25px;font-style:italic}
+/* the classification table as an outlined card */
+.tbl{overflow-x:auto;border-radius:12px;box-shadow:inset 0 0 0 1px var(--md-outline-variant)}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:20px;letter-spacing:.25px}
+th,td{padding:12px 16px;text-align:left;vertical-align:top;border-bottom:1px solid var(--md-outline-variant)}tr:last-child td{border-bottom:0}
+th{font:500 14px/20px var(--font);color:var(--md-on-surface-variant);background:var(--md-surface-container)}
+td:first-child{font:500 16px/24px var(--font)}
+/* quiz: outlined cards with chip answers */
+.card{background:var(--md-surface);border-radius:12px;box-shadow:inset 0 0 0 1px var(--md-outline-variant);padding:16px;margin:12px 0}
+.q b{font-weight:500}
+.q .opts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
+.q .opts button{height:32px;padding:0 16px;border-radius:8px;box-shadow:inset 0 0 0 1px var(--md-outline);color:var(--md-on-surface-variant)}
+ol{padding-left:22px}ol li{margin:6px 0;font-size:14px;line-height:20px}
+.foot{margin:40px 0 8px;padding:16px;border-radius:12px;background:var(--md-surface-container);color:var(--md-on-surface-variant);font-size:14px;line-height:20px;text-align:center}
+@media (max-width:900px) and (orientation:portrait),(max-width:600px){
+ .wrap{padding:4px 12px 96px}
+ .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto;gap:12px}
+ .side,.cap{min-width:0}
+ .pane{position:sticky;top:64px;z-index:3;border-radius:0 0 20px 20px;margin:0 -12px;padding:8px 8px 6px;box-shadow:0 4px 12px rgba(0,0,0,.25);grid-row:1}
+ .bar{padding:6px 4px 0}.num b{font-size:22px;line-height:28px}.desc{display:none}.badge{height:28px}
+ .side{grid-column:1;grid-row:2;padding:16px;border-radius:20px}
+ .cap{grid-row:3;margin:0}
+ #us{max-height:44vh}
+ .steps{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px;padding:0 16px 4px;scrollbar-width:none}.steps::-webkit-scrollbar{display:none}
+ .steps button{flex:none;min-width:44px}
+ /* back / next become a bottom app bar */
+ .stepnav{position:fixed;left:0;right:0;bottom:0;z-index:6;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--md-surface-container);box-shadow:0 -1px 3px rgba(0,0,0,.12)}
+ .stepnav button{height:48px;border-radius:24px}
+ .brand .lesson{display:none}
+ .tbl{margin:0 -4px}
+}
+@media (max-height:540px) and (orientation:landscape) and (min-width:601px){
+ .appbar{height:52px}.wrap{padding:0 12px 24px}h1{font-size:26px;line-height:32px;margin:0 0 4px}.sub{font-size:14px;line-height:20px}
+ .app{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 12px;margin-top:12px}
+ .pane{position:sticky;top:56px}#us{max-height:calc(100vh - 68px)}
+ .side{padding:14px;gap:12px;border-radius:16px}.steps{gap:6px}.stitle{font-size:20px;line-height:28px}
+}
+/* bigger touch targets on touch screens (M3: 48 px) */
+@media (pointer:coarse){input[type=range]{height:44px}.steps button{height:40px}.tools button{height:40px}.q .opts button{height:40px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style></head><body><div class="wrap">
-<div class="top"><a class="brand" href="../../index.html" target="_top"><img src="../../logo.svg" alt="">Radyssey</a><a class="home" href="../../posts/2026-10-26-graf-hip-ultrasound/" target="_top">← About this lesson</a></div>
+</style></head><body>
+<header class="appbar"><a class="iconbtn" href="../../index.html" target="_top" aria-label="All lessons"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg></a>
+<a class="brand" href="../../index.html" target="_top"><svg class="rv-logo" viewBox="0 0 227.0 48" role="img" aria-label="Radyssey"><g class="mk"><path fill="var(--logo-brand)" d="M0 0H35A16 16 0 0 1 39.51 31.35L31.6 20.8Q29.5 18 26 18H13.5Z"/><path fill="var(--logo-ink)" d="M0 18H10Q13.5 18 15.6 20.8L36 48H0Z"/></g><path fill="var(--logo-ink)" transform="translate(66 0)" d="M1.9695 35.45238095238095V16.381380952380947H8.775V35.45238095238095ZM8.775 25.06863095238095 5.74275 22.51413095238095Q6.85425 19.286880952380947 8.72607055214724 17.63913095238095Q10.59789110429448 15.99138095238095 13.62075 15.99138095238095Q14.96625 15.99138095238095 15.965625 16.35213095238095Q16.965 16.71288095238095 17.6475 17.43438095238095L13.728 22.71888095238095Q13.3965 22.34838095238095 12.842375 22.12900595238095Q12.28825 21.90963095238095 11.5635 21.90963095238095Q10.2375 21.90963095238095 9.506250000000001 22.711522461814912Q8.775 23.513413971248873 8.775 25.06863095238095ZM26.8125 35.84238095238095Q24.1605 35.84238095238095 22.098374999999997 34.55538095238095Q20.03625 33.26838095238095 18.861375 31.03563095238095Q17.6865 28.80288095238095 17.6865 25.926630952380947Q17.6865 23.04063095238095 18.861375 20.79325595238095Q20.03625 18.545880952380948 22.098374999999997 17.26863095238095Q24.1605 15.99138095238095 26.8125 15.99138095238095Q28.6065 15.99138095238095 30.088500000000003 16.64463095238095Q31.570500000000003 17.29788095238095 32.530875 18.458130952380948Q33.49125 19.61838095238095 33.696 21.11988095238095V30.713880952380947Q33.49125 32.21538095238095 32.53575 33.375630952380945Q31.58025 34.53588095238095 30.093375 35.18913095238095Q28.6065 35.84238095238095 26.8125 35.84238095238095ZM28.275 29.797380952380948Q29.951999999999998 29.797380952380948 30.975749999999998 28.710255952380948Q31.9995 27.623130952380947 31.9995 25.91688095238095Q31.9995 24.76638095238095 31.541249999999998 23.90350595238095Q31.083 23.04063095238095 30.2445 22.53850595238095Q29.406 22.03638095238095 28.30425 22.03638095238095Q27.21225 22.03638095238095 26.37375 22.53850595238095Q25.535249999999998 23.04063095238095 25.042875 23.91813095238095Q24.5505 24.795630952380947 24.5505 25.91688095238095Q24.5505 27.03813095238095 25.02825 27.91563095238095Q25.506 28.79313095238095 26.359125 29.29525595238095Q27.21225 29.797380952380948 28.275 29.797380952380948ZM31.75575 35.45238095238095V30.33363095238095L32.73075 25.68288095238095L31.75575 21.071130952380948V16.381380952380947H38.415V35.45238095238095ZM49.783500000000004 35.84238095238095Q47.014500000000005 35.84238095238095 44.90900843558283 34.555637531328316Q42.80351687116565 33.26889411027569 41.61350843558283 31.03588753132832Q40.423500000000004 28.80288095238095 40.423500000000004 25.924569976771192Q40.423500000000004 23.036191927990707 41.613 20.791036440185827Q42.8025 18.545880952380948 44.906625000000005 17.26863095238095Q47.01075 15.99138095238095 49.783500000000004 15.99138095238095Q51.606750000000005 15.99138095238095 53.161875 16.64463095238095Q54.717 17.29788095238095 55.765125 18.458130952380948Q56.813250000000004 19.61838095238095 57.018 21.11988095238095V30.42138095238095Q56.813250000000004 31.92288095238095 55.77 33.156255952380945Q54.72675 34.38963095238095 53.16675000000001 35.116005952380945Q51.606750000000005 35.84238095238095 49.783500000000004 35.84238095238095ZM51.012 29.797380952380948Q52.143 29.797380952380948 52.96576378676471 29.308277764461486Q53.788527573529414 28.81917457654202 54.262513786764714 27.943277764461484Q54.73650000000001 27.06738095238095 54.73650000000001 25.91688095238095Q54.73650000000001 24.762609725965856 54.276201086956526 23.902540150494158Q53.815902173913045 23.04247057502246 52.97945108695652 22.539425763701704Q52.143 22.03638095238095 51.046125 22.03638095238095Q49.949250000000006 22.03638095238095 49.11150528169014 22.54028498081697Q48.273760563380286 23.04418900925299 47.780630281690144 23.920395170390428Q47.2875 24.796601331527867 47.2875 25.91688095238095Q47.2875 27.03813095238095 47.764457512315275 27.915240952380948Q48.24141502463054 28.79235095238095 49.097637931034484 29.29486595238095Q49.95386083743843 29.797380952380948 51.012 29.797380952380948ZM61.152 35.45238095238095H54.49275V30.33363095238095L55.46775 25.68288095238095L54.346500000000006 21.071130952380948V7.021380952380948H61.152ZM70.05375 35.50113095238095 62.3805 16.381380952380947H69.64425L74.34375 32.10813095238095H71.487L76.206 16.381380952380947H83.45025L75.63074999999999 35.50113095238095ZM65.52974999999999 43.54488095238095 71.16525 31.103880952380948 75.63074999999999 35.50113095238095 72.33525 43.54488095238095ZM91.91325 35.98863095238095Q90.17775 35.98863095238095 88.4715 35.53525595238095Q86.76525000000001 35.08188095238095 85.307625 34.27750595238095Q83.85000000000001 33.47313095238095 82.83600000000001 32.41038095238095L86.53125 28.62738095238095Q87.477 29.612130952380948 88.77375 30.16300595238095Q90.07050000000001 30.713880952380947 91.55250000000001 30.713880952380947Q92.41050000000001 30.713880952380947 92.873625 30.475005952380947Q93.33675000000001 30.23613095238095 93.33675000000001 29.797380952380948Q93.33675000000001 29.17338095238095 92.67862500000001 28.85163095238095Q92.02050000000001 28.52988095238095 90.99675000000002 28.27150595238095Q89.97300000000001 28.013130952380948 88.83225000000002 27.647505952380946Q87.6915 27.28188095238095 86.653125 26.648130952380946Q85.61475 26.014380952380947 84.97125 24.88825595238095Q84.32775000000001 23.76213095238095 84.32775000000001 21.99738095238095Q84.32775000000001 20.17413095238095 85.3125 18.784755952380948Q86.29725 17.39538095238095 88.101 16.59100595238095Q89.90475 15.78663095238095 92.313 15.78663095238095Q94.77975 15.78663095238095 96.99787500000001 16.630005952380948Q99.21600000000001 17.47338095238095 100.56150000000001 19.16013095238095L96.837 22.943130952380947Q95.90100000000001 21.87063095238095 94.76025000000001 21.46600595238095Q93.6195 21.06138095238095 92.69325 21.06138095238095Q91.81575000000001 21.06138095238095 91.42087500000001 21.31975595238095Q91.02600000000001 21.57813095238095 91.02600000000001 21.99738095238095Q91.02600000000001 22.51413095238095 91.6695 22.82613095238095Q92.313 23.138130952380948 93.33675 23.39163095238095Q94.3605 23.64513095238095 95.486625 24.030255952380948Q96.61275 24.41538095238095 97.63650000000001 25.10275595238095Q98.66025 25.79013095238095 99.30375000000001 26.92113095238095Q99.94725000000001 28.05213095238095 99.94725000000001 29.85588095238095Q99.94725000000001 32.67363095238095 97.77300000000001 34.331130952380946Q95.59875000000001 35.98863095238095 91.91325 35.98863095238095ZM109.50225 35.98863095238095Q107.76675 35.98863095238095 106.0605 35.53525595238095Q104.35425000000001 35.08188095238095 102.896625 34.27750595238095Q101.43900000000001 33.47313095238095 100.42500000000001 32.41038095238095L104.12025 28.62738095238095Q105.066 29.612130952380948 106.36275 30.16300595238095Q107.65950000000001 30.713880952380947 109.14150000000001 30.713880952380947Q109.99950000000001 30.713880952380947 110.462625 30.475005952380947Q110.92575000000001 30.23613095238095 110.92575000000001 29.797380952380948Q110.92575000000001 29.17338095238095 110.26762500000001 28.85163095238095Q109.60950000000001 28.52988095238095 108.58575000000002 28.27150595238095Q107.56200000000001 28.013130952380948 106.42125000000001 27.647505952380946Q105.2805 27.28188095238095 104.242125 26.648130952380946Q103.20375 26.014380952380947 102.56025 24.88825595238095Q101.91675000000001 23.76213095238095 101.91675000000001 21.99738095238095Q101.91675000000001 20.17413095238095 102.9015 18.784755952380948Q103.88625 17.39538095238095 105.69 16.59100595238095Q107.49375 15.78663095238095 109.902 15.78663095238095Q112.36875 15.78663095238095 114.586875 16.630005952380948Q116.805 17.47338095238095 118.15050000000001 19.16013095238095L114.426 22.943130952380947Q113.49000000000001 21.87063095238095 112.34925000000001 21.46600595238095Q111.2085 21.06138095238095 110.28225 21.06138095238095Q109.40475 21.06138095238095 109.00987500000001 21.31975595238095Q108.61500000000001 21.57813095238095 108.61500000000001 21.99738095238095Q108.61500000000001 22.51413095238095 109.2585 22.82613095238095Q109.902 23.138130952380948 110.92575 23.39163095238095Q111.9495 23.64513095238095 113.075625 24.030255952380948Q114.20175 24.41538095238095 115.22550000000001 25.10275595238095Q116.24925 25.79013095238095 116.89275 26.92113095238095Q117.53625000000001 28.05213095238095 117.53625000000001 29.85588095238095Q117.53625000000001 32.67363095238095 115.36200000000001 34.331130952380946Q113.18775000000001 35.98863095238095 109.50225 35.98863095238095ZM129.48975000000002 35.90088095238095Q126.27225 35.90088095238095 123.810375 34.633380952380946Q121.3485 33.36588095238095 119.95425 31.09900595238095Q118.56 28.83213095238095 118.56 25.91688095238095Q118.56 23.030880952380947 119.92012500000001 20.78350595238095Q121.28025000000001 18.536130952380947 123.644625 17.23450595238095Q126.009 15.932880952380948 128.96325000000002 15.932880952380948Q131.86875 15.932880952380948 134.09662500000002 17.156505952380947Q136.3245 18.38013095238095 137.59199999999998 20.54463095238095Q138.8595 22.70913095238095 138.8595 25.487880952380948Q138.8595 26.04363095238095 138.801 26.64813095238095Q138.7425 27.252630952380947 138.567 28.04238095238095L121.7385 28.13013095238095V23.74263095238095L135.876 23.65488095238095L132.8145 25.556130952380947Q132.79500000000002 23.95713095238095 132.370875 22.91875595238095Q131.94675 21.88038095238095 131.12287500000002 21.34413095238095Q130.299 20.80788095238095 129.06075 20.80788095238095Q127.77375 20.80788095238095 126.828 21.422130952380947Q125.88225 22.03638095238095 125.38012499999999 23.17225595238095Q124.878 24.30813095238095 124.878 25.91688095238095Q124.878 27.554880952380948 125.41912500000001 28.690755952380947Q125.96025 29.82663095238095 126.98400000000001 30.416505952380952Q128.00775000000002 31.00638095238095 129.48000000000002 31.00638095238095Q130.8645 31.00638095238095 131.94675 30.54325595238095Q133.029 30.080130952380948 133.887 29.10513095238095L137.436 32.634630952380945Q136.0125 34.26288095238095 134.004 35.08188095238095Q131.9955 35.90088095238095 129.48975000000002 35.90088095238095ZM146.37675 35.50113095238095 138.7035 16.381380952380947H145.96725L150.66675 32.10813095238095H147.81L152.529 16.381380952380947H159.77325L151.95374999999999 35.50113095238095ZM141.85275 43.54488095238095 147.48825 31.103880952380948 151.95374999999999 35.50113095238095 148.65825 43.54488095238095Z"/></svg><span class="lesson">· Graf hip ultrasound</span></a></header>
+<div class="wrap">
 <h1>Graf hip ultrasound: learn it on one image</h1>
-<p class="sub">An interactive teaching brief built on a real Graf standard-plane image. Work through steps 1–12 beside the image: each step changes what is drawn on it. It is a study aid, not a substitute for supervised scanning.</p>
-
 <div class="app">
-<div class="pane"><svg id="us" viewBox="40 15 1188 947" role="img" aria-label="Interactive infant hip ultrasound with Graf overlays"></svg></div>
+<div class="pane"><div class="img"><svg id="us" viewBox="40 15 1188 947" role="img" aria-label="Interactive infant hip ultrasound with Graf overlays"></svg></div><div id="readout" class="bar" aria-live="polite"></div></div>
 <p class="gk cap">Image: Walter SG et al., Front Pediatr 2022;10:990806, Fig. 2 (cropped; in screen view rotated and flipped so that cranial is on the left), CC BY 4.0. The original authors' printed labels and arrows were removed digitally (inpainted); faint smoothing may remain where they were. All labels now come from this page. The coloured overlays are added here: landmark positions are hand-placed approximations, and the simulation in step 12 is a schematic drawn over the image, not a real dysplastic scan.</p>
 <div class="side">
-<button id="play" class="play">Play with the angles ▶</button>
+<button id="play" class="play"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M320-200v-560l440 280-440 280Z"/></svg>Play with the angles</button>
+<div class="progress"><span class="lbl" id="stepnum">Step 1 of 12</span><div class="track"><i id="prog"></i></div></div>
 <div class="steps" id="steps"></div>
 <p class="stitle" id="stitle"></p>
 <div class="stext" id="stext"></div>
 <div id="extra"></div>
-<div class="row"><button id="prev">◀ Back</button><button id="next" style="font-weight:700">Next ▶</button>
-<button id="view">⟳ Screen / Graf view</button><button id="labs">Labels on/off</button><button id="side" style="font-weight:700">Hip: RIGHT</button></div>
+<div class="tools"><button id="view" aria-pressed="false"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M480-160q-134 0-227-93t-93-227q0-134 93-227t227-93q69 0 132 28.5T720-690v-110h80v280H520v-80h168q-32-56-87.5-88T480-720q-100 0-170 70t-70 170q0 100 70 170t170 70q77 0 139-44t87-116h84q-28 106-114 173t-196 67Z"/></svg>Graf view</button><button id="labs" aria-pressed="true"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M840-480 666-234q-11 16-28.5 25t-37.5 9H200q-33 0-56.5-23.5T120-280v-400q0-33 23.5-56.5T200-760h400q20 0 37.5 9t28.5 25l174 246Z"/></svg>Labels</button><button id="side" aria-pressed="false"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M360-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h160v80H200v560h160v80Zm80 80v-880h80v880h-80Zm160-80v-80h80v80h-80Zm0-640v-80h80v80h-80Zm160 640v-80h80q0 33-23.5 56.5T760-120Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80h80v80h-80Zm0-160v-80q33 0 56.5 23.5T840-760h-80Z"/></svg>Hip: RIGHT</button></div>
+<div class="stepnav"><button id="prev"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z"/></svg>Back</button><button id="next">Next<svg viewBox="0 -960 960 960" aria-hidden="true"><path d="M647-440H160v-80h487L423-744l57-56 320 320-320 320-57-56 224-224Z"/></svg></button></div>
 </div></div>
 
+<h2 id="about">About this lesson</h2>
+<p>The <b>Graf method</b> is the standard way to assess an infant hip with ultrasound for developmental dysplasia of the hip (DDH). You take one coronal image of the hip in a standard plane, check that the image is usable, draw three lines, and read two angles: α, for the bony roof, and β, for the cartilage roof. Those two angles and the baby's age give the hip a type, from Ia (mature) to III/IV (dislocated).</p>
+<p>It is written for <b>radiology residents</b>, and for anyone else learning to scan or report infant hips. It assumes basic ultrasound knowledge and nothing about Graf. It is a study aid, not a substitute for supervised scanning.</p>
 <h2 id="table">The classification at a glance</h2>
-<table><tr><th>Type</th><th>α (bony roof)</th><th>β (cartilage roof)</th><th>Age</th><th>Meaning</th></tr>
+<div class="tbl"><table><tr><th>Type</th><th>α (bony roof)</th><th>β (cartilage roof)</th><th>Age</th><th>Meaning</th></tr>
 <tr><td>Ia</td><td>≥60°</td><td>≤55°</td><td>any</td><td>Mature hip</td></tr>
 <tr><td>Ib</td><td>≥60°</td><td>&gt;55°</td><td>any</td><td>Mature hip (transitional cartilage roof)</td></tr>
 <tr><td>IIa (+/−)</td><td>50–59°</td><td>&gt;55°</td><td>≤3 months</td><td>Physiologically immature. IIa+ is α 55–59° (on track); IIa− is α 50–54° at about 6 weeks (lagging).</td></tr>
 <tr><td>IIb</td><td>50–59°</td><td>&gt;55°</td><td>&gt;3 months</td><td>Delayed ossification</td></tr>
 <tr><td>IIc</td><td>43–49°</td><td>≤77°</td><td>any</td><td>Critical: a shallow socket, but the head is still centred</td></tr>
 <tr><td>D</td><td>43–49°</td><td>&gt;77°</td><td>any</td><td>Decentring: the head is starting to leave the socket</td></tr>
-<tr><td>III / IV</td><td>&lt;43°</td><td>—</td><td>any</td><td>Dislocated. III and IV are told apart by the position of the labrum (general knowledge), not by angles.</td></tr></table>
+<tr><td>III / IV</td><td>&lt;43°</td><td>—</td><td>any</td><td>Dislocated. III and IV are told apart by the position of the labrum (general knowledge), not by angles.</td></tr></table></div>
 <p class="gk">Thresholds: Ömeroğlu 2014, Table 1 [2]. Management depends on local protocol and is not covered here.</p>
 
 <h2 id="quiz">Self-test</h2><div id="quizbox"></div>
@@ -91,13 +188,19 @@ ol li::marker{font-family:var(--serif);font-weight:600;color:var(--ink-3)}
 <li>Walter SG, et al. Four decades of developmental dysplastic hip screening according to Graf: what have we learned? Front Pediatr. 2022;10:990806. <a href="https://doi.org/10.3389/fped.2022.990806">doi:10.3389/fped.2022.990806</a> (Fig. 2: checklists and the image used here, CC BY 4.0)</li>
 </ol>
 <p class="gk">Points marked "general knowledge" are standard teaching that was not checked against these sources. This applies especially to the practical scanning tips in steps 1–2.</p>
-<p class="foot">Radyssey · For education only, not clinical advice.</p>
+<p class="foot">Radyssey · For education only, not clinical advice. · <a href="https://github.com/Radyssey/radyssey.github.io/issues/new?title=Graf%20lesson%3A%20&body=Step%20or%20section%3A%0A%0AWhat%20is%20wrong%20or%20what%20would%20help%3F%0A" target="_blank" rel="noopener">Suggest an improvement or report an error</a></p>
 </div>
+<script src="../../assets/lesson-kit.js"></script>
 <script>
 (function(){
 var NS="http://www.w3.org/2000/svg",R=Math.PI/180,SV=document.getElementById("us");
 function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
-var K=1;function txt(p,x,y,s,col,size){var t=el("text",{x:x,y:y},p);t.textContent=s;t.setAttribute("style","fill:"+(col||"#fff")+";font:700 "+((size||28)*(p===SV?K:1))+"px Inter,system-ui,sans-serif;paint-order:stroke;stroke:#000;stroke-width:7px;stroke-linejoin:round");return t}
+/* Overlay colours: the line colours at Material tone 78 (generated with material-color-utilities) so they read on the
+   dark image and belong to the site's tonal system; labels are small chips like the home-page toy. */
+var OV={base:"#ffaba8",roof:"#8cc6ff",cart:"#5cd96f",rim:"#e6bd21",teal:"#46d5cf",wing:"#ffaf70",ink:"#dde4e2",soft:"#889391",line:"#0e1514",chip:"rgba(14,21,20,.8)",panel:"rgba(14,21,20,.88)",edge:"#3f4948"};
+var K=1;function txt(p,x,y,s,col,size){var fs=(size||28)*(p===SV?K:1)*.8,g=el("g",{},p),t=el("text",{x:x,y:y},g);t.textContent=s;
+ t.setAttribute("style","fill:"+(col||OV.ink)+";font:500 "+fs+"px 'Roboto Flex',Roboto,system-ui,sans-serif;letter-spacing:.2px");
+ var w=t.getComputedTextLength(),ph=fs*.45,pv=fs*.28,r=el("rect",{x:x-ph,y:y-fs*.84-pv,width:w+2*ph,height:fs*1.12+2*pv,rx:fs*.5,fill:OV.chip},g);g.insertBefore(r,t);if(p===SV)RVKit.fit(g,SV);return t}
 function sub(a,b){return[a[0]-b[0],a[1]-b[1]]}function nrm(v){var l=Math.hypot(v[0],v[1])||1;return[v[0]/l,v[1]/l]}
 function classify(a,b,w){
  if(a>=60)return b<=55?["Ia","Mature hip."]:["Ib","Mature hip, transitional cartilage roof."];
@@ -109,7 +212,9 @@ function classify(a,b,w){
 var LM={wingTop:[652,170],rim:[640,492],ll:[805,612],lab:[515,612],head:[640,770],
  roof:[725,550],cart:[575,555],caps:[470,700],fold:[445,800],chb:[600,1000]};
 var HSTART={b1:[652,170],b2:[646,390],ll:[805,612],rim:[640,492],lab:[515,612]},H=JSON.parse(JSON.stringify(HSTART));
-var SIDE="R",MODE="screen",LABS=true,AGE=6,SIMA=64,step=0,drag=null;
+var SIDE="R",MODE="screen",LABS=true,AGE=6,SIMA=64,step=0,drag=null,FOCUS=null;
+/* a move on screen, turned back into image coordinates for the current view */
+function dI(d){return MODE==="screen"?[d[1],d[0]]:(SIDE==="L"?[-d[0],d[1]]:d)}
 /* Step 12 starts on the same hand-placed landmarks as step 11, so its lines sit on the real image,
    and rotates the bony roof and labrum lines about the bony rim as α changes. */
 function rot(v,d){var c=Math.cos(d*R),s=Math.sin(d*R);return[v[0]*c-v[1]*s,v[0]*s+v[1]*c]}
@@ -131,9 +236,9 @@ var S=[
 {t:"1. Position the baby and the probe",l:["inset"],
  x:"<p>The baby lies on its <b>side</b>, with the hip to be scanned uppermost, slightly flexed and turned in. A positioning cradle helps.</p><p>Put a <b>linear probe</b> on the outside (<b>lateral</b>) of the hip, over the greater trochanter. Hold it <b>head-to-foot</b> (cranio-caudal), parallel to the body. This cuts a <b>coronal</b> slice through the hip joint.</p><p>The inset at the top right is drawn in the <b>same orientation as the image</b>. In screen view the probe is at the top and the baby's head (cranial) is to the left. The beam goes down through the hip joint (yellow dot), and the probe's long axis lies along the body. <span class='gk'>(Positioning details are general knowledge.)</span></p>"},
 {t:"2. Know your orientation on the screen",l:["inset","compass"],
- x:"<p>The image opens in <b>screen view</b>, as acquired. The yellow arrows give the directions:</p><ul><li><b>Top</b> = where the probe touches the skin: <b>lateral</b>.</li><li><b>Bottom</b> = deep: <b>medial</b>, towards the pelvis.</li><li><b>Left</b> = <b>cranial</b>: towards the baby's head and the iliac crest. <b>Right</b> = <b>caudal</b>: towards the femur. This is the usual set-up, with the probe marker towards the head. If the marker is reversed, the sides swap, so check the femur and ilium on every scan.</li></ul><p>Press <b>⟳ Screen / Graf view</b> to rotate the image 90°. That is the Graf standard display, which looks like an AP X-ray of a right hip: cranial up, lateral on the left. Most papers, and the rest of this brief, think in that view.</p><p><b>Hip: RIGHT / LEFT.</b> For the left hip the baby lies on its right side. With the probe marker towards the head, the <b>screen image looks the same for either hip</b>: lateral up, cranial left. Only the Graf view differs. Shown like an AP X-ray of that hip, a left hip has lateral on the <b>right</b>. <span class='gk'>(Some labs display every hip in the right-hip orientation. Follow your local convention; general knowledge.)</span></p>"},
+ x:"<p>The image opens in <b>screen view</b>, as acquired. The yellow direction labels give the directions:</p><ul><li><b>Top</b> = where the probe touches the skin: <b>lateral</b>.</li><li><b>Bottom</b> = deep: <b>medial</b>, towards the pelvis.</li><li><b>Left</b> = <b>cranial</b>: towards the baby's head and the iliac crest. <b>Right</b> = <b>caudal</b>: towards the femur. This is the usual set-up, with the probe marker towards the head. If the marker is reversed, the sides swap, so check the femur and ilium on every scan.</li></ul><p>Turn on <b>Graf view</b> to rotate the image 90°. That is the Graf standard display, which looks like an AP X-ray of a right hip: cranial up, lateral on the left. Most papers, and the rest of this brief, think in that view.</p><p><b>Hip: RIGHT / LEFT.</b> For the left hip the baby lies on its right side. With the probe marker towards the head, the <b>screen image looks the same for either hip</b>: lateral up, cranial left. Only the Graf view differs. Shown like an AP X-ray of that hip, a left hip has lateral on the <b>right</b>. <span class='gk'>(Some labs display every hip in the right-hip orientation. Follow your local convention; general knowledge.)</span></p>"},
 {t:"3. Find the femoral head",l:["compass","head"],
- x:"<p>Look for a <b>round, dark (hypoechoic) ball with fine speckles</b> (dashed green). In infants it is mostly cartilage, which is why it is dark and not bright like bone.</p><p>Below it is the bright, curved <b>chondro-osseous border</b> (1), where the femoral neck is ossifying. Centre the head on the screen.</p>"},
+ x:"<p>Look for a <b>round, dark (hypoechoic) ball with fine speckles</b> (dashed teal). In infants it is mostly cartilage, which is why it is dark and not bright like bone.</p><p>Below it is the bright, curved <b>chondro-osseous border</b> (1), where the femoral neck is ossifying. Centre the head on the screen.</p>"},
 {t:"4. Find the iliac wing: it must be straight",l:["compass","head","wing"],
  x:"<p>Above the head, the <b>outer surface of the ilium</b> is a bright straight line (orange).</p><p>Tilt or rotate the probe until this line is <b>straight and parallel to the probe face</b>, which is horizontal in screen view. If it curves or slopes, you are too far anterior or posterior. <span class='gk'>(Probe-correction tips: general knowledge.)</span></p>"},
 {t:"5. Bony roof, bony rim and lower limb",l:["compass","head","wing","roof"],
@@ -155,61 +260,78 @@ var S=[
 
 function angles(P){var u=nrm(sub(P.b2,P.b1));if(u[1]<0)u=[-u[0],-u[1]];var w=nrm(sub(P.rim,P.ll)),c=nrm(sub(P.lab,P.rim));
  return{a:Math.acos(Math.min(1,Math.abs(u[0]*w[0]+u[1]*w[1])))/R,b:Math.acos(Math.max(-1,Math.min(1,u[0]*c[0]+u[1]*c[1])))/R}}
-function longLine(g,a,b,col,dash,w){var d=nrm(sub(b,a));el("line",{x1:a[0]-d[0]*1600,y1:a[1]-d[1]*1600,x2:a[0]+d[0]*1600,y2:a[1]+d[1]*1600,stroke:col,"stroke-width":w||6,"stroke-dasharray":dash||""},g)}
-function dot(g,p,col,r){el("circle",{cx:p[0],cy:p[1],r:r||13,fill:col,stroke:"#000","stroke-width":3},g)}
+function longLine(g,a,b,col,dash,w){var d=nrm(sub(b,a));el("line",{x1:a[0]-d[0]*1600,y1:a[1]-d[1]*1600,x2:a[0]+d[0]*1600,y2:a[1]+d[1]*1600,stroke:col,"stroke-width":w||5,"stroke-dasharray":dash||"","stroke-linecap":"round"},g)}
+/* α and β as translucent arcs at the rim, between the baseline and each line (like the home-page toy) */
+function arc(g,c,d1,d2,r,col){var a=[c[0]+d1[0]*r,c[1]+d1[1]*r],b=[c[0]+d2[0]*r,c[1]+d2[1]*r],sw=cross(d1,d2)>0?1:0;
+ el("path",{d:"M"+c+" L"+a+" A"+r+" "+r+" 0 0 "+sw+" "+b+"Z",fill:col,"fill-opacity":.2,stroke:col,"stroke-width":3},g)}
+function arcs(g,b1,b2,rim,ll,lab,showB){var u=nrm(sub(b2,b1));if(u[1]<0)u=[-u[0],-u[1]];var w=nrm(sub(ll,rim)),d=(u[0]*w[0]+u[1]*w[1])>=0?u:[-u[0],-u[1]];
+ arc(g,rim,d,w,95,OV.roof);if(showB){var c=nrm(sub(lab,rim));arc(g,rim,u,c,70,OV.cart)}}
+function dot(g,p,col,r){el("circle",{cx:p[0],cy:p[1],r:r||12,fill:col,stroke:OV.line,"stroke-width":3},g)}
 function lab(p,s,col,dx,dy){if(!LABS)return;if(K>1.6&&/^\d /.test(s))s=s.split(" ")[0];var q=T(p),w=s.length*15*K,mx=MODE==="screen"?1228:962,x=q[0]+(dx||22)*K;if(x+w>mx-6)x=q[0]-w-22*K;if(x<(MODE==="screen"?44:18))x=MODE==="screen"?44:18;txt(SV,x,q[1]+(dy||-16)*K,s,col)}
+/* the type chip wears a Material container colour: green mature, yellow immature, red critical, error dislocated */
+function readout(a,b,cl){var t=cl[0],k=/^I[ab]/.test(t)?"cart":/^II[ab]/.test(t)?"rim":/^(IIc|D)/.test(t)?"base":"error";
+ return '<div class="nums"><span class="num"><small>α</small> <b class="c-roof">'+a+'°</b></span><span class="num"><small>β</small> <b class="c-cart">'+b+'°</b></span>'+
+  '<span class="badge" style="background:var(--md-'+k+'-container);color:var(--md-on-'+k+'-container)">Type '+t+'</span></div><p class="desc">'+cl[1]+'</p>'}
 function render(){
+ RVKit.resetLabels();
  var cw=SV.clientWidth||800;K=Math.max(1,((MODE==="screen"?1188:947)/cw)*15/28);
  var st=S[step],L={};st.l.forEach(function(k){L[k]=1});
  while(SV.firstChild)SV.removeChild(SV.firstChild);
  SV.setAttribute("viewBox",MODE==="screen"?"40 15 1188 947":"15 40 947 1188");
  var g=el("g",{transform:MODE==="screen"?"matrix(0,1,1,0,0,0)":(SIDE==="L"?"matrix(-1,0,0,1,977,0)":"")},SV);
  var im=el("image",{x:15,y:40,width:947,height:1188,href:"Graf_us_Walter2022_clean.jpg"},g);im.setAttributeNS("http://www.w3.org/1999/xlink","href","Graf_us_Walter2022_clean.jpg");
- if(L.head||L.anat)el("circle",{cx:LM.head[0],cy:LM.head[1],r:160,fill:"#63e6be","fill-opacity":.12,stroke:"#63e6be","stroke-width":6,"stroke-dasharray":"18 10"},g);
- if(L.wing)el("line",{x1:LM.wingTop[0],y1:LM.wingTop[1]-120,x2:LM.rim[0],y2:LM.rim[1],stroke:"#ff922b","stroke-width":12,"stroke-linecap":"round",opacity:.8},g);
- if(L.roof){el("path",{d:"M"+LM.rim+" Q720,520 "+LM.ll,stroke:"#ffffff","stroke-width":10,fill:"none",opacity:.85},g);dot(g,LM.rim,"#ffd43b");dot(g,LM.ll,"#4dabf7")}
- if(L.usab)[LM.ll,[649,280],LM.lab].forEach(function(p){el("circle",{cx:p[0],cy:p[1],r:36,fill:"none",stroke:"#ff922b","stroke-width":8},g)});
+ if(L.head||L.anat)el("circle",{cx:LM.head[0],cy:LM.head[1],r:160,fill:OV.teal,"fill-opacity":.12,stroke:OV.teal,"stroke-width":4,"stroke-dasharray":"14 10"},g);
+ if(L.wing)el("line",{x1:LM.wingTop[0],y1:LM.wingTop[1]-120,x2:LM.rim[0],y2:LM.rim[1],stroke:OV.wing,"stroke-width":8,"stroke-linecap":"round",opacity:.9},g);
+ if(L.roof){el("path",{d:"M"+LM.rim+" Q720,520 "+LM.ll,stroke:OV.ink,"stroke-width":6,fill:"none",opacity:.9,"stroke-linecap":"round"},g);dot(g,LM.rim,OV.rim);dot(g,LM.ll,OV.roof)}
+ if(L.usab)[LM.ll,[649,280],LM.lab].forEach(function(p){el("circle",{cx:p[0],cy:p[1],r:36,fill:"none",stroke:OV.wing,"stroke-width":5},g)});
  var P=H;
- if(L.m1)longLine(g,P.b1,P.b2,"#ff6b6b");
- if(L.m2)longLine(g,P.ll,P.rim,"#4dabf7");
- if(L.m3)longLine(g,P.rim,P.lab,"#51cf66","26 12");
+ if(L.m1)longLine(g,P.b1,P.b2,OV.base,"22 14");
+ if(L.m2)longLine(g,P.ll,P.rim,OV.roof);
+ if(L.m3)longLine(g,P.rim,P.lab,OV.cart);
+ if(L.m2)arcs(g,P.b1,P.b2,P.rim,P.ll,P.lab,L.m3);
  var SIM=null;
  if(L.sim){var G=simGeom(SIMA),a=SIMA,rim=G.rim,ll=G.ll,hc=G.hc,bb=G.b,labp=G.lab;
-  el("path",{d:"M"+rim+" L"+ll+" L1000,"+(ll[1]+40)+" L1000,"+(rim[1]-150)+" L"+rim[0]+","+(rim[1]-150)+"Z",fill:"#ffd8a8","fill-opacity":.35,stroke:"none"},g);
-  el("circle",{cx:hc[0],cy:hc[1],r:160,fill:"#63e6be","fill-opacity":.18,stroke:"#63e6be","stroke-width":6,"stroke-dasharray":"18 10"},g);
-  longLine(g,HSTART.b1,HSTART.b2,"#ff6b6b");longLine(g,ll,rim,"#4dabf7");longLine(g,rim,labp,"#51cf66","26 12");
-  el("path",{d:"M"+(labp[0]-30)+","+(labp[1]-20)+" l60,10 l-25,45z",fill:"#ff8787"},g);dot(g,ll,"#4dabf7");dot(g,rim,"#ffd43b");
+  el("path",{d:"M"+rim+" L"+ll+" L1000,"+(ll[1]+40)+" L1000,"+(rim[1]-150)+" L"+rim[0]+","+(rim[1]-150)+"Z",fill:OV.roof,"fill-opacity":.16,stroke:"none"},g);
+  el("circle",{cx:hc[0],cy:hc[1],r:160,fill:OV.teal,"fill-opacity":.16,stroke:OV.teal,"stroke-width":4,"stroke-dasharray":"14 10"},g);
+  longLine(g,HSTART.b1,HSTART.b2,OV.base,"22 14");longLine(g,ll,rim,OV.roof);longLine(g,rim,labp,OV.cart);arcs(g,HSTART.b1,HSTART.b2,rim,ll,labp,true);
+  el("path",{d:"M"+(labp[0]-30)+","+(labp[1]-20)+" l60,10 l-25,45z",fill:OV.cart},g);dot(g,ll,OV.roof);dot(g,rim,OV.rim);
   SIM={a:a,b:bb,hc:hc,lab:labp,ll:ll}}
- if(L.head||L.anat)lab([LM.head[0]-60,LM.head[1]+40],L.anat?"2 femoral head":"femoral head","#63e6be");
- if(L.wing)lab(LM.wingTop,"iliac wing (must be straight)","#ff922b");
- if(L.roof){lab(LM.rim,"bony rim (8)","#ffd43b");lab(LM.ll,"lower limb of ilium","#4dabf7",22,40);lab(LM.roof,"bony roof (7)","#fff",22,-30)}
- if(L.anat){[[LM.chb,"1 chondro-osseous border","#ffd43b"],[LM.fold,"3 synovial fold","#ffd43b"],[LM.caps,"4 joint capsule","#ffd43b"],[LM.lab,"5 labrum","#ff8787"],[LM.cart,"6 cartilage roof","#a5d8ff"],[LM.roof,"7 bony roof","#fff"],[LM.rim,"8 bony rim","#ffd43b"],[LM.ll,"lower limb","#4dabf7"]].forEach(function(d){var q=T(d[0]);el("circle",{cx:q[0],cy:q[1],r:9,fill:d[2],stroke:"#000","stroke-width":3},SV);lab(d[0],d[1],d[2])})}
- if(L.usab){lab(LM.ll,"① lower limb","#ff922b",40,10);lab([649,280],"② straight iliac wing","#ff922b",40,10);lab(LM.lab,"③ labrum","#ff922b",40,10)}
- if(SIM){lab(SIM.hc,"femoral head","#63e6be",-60,0);lab(SIM.lab,"labrum","#ff8787",30,0);lab(SIM.ll,"bony roof","#4dabf7",20,30);var q=T([820,300]);txt(SV,q[0]-100,q[1],"bony socket","#ffd8a8")}
+ if(L.head||L.anat)lab([LM.head[0]-60,LM.head[1]+40],L.anat?"2 femoral head":"femoral head",OV.teal);
+ if(L.wing)lab(LM.wingTop,"iliac wing (must be straight)",OV.wing);
+ if(L.roof){lab(LM.rim,"bony rim (8)",OV.rim);lab(LM.ll,"lower limb of ilium",OV.roof,22,40);lab(LM.roof,"bony roof (7)",OV.ink,22,-30)}
+ if(L.anat){[[LM.chb,"1 chondro-osseous border",OV.ink],[LM.fold,"3 synovial fold",OV.ink],[LM.caps,"4 joint capsule",OV.ink],[LM.lab,"5 labrum",OV.cart],[LM.cart,"6 cartilage roof",OV.cart],[LM.roof,"7 bony roof",OV.roof],[LM.rim,"8 bony rim",OV.rim],[LM.ll,"lower limb",OV.roof]].forEach(function(d){var q=T(d[0]);el("circle",{cx:q[0],cy:q[1],r:9*K,fill:d[2],stroke:OV.line,"stroke-width":3},SV);lab(d[0],d[1],d[2])})}
+ if(L.usab){lab(LM.ll,"① lower limb",OV.wing,40,10);lab([649,280],"② straight iliac wing",OV.wing,40,10);lab(LM.lab,"③ labrum",OV.wing,40,10)}
+ if(SIM){lab(SIM.hc,"femoral head",OV.teal,-60,0);lab(SIM.lab,"labrum",OV.cart,30,0);lab(SIM.ll,"bony roof",OV.roof,20,30);var q=T([820,300]);txt(SV,q[0]-100,q[1],"bony socket",OV.roof)}
  var mh=L.m3?["b1","b2","ll","rim","lab"]:L.m2?["b1","b2","ll","rim"]:L.m1?["b1","b2"]:[];
- var HC={b1:"#ff6b6b",b2:"#ff6b6b",ll:"#4dabf7",rim:"#ffd43b",lab:"#51cf66"},HN={b1:"baseline",b2:"baseline",ll:"lower limb",rim:"bony rim",lab:"labrum centre"};
- mh.forEach(function(h){var q=T(P[h]);var c=el("circle",{cx:q[0],cy:q[1],r:24*Math.max(1,K*1.3),fill:HC[h],"fill-opacity":.35,stroke:HC[h],"stroke-width":6,style:"cursor:grab"},SV);
-  c.addEventListener("pointerdown",function(e){drag=h;SV.setPointerCapture(e.pointerId);e.preventDefault()});lab(P[h],HN[h],HC[h],30,-20)});
+ var HC={b1:OV.base,b2:OV.base,ll:OV.roof,rim:OV.rim,lab:OV.cart},HN={b1:"baseline",b2:"baseline",ll:"lower limb",rim:"bony rim",lab:"labrum centre"};
+ mh.forEach(function(h){var q=T(P[h]),z=Math.max(1,K*1.3),c=el("g",{class:"handle",tabindex:0,role:"button","aria-label":HN[h]+" handle. Use the arrow keys to move it."},SV);
+  if(!drag)el("circle",{cx:q[0],cy:q[1],r:12*z,fill:"none",stroke:HC[h],"stroke-width":3,class:"ring"},c);
+  el("circle",{cx:q[0],cy:q[1],r:12*z,fill:HC[h],stroke:OV.line,"stroke-width":3*z},c);el("circle",{cx:q[0],cy:q[1],r:32*z,fill:"transparent"},c);
+  c.addEventListener("pointerdown",function(e){drag=h;SV.setPointerCapture(e.pointerId);e.preventDefault()});
+  c.addEventListener("keydown",function(e){var d={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]}[e.key];if(!d)return;e.preventDefault();e.stopPropagation();
+   var k=e.shiftKey?20:4,v=dI([d[0]*k,d[1]*k]);H[h]=[H[h][0]+v[0],H[h][1]+v[1]];FOCUS=h;render()});
+  if(FOCUS===h)setTimeout(function(){c.focus({preventScroll:true})},0);
+  lab(P[h],HN[h],HC[h],34,-22)});
  if(L.compass){var c=MODE==="screen"?[["↑ LATERAL (probe / skin)",470,50],["↓ MEDIAL (deep)",520,950],["← CRANIAL (head, ilium)",48,520],["caudal (femur) →",1000,520]]:
   (SIDE==="R"?[["↑ CRANIAL",420,80],["↓ caudal",440,1215],["← LATERAL (probe)",22,700],["medial →",820,700]]:[["↑ CRANIAL",420,80],["↓ caudal",440,1215],["← medial",22,700],["LATERAL (probe) →",680,700]]);
-  var mxc=MODE==="screen"?1228:962,mnc=MODE==="screen"?44:18;c.forEach(function(d){var w=d[0].length*16*K,x=Math.max(mnc,Math.min(d[1],mxc-w-8));txt(SV,x,d[2],d[0],"#ffe066",30)})}
+  var mxc=MODE==="screen"?1228:962,mnc=MODE==="screen"?44:18;c.forEach(function(d){var w=d[0].length*16*K,x=Math.max(mnc,Math.min(d[1],mxc-w-8));txt(SV,x,d[2],d[0],OV.rim,30)})}
  if(L.inset){
   /* The inset is drawn in the same orientation as the image: screen view = probe up, cranial right;
      Graf view = cranial up, probe (lateral) left. Base drawing: head right, legs left, probe on top. */
   var scr=MODE==="screen",W=scr?1228:962,bw=scr?330:250,bh=scr?250:380,kk=Math.min(K,1.5),ig=el("g",{transform:"translate("+(W-bw*kk-12)+","+((scr?31:56)+48*(K-1))+") scale("+kk+")"},SV);
-  el("rect",{x:0,y:0,width:bw,height:bh,rx:14,fill:"rgba(20,26,34,.92)",stroke:"#ffe066","stroke-width":3},ig);
+  el("rect",{x:0,y:0,width:bw,height:bh,rx:14,fill:OV.panel,stroke:OV.edge,"stroke-width":2},ig);
   var bg=el("g",{transform:scr?"translate(320,40) scale(-1,1)":(SIDE==="R"?"translate(40,360) rotate(-90)":"translate("+bw+",0) scale(-1,1) translate(40,360) rotate(-90)")},ig);
-  el("ellipse",{cx:250,cy:120,rx:38,ry:34,fill:"#8aa"},bg);el("rect",{x:92,y:92,width:120,height:58,rx:24,fill:"#8aa"},bg);
-  el("path",{d:"M92,112 L18,92 M92,132 L18,150",stroke:"#8aa","stroke-width":16,"stroke-linecap":"round"},bg);
-  el("circle",{cx:96,cy:100,r:10,fill:"#ffd43b"},bg);
-  el("rect",{x:66,y:64,width:62,height:16,rx:4,fill:"#4dabf7"},bg);
-  el("path",{d:"M72,82 L122,82 L122,100 L72,100Z",fill:"#4dabf7","fill-opacity":.35},bg);
-  if(scr){txt(ig,12,28,"same orientation as the image","#ffe066",19);txt(ig,250,82,"probe","#4dabf7",19);txt(ig,12,214,"head (cranial)","#fff",17);
-   txt(ig,200,214,"legs (caudal)","#fff",17);txt(ig,12,240,(SIDE==="R"?"RIGHT":"LEFT")+" hip · yellow dot = joint","#ffd43b",17)}
-  else{txt(ig,12,28,"same orientation","#ffe066",19);txt(ig,12,50,"as the image","#ffe066",19);txt(ig,200,112,"head","#fff",19);txt(ig,200,134,"(cranial)","#fff",17);txt(ig,140,362,"legs (caudal)","#fff",17);txt(ig,SIDE==="R"?8:bw-62,250,"probe","#4dabf7",19);txt(ig,12,72,(SIDE==="R"?"RIGHT":"LEFT")+" hip","#ffd43b",17);txt(ig,150,240,"● hip","#ffd43b",17)}}
+  el("ellipse",{cx:250,cy:120,rx:38,ry:34,fill:OV.soft},bg);el("rect",{x:92,y:92,width:120,height:58,rx:24,fill:OV.soft},bg);
+  el("path",{d:"M92,112 L18,92 M92,132 L18,150",stroke:OV.soft,"stroke-width":16,"stroke-linecap":"round"},bg);
+  el("circle",{cx:96,cy:100,r:10,fill:OV.rim},bg);
+  el("rect",{x:66,y:64,width:62,height:16,rx:4,fill:OV.teal},bg);
+  el("path",{d:"M72,82 L122,82 L122,100 L72,100Z",fill:OV.teal,"fill-opacity":.35},bg);
+  if(scr){txt(ig,12,28,"same orientation as the image",OV.rim,19);txt(ig,250,82,"probe",OV.teal,19);txt(ig,12,214,"head (cranial)",OV.ink,17);
+   txt(ig,200,214,"legs (caudal)",OV.ink,17);txt(ig,12,240,(SIDE==="R"?"RIGHT":"LEFT")+" hip · yellow dot = joint",OV.rim,17)}
+  else{txt(ig,12,28,"same orientation",OV.rim,19);txt(ig,12,50,"as the image",OV.rim,19);txt(ig,200,112,"head",OV.ink,19);txt(ig,200,134,"(cranial)",OV.ink,17);txt(ig,140,362,"legs (caudal)",OV.ink,17);txt(ig,SIDE==="R"?8:bw-62,250,"probe",OV.teal,19);txt(ig,12,72,(SIDE==="R"?"RIGHT":"LEFT")+" hip",OV.rim,17);txt(ig,150,240,"● hip",OV.rim,17)}}
  var st2="";
- if(L.read&&!SIM){var A=angles(P),cl=classify(A.a,A.b,AGE);st2='<div class="read"><span class="big c-roof">α '+A.a.toFixed(0)+'°</span> · <span class="big c-cart">β '+A.b.toFixed(0)+'°</span><div class="big">Type '+cl[0]+'</div>'+cl[1]+'</div>'}
- if(SIM){var cl2=classify(SIM.a,SIM.b,AGE);st2='<div class="read"><span class="big c-roof">α '+SIM.a+'°</span> · <span class="big c-cart">β ≈'+SIM.b.toFixed(0)+'°</span><div class="big">Type '+cl2[0]+'</div>'+cl2[1]+'</div>'}
+ if(L.read&&!SIM){var A=angles(P),cl=classify(A.a,A.b,AGE);st2=readout(A.a.toFixed(0),A.b.toFixed(0),cl)}
+ if(SIM){var cl2=classify(SIM.a,SIM.b,AGE);st2=readout(SIM.a,"≈"+SIM.b.toFixed(0),cl2)}
  var ro=document.getElementById("readout");if(ro)ro.innerHTML=st2;}
 /* Colour the key words in the step text like their lines on the image (baseline red, bony roof blue, cartilage roof green, rim yellow). */
 var TINT=[[/\b(cartilage roof line|cartilage roof)\b/g,"c-cart"],[/\b(bony roof line|bony roof)\b/g,"c-roof"],[/\b(baseline)\b/g,"c-base"],[/\b(bony rim)\b/g,"c-rim"],[/(α)/g,"c-roof"],[/(β)/g,"c-cart"]];
@@ -218,7 +340,7 @@ function tint(root){var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),n
   if(h===o)return;h=h.replace(/\u0001([^\u0002]+)\u0002/g,'<span class="$1">').replace(/\u0003/g,"</span>");var sp=document.createElement("span");sp.innerHTML=h;t.parentNode.replaceChild(sp,t)})}
 function setStep(i){step=Math.max(0,Math.min(S.length-1,i));var st=S[step];
  document.getElementById("stitle").textContent=st.t;var tx=document.getElementById("stext");tx.innerHTML=st.x;tint(tx);tx.classList.remove("swap");void tx.offsetWidth;tx.classList.add("swap");
- var ex='<div id="readout"></div>';
+ var ex='';
  if(st.ctl==="age")ex+='<div class="ctl"><label for="age">Age</label><input id="age" type="range" min="1" max="24" value="'+AGE+'"><span id="agev">'+AGE+' wk</span></div><div class="row"><button id="reset">Reset handles</button></div>';
  if(st.ctl==="sim")ex+='<div class="ctl"><label for="sima">α</label><input id="sima" type="range" min="34" max="70" value="'+SIMA+'"><span id="simv">'+SIMA+'°</span></div><div class="row"><button data-a="66">Ia</button><button data-a="56">IIa</button><button data-a="47">IIc</button><button data-a="44">D</button><button data-a="37">III/IV</button></div>';
  document.getElementById("extra").innerHTML=ex;
@@ -227,18 +349,19 @@ function setStep(i){step=Math.max(0,Math.min(S.length-1,i));var st=S[step];
  var s=document.getElementById("sima");if(s)s.oninput=function(){SIMA=+s.value;document.getElementById("simv").textContent=SIMA+"°";render()};
  document.querySelectorAll("#extra button[data-a]").forEach(function(b){b.onclick=function(){SIMA=+b.dataset.a;s.value=SIMA;document.getElementById("simv").textContent=SIMA+"°";render()}});
  document.querySelectorAll("#steps button").forEach(function(b,j){b.classList.toggle("on",j===step)});
- document.getElementById("play").classList.toggle("on",step===S.length-1);render()}
+ document.getElementById("play").classList.toggle("on",step===S.length-1);RVKit.save("graf",{step:step});render()}
 var sb=document.getElementById("steps");S.forEach(function(s,i){var b=document.createElement("button");b.textContent=i+1;b.title=s.t;b.onclick=function(){setStep(i)};sb.appendChild(b)});
 document.getElementById("prev").onclick=function(){setStep(step-1)};document.getElementById("next").onclick=function(){setStep(step+1)};
 document.getElementById("play").onclick=function(){setStep(S.length-1)};
 document.getElementById("view").onclick=function(){MODE=MODE==="screen"?"graf":"screen";render()};
 document.getElementById("labs").onclick=function(){LABS=!LABS;render()};
-document.getElementById("side").onclick=function(){SIDE=SIDE==="R"?"L":"R";this.textContent="Hip: "+(SIDE==="R"?"RIGHT":"LEFT");render()};
+document.getElementById("side").onclick=function(){SIDE=SIDE==="R"?"L":"R";[].slice.call(this.childNodes).filter(function(n){return n.nodeType===3}).pop().nodeValue="Hip: "+(SIDE==="R"?"RIGHT":"LEFT");this.setAttribute("aria-pressed",SIDE==="L");render()};
 SV.addEventListener("pointermove",function(e){if(!drag)return;var pt=SV.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;var q=pt.matrixTransform(SV.getScreenCTM().inverse());H[drag]=Ti([q.x,q.y]);render()});
 SV.addEventListener("pointerup",function(){drag=null});SV.addEventListener("pointercancel",function(){drag=null});
 var rz;window.addEventListener("resize",function(){clearTimeout(rz);rz=setTimeout(render,150)});
-document.addEventListener("keydown",function(e){if(e.target.tagName==="INPUT")return;if(e.key==="ArrowRight")setStep(step+1);if(e.key==="ArrowLeft")setStep(step-1)});
-var m=location.search.match(/step=(\d+)/),sa=location.search.match(/sima=(\d+)/);if(sa)SIMA=+sa[1];if(location.search.indexOf("graf")>-1)MODE="graf";if(location.search.indexOf("left")>-1){SIDE="L";document.getElementById("side").textContent="Hip: LEFT"}setStep(m?+m[1]-1:0);
+document.addEventListener("keydown",function(e){if(e.target.tagName==="INPUT"||(e.target.closest&&e.target.closest(".handle")))return;if(e.key==="ArrowRight")setStep(step+1);if(e.key==="ArrowLeft")setStep(step-1)});
+var m=location.search.match(/step=(\d+)/),sa=location.search.match(/sima=(\d+)/);if(sa)SIMA=+sa[1];if(location.search.indexOf("graf")>-1)MODE="graf";if(location.search.indexOf("left")>-1){SIDE="L";document.getElementById("side").textContent="Hip: LEFT"}var saved=RVKit.load("graf").step;
+if(m)setStep(+m[1]-1);else if(saved>0){setStep(saved);RVKit.snackbar("Continued at step "+(saved+1)+" of "+S.length,"Start over",function(){setStep(0)})}else setStep(0);
 var Q=[["You see a dark speckled ball under a bright line. What is the ball?",["Femoral head","Bladder","Labrum"],0,"In infants the femoral head is cartilage, so it is dark (hypoechoic)."],
 ["On the scanner screen (as acquired), the top of the image is…",["Medial","Lateral, the probe side","Cranial"],1,"The probe sits on the lateral hip, so the near field at the top is lateral."],
 ["The iliac wing on your frozen image curves. What do you do?",["Measure anyway","Re-scan","Use β only"],1,"It fails the usability check. Adjust the probe and re-scan."],
@@ -247,7 +370,8 @@ var Q=[["You see a dark speckled ball under a bright line. What is the ball?",["
 ["α 56° at 18 weeks",["IIa","IIb","III"],1,"The same angle after 3 months is delayed ossification: IIb."],
 ["α 46°, β 82°",["IIc","D","Ib"],1,"α 43–49° with β >77° is D (decentring)."],
 ["As the socket gets shallower, the labrum is…",["pushed up and out, so β rises","pulled in, so β falls","unchanged"],0,"The head pushes the labrum away, so the cartilage roof line flattens and β rises."]];
-var qb=document.getElementById("quizbox");Q.forEach(function(q){var d=document.createElement("div");d.className="q card";d.innerHTML="<b>"+q[0]+"</b>";var o=document.createElement("div");o.className="opts";var f=document.createElement("div");
- q[1].forEach(function(x,i){var b=document.createElement("button");b.textContent=x;b.onclick=function(){f.innerHTML=(i===q[2]?"<span style='color:var(--ok)'>✓ Correct.</span> ":"<span style='color:var(--bad)'>✗ Not quite.</span> ")+q[3]};o.appendChild(b)});d.appendChild(o);d.appendChild(f);qb.appendChild(d)});
+tint(document.getElementById("about").nextElementSibling);
+RVKit.quiz(document.getElementById("quizbox"),Q,"graf");
 })();
-</script></body></html>
+</script><script>RVKit.chrome();</script>
+</body></html>

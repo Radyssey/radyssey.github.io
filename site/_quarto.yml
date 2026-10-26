@@ -3,8 +3,10 @@ project:
   resources:
     - lessons/**
     - logo.svg
+    - logo-dark.svg
     - fonts/**
     - assets/**
+    - posts/**
 
 website:
   title: "Radyssey"
@@ -12,7 +14,6 @@ website:
   # Placeholder until the site is published; RSS and share links use it.
   site-url: https://radyssey.github.io
   favicon: favicon.svg
-  # The lead side marker: every radiograph carries an R, so Radyssey does too.
   search: true
   open-graph: true
   navbar:
@@ -24,7 +25,10 @@ website:
         href: index.xml
         aria-label: RSS feed
   page-footer:
-    center: "For education only, not clinical advice."
+    left: "For education only, not clinical advice."
+    right:
+      - text: "Suggest a topic or report an error"
+        href: "https://github.com/Radyssey/radyssey.github.io/issues/new?title=Suggestion%3A%20&body=What%20would%20you%20like%20to%20see%2C%20or%20what%20is%20wrong%3F%0A%0APage%3A%20"
 
 format:
   html:
@@ -33,4 +37,6 @@ format:
       dark: [darkly, theme-dark.scss]
     respect-user-color-scheme: true
     css: styles.css
+    include-in-header: _preload.html
+    include-after-body: _m3.html
     lang: en
