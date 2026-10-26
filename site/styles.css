@@ -43,6 +43,7 @@ main.content h2 { font-size: 1.35rem; font-weight: 680; border-bottom: 0; margin
 }
 .lesson-cta:hover { filter: brightness(1.08); }
 .lesson-cta::after { content: " →"; }
+.lesson-cta-alt { background: transparent; color: var(--rv-accent) !important; box-shadow: inset 0 0 0 2px var(--rv-accent); margin-left: 0.4rem; }
 
 .lesson-shot img { border-radius: 10px; border: 1px solid var(--rv-line); }
 

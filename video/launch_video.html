@@ -42,9 +42,16 @@ function classify(a,b,w){
  return['III / IV','Dislocated'];}
 const BT=[[34,105],[43,88],[45,82],[47,72],[50,63],[55,58],[60,52],[70,48]];
 function betaFor(a){let bb=105;for(let z=1;z<BT.length;z++){if(a<=BT[z][0]){bb=BT[z-1][1]+(BT[z][1]-BT[z-1][1])*(a-BT[z-1][0])/(BT[z][0]-BT[z-1][0]);break}}return bb}
-function sim(a){const rim=LM.rim,ll=[rim[0]+190*Math.sin(a*R),rim[1]+190*Math.cos(a*R)];
- const k=Math.max(0,60-a),hc=[LM.head[0]-k*4.2,LM.head[1]-k*5.4],bb=betaFor(a);
- const lab=[rim[0]-150*Math.sin(bb*R),rim[1]+150*Math.cos(bb*R)];return{a,b:bb,rim,ll,hc,lab}}
+/* step-12 model: starts on the hand-placed landmarks (HS, the lesson's HSTART) and rotates the
+   bony roof and labrum lines about the bony rim; β blends from the image's own value into the table below α 43 */
+const HS={b1:[652,170],b2:[646,390],ll:[805,612],rim:[640,492],lab:[515,612]};
+function sim(a){
+ const rot=(v,d)=>{const c=Math.cos(d*R),s=Math.sin(d*R);return[v[0]*c-v[1]*s,v[0]*s+v[1]*c]},cr=(p,q)=>p[0]*q[1]-p[1]*q[0];
+ const U=nrm(sub(HS.b2,HS.b1)),LV=sub(HS.ll,HS.rim),BV=sub(HS.lab,HS.rim),lu=nrm(LV),bu=nrm(BV);
+ const A0=Math.acos(Math.abs(U[0]*lu[0]+U[1]*lu[1]))/R,B0=Math.acos(U[0]*bu[0]+U[1]*bu[1])/R;
+ const w=a>=A0?1:Math.max(0,(a-43)/(A0-43)),bb=betaFor(a)+(B0-betaFor(A0))*w,k=Math.max(0,A0-a);
+ const ud=rot(U,(cr(U,LV)>0?1:-1)*a),bd=rot(U,(cr(U,BV)>0?1:-1)*bb),LL=Math.hypot(...LV),LB=Math.hypot(...BV),rim=HS.rim;
+ return{a,b:bb,rim,ll:[rim[0]+ud[0]*LL,rim[1]+ud[1]*LL],lab:[rim[0]+bd[0]*LB,rim[1]+bd[1]*LB],hc:[LM.head[0]-k*5.2,LM.head[1]-k*6.7]}}
 
 /* helpers */
 function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
@@ -89,6 +96,21 @@ const camG=el('g',{},paneG),conG=el('g',{},camG);
 const img=el('image',{x:15,y:40,width:947,height:1188,href:IMG},conG);
 const ovC=el('g',{},conG);  /* overlays in image coordinates */
 const ovP=el('g',{},paneG); /* overlays in frame pixels, clipped to the pane */
+/* phone mock-up for the "at the scanner" scene; its image element is persistent so it is decoded once */
+const PH=VERT?{x:330,y:500,w:560,h:990}:{x:560,y:150,w:400,h:830};
+const phoneG=el('g',{opacity:0},svg);
+el('rect',{x:PH.x,y:PH.y,width:PH.w,height:PH.h,rx:PH.w*.13,fill:'#05070a',stroke:'#3a4553','stroke-width':4},phoneG);
+el('rect',{x:PH.x+PH.w/2-50,y:PH.y+20,width:100,height:12,rx:6,fill:'#1a212b'},phoneG);
+const SC={x:PH.x+14,y:PH.y+46,w:PH.w-28,h:PH.h-62};
+el('rect',{x:SC.x,y:SC.y,width:SC.w,height:SC.h,rx:PH.w*.07},el('clipPath',{id:'scr'},defs));
+const scrG=el('g',{'clip-path':'url(#scr)'},phoneG);
+el('rect',{x:SC.x,y:SC.y,width:SC.w,height:SC.h,fill:'#11161d'},scrG);
+const IH=SC.w*947/1188;
+const mini=el('svg',{x:SC.x,y:SC.y,width:SC.w,height:IH,viewBox:'40 15 1188 947',preserveAspectRatio:'none'},scrG);
+const miniG=el('g',{transform:'matrix(0,1,1,0,0,0)'},mini);
+el('image',{x:15,y:40,width:947,height:1188,href:IMG},miniG);
+const miniOv=el('g',{},miniG);
+const phoneUI=el('g',{},scrG);
 const ovF=el('g',{},svg);   /* everything else, in frame pixels */
 
 /* view state, set per frame */
@@ -153,8 +175,8 @@ function compassGraf(side,op){if(op<=0)return;const r=imgRect(),s=VERT?40:36,cy=
  else{txt(ovP,r.x0+12,cy,'← medial',{col:C.compass,size:s,op});txt(ovP,r.x1-12,cy,'LATERAL →',{anchor:'end',col:C.compass,size:s,op})}}
 
 /* ---------------- timeline ---------------- */
-const T={title:[0,3],lesson:[3,5.5],orient:[5.5,13],anat:[13,20],meas:[20,27],key:[27,34.5],flip:[34.5,39.5],close:[39.5,44]};
-const DURATION=44;
+const T={title:[0,3],lesson:[3,5.5],orient:[5.5,13],anat:[13,20],meas:[20,27],key:[27,32],flip:[32,36],scan:[36,41.5],close:[41.5,45]};
+const DURATION=45;
 
 /* the Radyssey logo: an R whose bowl is a femoral head. pr = draw progress of [stem, head, leg] */
 function drawMark(cx,top,size,pr,op){const g=el('g',{transform:`translate(${cx-size/2},${top}) scale(${size/64})`,opacity:op,fill:'none','stroke-width':5.5,'stroke-linecap':'round'},ovF);
@@ -205,6 +227,47 @@ function sceneBaby(lt,op){if(op<=0)return;const g=el('g',{transform:`translate($
   if(lt<3.3)txt(g,500,700,'coronal plane',{anchor:'middle',size:36,col:C.roof,op:seg(lt,2.4,2.7)*(1-seg(lt,3.1,3.3))})}
  el('circle',{cx:640,cy:470,r:14,fill:C.rim,stroke:'#000','stroke-width':3,opacity:bIn*(1-seg(lt,3.2,3.6))},g)}
 
+/* "At the scanner": the lesson open on a phone beside the probe, used as a quick reference */
+function sceneScan(lt,op){
+ const k=SC.w/452,sl=eout(seg(lt,0,.6)),ph=lt<1.8?0:lt<3.6?1:2;
+ phoneG.setAttribute('opacity',op*sl);phoneG.setAttribute('transform',`translate(0,${(1-sl)*140})`);
+ clear(miniOv);clear(phoneUI);
+ const caps=['Open it on your phone at the scanner','Check: lower limb · straight wing · labrum','Measure α and β → read the type'],cst=[0,1.8,3.6][ph];
+ caption('AT THE SCANNER',caps[ph],op*seg(lt,cst,cst+.3));credit(op);
+ /* probe beside the phone, with a faint beam */
+ const pr=VERT?{x:165,y:1080,s:1}:{x:300,y:420,s:1.25},po=op*eout(seg(lt,.2,.8)),pg=el('g',{transform:`translate(${pr.x},${pr.y+(1-eout(seg(lt,.2,.8)))*-80}) scale(${pr.s}) rotate(-12)`,opacity:po},ovF);
+ el('path',{d:'M0,-120 Q0,-200 70,-240',stroke:'#3b8fd6','stroke-width':8,fill:'none'},pg);
+ el('rect',{x:-30,y:-125,width:60,height:150,rx:16,fill:'#3b8fd6'},pg);
+ el('rect',{x:-55,y:20,width:110,height:38,rx:9,fill:C.roof,stroke:'#000','stroke-width':3},pg);
+ el('path',{d:'M-55,60 L-90,230 L90,230 L55,60Z',fill:C.roof,'fill-opacity':.14},pg);
+ /* lesson UI on the phone */
+ const y0=SC.y+IH+16*k,gap=5*k,cw=(SC.w-24*k-gap*11)/12,chH=cw*.9,cur=[2,7,11][ph];
+ for(let i=0;i<12;i++){const x=SC.x+12*k+i*(cw+gap),on=i+1===cur;
+  el('rect',{x,y:y0,width:cw,height:chH,rx:4*k,fill:on?C.accent:'#18202a',stroke:on?C.accent:'#2c3744','stroke-width':1.5},phoneUI);
+  txt(phoneUI,x+cw/2,y0+chH*.68,String(i+1),{anchor:'middle',size:chH*.48,col:on?'#0e1116':C.muted,stroke:false,weight:600})}
+ /* a fingertip taps the next step just before each change */
+ [[1.45,7],[3.25,11]].forEach(([tt,n])=>{const p=seg(lt,tt,tt+.35);if(p<=0||p>=1)return;const x=SC.x+12*k+(n-1)*(cw+gap)+cw/2;
+  el('circle',{cx:x,cy:y0+chH/2,r:(14+16*p)*k,fill:'#fff','fill-opacity':.35*(1-p),stroke:'#fff','stroke-width':2,opacity:1-p},phoneUI)});
+ const titles=['2. Know your orientation','7. Usability check','11. Measure it and classify'];
+ let y=y0+chH+42*k;txt(phoneUI,SC.x+14*k,y,titles[ph],{size:27*k,stroke:false});
+ if(ph===0){['↑ top = lateral (probe side)','← left = cranial','↓ bottom = medial (deep)'].forEach((s,i)=>{
+   txt(phoneUI,SC.x+14*k,y+(i+1)*42*k,s,{size:23*k,col:C.compass,stroke:false,op:seg(lt,.7+i*.25,.95+i*.25)})})}
+ if(ph===1){const it=[[LM.ll,'Lower limb of the ilium'],[[649,280],'Straight iliac wing'],[LM.lab,'Labrum']];
+  it.forEach((d,i)=>{const s0=1.95+i*.45,o=seg(lt,s0,s0+.2),pu=back(seg(lt,s0,s0+.35));if(o<=0)return;
+   el('circle',{cx:d[0][0],cy:d[0][1],r:42*pu,fill:'none',stroke:C.wing,'stroke-width':12,opacity:o},miniOv);
+   const yy=y+(i+1)*44*k;el('rect',{x:SC.x+14*k,y:yy-24*k,width:28*k,height:28*k,rx:6*k,fill:C.cart,opacity:o},phoneUI);
+   txt(phoneUI,SC.x+28*k,yy-3*k,'✓',{anchor:'middle',size:22*k,col:'#0e1116',stroke:false,op:o});
+   txt(phoneUI,SC.x+54*k,yy-3*k,d[1],{size:23*k,stroke:false,op:o})})}
+ if(ph===2){const S0=sim(64),bl=longPts(HS.b1,HS.b2,250,700),rl=longPts(S0.ll,S0.rim,250,700),c2=longPts(S0.rim,S0.lab,500,900),g=miniOv;
+  const ln=(a,b,p,col,dash)=>{if(p<=0)return;const e=lerp2(a,b,p);el('line',{x1:a[0],y1:a[1],x2:e[0],y2:e[1],stroke:col,'stroke-width':12,'stroke-linecap':'round','stroke-dasharray':dash||''},g)};
+  ln(bl[0],bl[1],ease(seg(lt,3.7,4.1)),C.base);ln(rl[1],rl[0],ease(seg(lt,3.9,4.3)),C.roof);ln(c2[0],c2[1],ease(seg(lt,4.1,4.5)),C.cart,'30 16');
+  const ro=eout(seg(lt,4.5,4.9));if(ro>0){const bx=SC.x+14*k,by=y+18*k,bw=SC.w-28*k;
+   el('rect',{x:bx,y:by,width:bw,height:118*k,rx:12*k,fill:'#1d2a3d',opacity:ro},phoneUI);
+   txt(phoneUI,bx+16*k,by+44*k,'α 64°',{size:32*k,col:C.roof,stroke:false,op:ro});txt(phoneUI,bx+150*k,by+44*k,'β '+Math.round(S0.b)+'°',{size:32*k,col:C.cart,stroke:false,op:ro});
+   txt(phoneUI,bx+16*k,by+92*k,'Type Ia',{size:34*k,stroke:false,op:ro});txt(phoneUI,bx+170*k,by+92*k,'mature hip',{size:22*k,col:C.muted,stroke:false,weight:500,op:ro})}}
+ /* reminder that it is a learning aid */
+ txt(ovF,W/2,VERT?PH.y+PH.h+70:HH-74,'A quick reference while you learn to scan',{anchor:'middle',col:C.muted,size:VERT?36:28,weight:500,op:op*seg(lt,.8,1.2),stroke:false})}
+
 function renderAt(t){
  clear(ovC);clear(ovP);clear(ovF);
  let phi=180,psi=0,fit=FIT_SCREEN,cam=[0,0],z=1,imgOp=0;
@@ -214,9 +277,9 @@ function renderAt(t){
  if(inS('anat')){imgOp=1;const p=ease(seg(L('anat'),0,1.5));cam=lerp2([0,0],[-40,110],p);z=lerp(1,1.22,p)}
  if(inS('meas')){imgOp=1;const p=ease(seg(L('meas'),0,1.2));cam=lerp2([-40,110],[-150,170],p);z=lerp(1.22,1.5,p)}
  if(inS('key')){imgOp=1;const p=ease(seg(L('key'),0,1.2));cam=lerp2([-150,170],[-90,150],p);z=lerp(1.5,1.3,p)}
- if(inS('flip')){imgOp=1;const lt=L('flip'),p0=ease(seg(lt,0,.6));cam=lerp2([-90,150],[0,0],p0);z=lerp(1.3,1,p0);
-  const f=ease(seg(lt,.7,2.2));phi=lerp(180,0,f);fit=lerp(FIT_SCREEN,FIT_GRAF,f);psi=180*ease(seg(lt,3.0,4.0))}
- if(inS('close'))imgOp=0;
+ if(inS('flip')){imgOp=1;const lt=L('flip'),p0=ease(seg(lt,0,.5));cam=lerp2([-90,150],[0,0],p0);z=lerp(1.3,1,p0);
+  const f=ease(seg(lt,.55,1.8));phi=lerp(180,0,f);fit=lerp(FIT_SCREEN,FIT_GRAF,f);psi=180*ease(seg(lt,2.4,3.3))}
+ if(inS('scan')||inS('close'))imgOp=0;
  setView(phi,psi,fit,cam,z);
  img.setAttribute('opacity',imgOp);paneBg.setAttribute('opacity',inS('orient')||inS('anat')||inS('meas')||inS('key')||inS('flip')?1:0);
 
@@ -261,7 +324,7 @@ function renderAt(t){
  if(inS('meas')){const lt=L('meas'),op=env(t,...T.meas,.01,.3),S0=sim(64);brand(1);credit(1);
   caption('MEASUREMENT',lt<3.9?'Three lines from the iliac wing':'α = bony roof · β = cartilage roof',op*(lt<3.9?seg(lt,0,.3):seg(lt,3.9,4.2)));
   el('circle',{cx:LM.head[0],cy:LM.head[1],r:160,fill:C.head,'fill-opacity':.1,stroke:C.head,'stroke-width':6,'stroke-dasharray':'18 10',opacity:.6},ovC);
-  const bl=longPts([646,170],S0.rim,250,700),rl=longPts(S0.ll,S0.rim,250,700),cl2=longPts(S0.rim,S0.lab,500,900);
+  const bl=longPts(HS.b1,HS.b2,250,700),rl=longPts(S0.ll,S0.rim,250,700),cl2=longPts(S0.rim,S0.lab,500,900);
   drawLine(bl[0],bl[1],ease(seg(lt,.3,1.5)),C.base,9);
   drawLine(rl[1],rl[0],ease(seg(lt,1.5,2.7)),C.roof,9);
   drawLine(cl2[0],cl2[1],ease(seg(lt,2.7,3.9)),C.cart,9,'26 14');
@@ -269,7 +332,7 @@ function renderAt(t){
   if(lt>1.8&&lt<3.9)label(S0.ll,'② bony roof line',C.roof,{dx:30,dy:50,op:seg(lt,1.8,2.1)*(1-seg(lt,3.6,3.9))});
   if(lt>3.0&&lt<3.9)label(S0.lab,'③ cartilage roof line',C.cart,{op:seg(lt,3.0,3.3)*(1-seg(lt,3.6,3.9))});
   dot(S0.rim,C.rim,14,seg(lt,1.4,1.7));dot(S0.ll,C.roof,14,seg(lt,1.6,1.9));
-  const down=nrm(sub(S0.rim,[646,170])),pa=ease(seg(lt,3.9,5.0)),pb=ease(seg(lt,4.6,5.7));
+  const down=nrm(sub(HS.b2,HS.b1)),pa=ease(seg(lt,3.9,5.0)),pb=ease(seg(lt,4.6,5.7));
   let aVal=0,bVal=0;
   if(pa>0){const q=arc(S0.rim,down,nrm(sub(S0.ll,S0.rim)),120,pa,C.roof,10);aVal=64*pa;label(q,'α '+Math.round(aVal)+'°',C.roof,{dx:-10,dy:12,size:VERT?44:40})}
   if(pb>0){const q=arc(S0.rim,down,nrm(sub(S0.lab,S0.rim)),190,pb,C.cart,10);bVal=S0.b*pb;label(q,'β '+Math.round(bVal)+'°',C.cart,{dx:-60,dy:12,size:VERT?44:40})}
@@ -279,32 +342,33 @@ function renderAt(t){
 
  if(inS('key')){const lt=L('key'),op=env(t,...T.key,.01,.3);brand(1);credit(1);
   caption('KEY MOMENT','Shallower socket: watch the hip decentre',op*seg(lt,0,.3));
-  const stops=[[0,64],[.6,64],[1.6,56],[2.2,56],[3.2,47],[3.8,47],[4.6,44],[5.2,44],[6.3,37]];
+  const stops=[[0,64],[.4,64],[1.1,56],[1.5,56],[2.2,47],[2.6,47],[3.2,44],[3.6,44],[4.4,37]];
   let a=64;for(let i=1;i<stops.length;i++){if(lt<=stops[i][0]){a=lerp(stops[i-1][1],stops[i][1],ease(seg(lt,stops[i-1][0],stops[i][0])));break}if(i===stops.length-1)a=37}
-  const s=sim(a),fade=1-seg(lt,7.1,7.5);
+  const s=sim(a),fade=1-seg(lt,4.6,5.0);
   el('path',{d:'M'+s.rim+' L'+s.ll+' L1000,'+(s.ll[1]+40)+' L1000,'+(s.rim[1]-150)+' L'+s.rim[0]+','+(s.rim[1]-150)+'Z',fill:C.socket,'fill-opacity':.35*fade,stroke:'none'},ovC);
   el('circle',{cx:s.hc[0],cy:s.hc[1],r:160,fill:C.head,'fill-opacity':.18*fade,stroke:C.head,'stroke-width':8,'stroke-dasharray':'18 10',opacity:fade},ovC);
-  const bl=longPts([646,170],s.rim,250,700),rl=longPts(s.ll,s.rim,250,700),cl2=longPts(s.rim,s.lab,500,900);
+  const bl=longPts(HS.b1,HS.b2,250,700),rl=longPts(s.ll,s.rim,250,700),cl2=longPts(s.rim,s.lab,500,900);
   drawLine(bl[0],bl[1],1,C.base,9,'',fade);drawLine(rl[0],rl[1],1,C.roof,9,'',fade);drawLine(cl2[0],cl2[1],1,C.cart,9,'26 14',fade);
   el('path',{d:'M'+(s.lab[0]-30)+','+(s.lab[1]-20)+' l60,10 l-25,45z',fill:C.labrum,opacity:fade},ovC);
   dot(s.ll,C.roof,14,fade);dot(s.rim,C.rim,14,fade);
-  const down=nrm(sub(s.rim,[646,170]));arc(s.rim,down,nrm(sub(s.ll,s.rim)),120,1,C.roof,10);arc(s.rim,down,nrm(sub(s.lab,s.rim)),190,1,C.cart,10);
+  const down=nrm(sub(HS.b2,HS.b1));arc(s.rim,down,nrm(sub(s.ll,s.rim)),120,1,C.roof,10);arc(s.rim,down,nrm(sub(s.lab,s.rim)),190,1,C.cart,10);
   label(s.hc,'femoral head',C.head,{dx:-60,dy:0,op:fade});label(s.lab,'labrum',C.labrum,{dx:30,dy:0,op:fade});
   label([990,600],'bony socket',C.socket,{op:fade});
   readout(a,s.b,fade,1)}
 
  if(inS('flip')){const lt=L('flip'),op=env(t,...T.flip,.01,.4);brand(op);credit(op);
-  const f=seg(lt,.7,2.2);
-  const cs=lt<2.8?['QUICK FLIP','Screen view ⟳ Graf view']:['QUICK FLIP','Right hip ↔ left hip'];
-  caption(cs[0],cs[1],op*(lt<2.8?seg(lt,0,.3):seg(lt,2.8,3.1)));
-  if(lt<.6)compassScreen(-5,lt,1-seg(lt,.3,.6));
-  if(lt>2.2&&lt<2.95)compassGraf('R',seg(lt,2.2,2.5)*(1-seg(lt,2.75,2.95)));
-  if(lt>4.0)compassGraf('L',seg(lt,4.0,4.3)*op);
-  const side=psi=>psi<90?'RIGHT hip':'LEFT hip';const pv=180*ease(seg(lt,3.0,4.0));
-  if(lt>2.2){const r=imgRect(),o=seg(lt,2.2,2.5)*op,lbl=lt<3.5?'RIGHT hip':'LEFT hip',w=VERT?250:230;
+  const cs=lt<2.3?['QUICK FLIP','Screen view ⟳ Graf view']:['QUICK FLIP','Right hip ↔ left hip'];
+  caption(cs[0],cs[1],op*(lt<2.3?seg(lt,0,.3):seg(lt,2.3,2.6)));
+  if(lt<.5)compassScreen(-5,lt,1-seg(lt,.25,.5));
+  if(lt>1.8&&lt<2.4)compassGraf('R',seg(lt,1.8,2.05)*(1-seg(lt,2.2,2.4)));
+  if(lt>3.3)compassGraf('L',seg(lt,3.3,3.55)*op);
+  if(lt>1.8){const r=imgRect(),o=seg(lt,1.8,2.05)*op,lbl=lt<2.85?'RIGHT hip':'LEFT hip',w=VERT?250:230;
    el('rect',{x:W/2-w/2,y:r.y1-140,width:w,height:62,rx:31,fill:'rgba(17,22,29,.88)',stroke:C.rim,'stroke-width':3,opacity:o},ovP);
    txt(ovP,W/2,r.y1-96,lbl,{anchor:'middle',col:C.rim,size:36,op:o,stroke:false})}
-  if(lt>1.6&&lt<2.9){const r=imgRect();txt(ovP,W/2,r.y0+120,'like an AP X-ray of the hip',{anchor:'middle',col:'#fff',size:VERT?40:34,op:seg(lt,1.9,2.2)*(1-seg(lt,2.6,2.9))})}}
+  if(lt>1.3&&lt<2.3){const r=imgRect();txt(ovP,W/2,r.y0+120,'like an AP X-ray of the hip',{anchor:'middle',col:'#fff',size:VERT?40:34,op:seg(lt,1.5,1.75)*(1-seg(lt,2.05,2.3))})}}
+
+ if(inS('scan')){const lt=L('scan'),op=env(t,...T.scan,.3,.35);brand(op);sceneScan(lt,op)}
+ else phoneG.setAttribute('opacity',0);
 
  if(inS('close')){const lt=L('close'),op=env(t,...T.close,.5,.01),cx=W/2,cy=VERT?HH*.4:HH*.36;
   const p=eout(seg(lt,.2,.9));

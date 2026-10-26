@@ -26,6 +26,9 @@ table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;margin:10px 0}
 .q .opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 @media (max-width:900px){.app{grid-template-columns:1fr;grid-template-rows:auto;gap:10px}.pane{position:sticky;top:0;z-index:3;box-shadow:0 6px 16px rgba(0,0,0,.45);grid-row:1}.side{grid-column:1;grid-row:2}.cap{grid-row:3;margin:0}#us{max-height:58vh}.wrap{padding:10px 10px}h1{font-size:21px}.side{padding:12px}.steps button{min-width:38px;padding:7px 8px}button{padding:8px 12px}table{display:block;overflow-x:auto;white-space:nowrap}.stext{font-size:15px}}
+.play{align-self:flex-start;background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:700;border-radius:999px;padding:8px 16px}
+.play:hover{border-color:var(--accent);filter:brightness(1.1)}
+.play.on{display:none}
 .home{display:inline-block;margin:0 0 8px;color:var(--accent);text-decoration:none;font-weight:600}
 .foot{margin:34px 0 8px;border-top:1px solid var(--line);padding-top:14px;color:var(--muted);font-size:14px;text-align:center}
 </style></head><body><div class="wrap">
@@ -37,6 +40,7 @@ table{border-collapse:collapse;width:100%;font-size:14px}th,td{border:1px solid 
 <div class="pane"><svg id="us" viewBox="40 15 1188 947" role="img" aria-label="Interactive infant hip ultrasound with Graf overlays"></svg></div>
 <p class="gk cap">Image: Walter SG et al., Front Pediatr 2022;10:990806, Fig. 2 (cropped; in screen view rotated and flipped so that cranial is on the left), CC BY 4.0. The original authors' printed labels and arrows were removed digitally (inpainted); faint smoothing may remain where they were. All labels now come from this page. The coloured overlays are added here: landmark positions are hand-placed approximations, and the simulation in step 12 is a schematic drawn over the image, not a real dysplastic scan.</p>
 <div class="side">
+<button id="play" class="play">Play with the angles ▶</button>
 <div class="steps" id="steps"></div>
 <p class="stitle" id="stitle"></p>
 <div class="stext" id="stext"></div>
@@ -84,6 +88,20 @@ var LM={wingTop:[652,170],rim:[640,492],ll:[805,612],lab:[515,612],head:[640,770
  roof:[725,550],cart:[575,555],caps:[470,700],fold:[445,800],chb:[600,1000]};
 var HSTART={b1:[652,170],b2:[646,390],ll:[805,612],rim:[640,492],lab:[515,612]},H=JSON.parse(JSON.stringify(HSTART));
 var SIDE="R",MODE="screen",LABS=true,AGE=6,SIMA=64,step=0,drag=null;
+/* Step 12 starts on the same hand-placed landmarks as step 11, so its lines sit on the real image,
+   and rotates the bony roof and labrum lines about the bony rim as α changes. */
+function rot(v,d){var c=Math.cos(d*R),s=Math.sin(d*R);return[v[0]*c-v[1]*s,v[0]*s+v[1]*c]}
+function cross(a,b){return a[0]*b[1]-a[1]*b[0]}
+var BT=[[34,105],[43,88],[45,82],[47,72],[50,63],[55,58],[60,52],[70,48]];
+function btab(a){for(var z=1;z<BT.length;z++)if(a<=BT[z][0])return BT[z-1][1]+(BT[z][1]-BT[z-1][1])*(a-BT[z-1][0])/(BT[z][0]-BT[z-1][0]);return BT[BT.length-1][1]}
+var A0=angles(HSTART),U0=nrm(sub(HSTART.b2,HSTART.b1)),RIM=HSTART.rim,LLV=sub(HSTART.ll,RIM),LBV=sub(HSTART.lab,RIM),
+ SR=cross(U0,LLV)>0?1:-1,SL=cross(U0,LBV)>0?1:-1,LLL=Math.hypot(LLV[0],LLV[1]),LBL=Math.hypot(LBV[0],LBV[1]);
+function simGeom(a){
+ /* β follows the image's own value near the start and blends into the β table below α 43, so the type buttons land on their types */
+ var w=a>=A0.a?1:Math.max(0,(a-43)/(A0.a-43)),bb=btab(a)+(A0.b-btab(A0.a))*w,k=Math.max(0,A0.a-a);
+ var ud=rot(U0,SR*a),bd=rot(U0,SL*bb);
+ return{a:a,b:bb,rim:RIM,ll:[RIM[0]+ud[0]*LLL,RIM[1]+ud[1]*LLL],lab:[RIM[0]+bd[0]*LBL,RIM[1]+bd[1]*LBL],hc:[LM.head[0]-k*5.2,LM.head[1]-k*6.7]}}
+SIMA=Math.round(A0.a);
 function T(p){return MODE==="screen"?[p[1],p[0]]:(SIDE==="L"?[977-p[0],p[1]]:p)}
 function Ti(p){return MODE==="screen"?[p[1],p[0]]:(SIDE==="L"?[977-p[0],p[1]]:p)}
 
@@ -111,7 +129,7 @@ var S=[
 {t:"11. Measure it yourself and classify",l:["compass","m1","m2","m3","read"],
  x:"<p>Drag all five handles onto the landmarks. α, β and the type update live. Set the baby's <b>age</b>: α of 50–59° is IIa up to 3 months and IIb after.</p><p>Notice how a few millimetres of handle error shifts α by several degrees. That is why the standard plane and exact landmarks matter.</p>",ctl:"age"},
 {t:"12. See what a shallow socket looks like",l:["compass","sim","read"],
- x:"<p>Move the <b>α slider</b> to make the bony socket shallower. The overlay redraws over the image:</p><ul><li>the <b>bony roof</b> (blue) gets steeper;</li><li>the <b>bony socket</b> (shaded) loses depth;</li><li>the <b>femoral head</b> drifts outwards and upwards;</li><li>the <b>labrum</b> is pushed up, so β rises.</li></ul><p>Watch the type go from Ia → IIa → IIc → D → III/IV. <span class='gk'>(A schematic drawn on top of the real image; real dysplastic hips vary.)</span></p>",ctl:"sim"}];
+ x:"<p>The slider starts at this image's own α (about 56°, the same lines as step 11). Move it down to make the bony socket shallower, or up towards a mature hip. The overlay redraws over the image:</p><ul><li>the <b>bony roof</b> (blue) gets steeper;</li><li>the <b>bony socket</b> (shaded) loses depth;</li><li>the <b>femoral head</b> drifts outwards and upwards;</li><li>the <b>labrum</b> is pushed up, so β rises.</li></ul><p>Watch the type go from Ia → IIa → IIc → D → III/IV. <span class='gk'>(A schematic drawn on top of the real image; real dysplastic hips vary.)</span></p>",ctl:"sim"}];
 
 function angles(P){var u=nrm(sub(P.b2,P.b1));if(u[1]<0)u=[-u[0],-u[1]];var w=nrm(sub(P.rim,P.ll)),c=nrm(sub(P.lab,P.rim));
  return{a:Math.acos(Math.min(1,Math.abs(u[0]*w[0]+u[1]*w[1])))/R,b:Math.acos(Math.max(-1,Math.min(1,u[0]*c[0]+u[1]*c[1])))/R}}
@@ -134,12 +152,10 @@ function render(){
  if(L.m2)longLine(g,P.ll,P.rim,"#4dabf7");
  if(L.m3)longLine(g,P.rim,P.lab,"#51cf66","26 12");
  var SIM=null;
- if(L.sim){var a=SIMA,rim=LM.rim,ll=[rim[0]+190*Math.sin(a*R),rim[1]+190*Math.cos(a*R)];
-  var k=Math.max(0,60-a),hc=[LM.head[0]-k*4.2,LM.head[1]-k*5.4];
-  var BT=[[34,105],[43,88],[45,82],[47,72],[50,63],[55,58],[60,52],[70,48]],bb=105;for(var z=1;z<BT.length;z++){if(a<=BT[z][0]){bb=BT[z-1][1]+(BT[z][1]-BT[z-1][1])*(a-BT[z-1][0])/(BT[z][0]-BT[z-1][0]);break}}var labp=[rim[0]-150*Math.sin(bb*R),rim[1]+150*Math.cos(bb*R)];
+ if(L.sim){var G=simGeom(SIMA),a=SIMA,rim=G.rim,ll=G.ll,hc=G.hc,bb=G.b,labp=G.lab;
   el("path",{d:"M"+rim+" L"+ll+" L1000,"+(ll[1]+40)+" L1000,"+(rim[1]-150)+" L"+rim[0]+","+(rim[1]-150)+"Z",fill:"#ffd8a8","fill-opacity":.35,stroke:"none"},g);
   el("circle",{cx:hc[0],cy:hc[1],r:160,fill:"#63e6be","fill-opacity":.18,stroke:"#63e6be","stroke-width":6,"stroke-dasharray":"18 10"},g);
-  longLine(g,[646,170],rim,"#ff6b6b");longLine(g,ll,rim,"#4dabf7");longLine(g,rim,labp,"#51cf66","26 12");
+  longLine(g,HSTART.b1,HSTART.b2,"#ff6b6b");longLine(g,ll,rim,"#4dabf7");longLine(g,rim,labp,"#51cf66","26 12");
   el("path",{d:"M"+(labp[0]-30)+","+(labp[1]-20)+" l60,10 l-25,45z",fill:"#ff8787"},g);dot(g,ll,"#4dabf7");dot(g,rim,"#ffd43b");
   SIM={a:a,b:bb,hc:hc,lab:labp,ll:ll}}
  if(L.head||L.anat)lab([LM.head[0]-60,LM.head[1]+40],L.anat?"2 femoral head":"femoral head","#63e6be");
@@ -183,9 +199,11 @@ function setStep(i){step=Math.max(0,Math.min(S.length-1,i));var st=S[step];
  var r=document.getElementById("reset");if(r)r.onclick=function(){H=JSON.parse(JSON.stringify(HSTART));render()};
  var s=document.getElementById("sima");if(s)s.oninput=function(){SIMA=+s.value;document.getElementById("simv").textContent=SIMA+"°";render()};
  document.querySelectorAll("#extra button[data-a]").forEach(function(b){b.onclick=function(){SIMA=+b.dataset.a;s.value=SIMA;document.getElementById("simv").textContent=SIMA+"°";render()}});
- document.querySelectorAll("#steps button").forEach(function(b,j){b.classList.toggle("on",j===step)});render()}
+ document.querySelectorAll("#steps button").forEach(function(b,j){b.classList.toggle("on",j===step)});
+ document.getElementById("play").classList.toggle("on",step===S.length-1);render()}
 var sb=document.getElementById("steps");S.forEach(function(s,i){var b=document.createElement("button");b.textContent=i+1;b.title=s.t;b.onclick=function(){setStep(i)};sb.appendChild(b)});
 document.getElementById("prev").onclick=function(){setStep(step-1)};document.getElementById("next").onclick=function(){setStep(step+1)};
+document.getElementById("play").onclick=function(){setStep(S.length-1)};
 document.getElementById("view").onclick=function(){MODE=MODE==="screen"?"graf":"screen";render()};
 document.getElementById("labs").onclick=function(){LABS=!LABS;render()};
 document.getElementById("side").onclick=function(){SIDE=SIDE==="R"?"L":"R";this.textContent="Hip: "+(SIDE==="R"?"RIGHT":"LEFT");render()};

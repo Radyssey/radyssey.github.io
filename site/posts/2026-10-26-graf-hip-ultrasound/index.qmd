@@ -13,7 +13,7 @@ The **Graf method** is the standard way to assess an infant hip with ultrasound 
 
 The lesson is for **radiology residents**, and for anyone else who is learning to scan or report infant hips. It assumes basic ultrasound knowledge and nothing about Graf.
 
-<a class="lesson-cta" href="../../lessons/graf-hip-ultrasound/index.html">Open the interactive lesson</a>
+<a class="lesson-cta" href="../../lessons/graf-hip-ultrasound/index.html">Open the interactive lesson</a> <a class="lesson-cta lesson-cta-alt" href="../../lessons/graf-hip-ultrasound/index.html?step=12">Play with the angles</a>
 
 [![The lesson: the image on the left changes with each step on the right.](screenshot.png){.lesson-shot fig-alt="Screenshot of the Graf lesson, showing an infant hip ultrasound with the baseline, bony roof line and cartilage roof line drawn on it, next to the step panel showing α, β and the hip type."}](../../lessons/graf-hip-ultrasound/index.html)
 
@@ -25,7 +25,7 @@ The lesson is one ultrasound image with a panel of 12 steps beside it. Each step
 2. **Steps 3–6, anatomy.** Find the femoral head, the iliac wing, the bony roof and the lower limb of the os ilium, then the full eight-point checklist. Turn **Labels** off to test yourself.
 3. **Step 7, usability.** The image may be measured only if the lower limb, a straight iliac wing and the labrum are all visible.
 4. **Steps 8–11, measurement.** Draw the baseline, the bony roof line and the cartilage roof line. In step 11, drag the five handles yourself, set the baby's age, and watch α, β and the type update.
-5. **Step 12, a shallow socket.** Move the α slider and watch the bony roof steepen, the head drift out and up, and the type change from Ia to III/IV.
+5. **Step 12, play with the angles.** The lines start on this image's own landmarks (α about 56°). Move the α slider and watch the bony roof steepen, the head drift out and up, and the type change from Ia to III/IV. The **Play with the angles** button jumps straight here.
 
 Below the image are the classification table, an eight-question self-test and the references.
 
